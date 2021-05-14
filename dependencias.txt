@@ -1,0 +1,12 @@
+npm install @react-navigation/native --save
+npm install @react-navigation/stack --save
+yarn add axios
+expo install expo-barcode-scanner
+expo install expo-camera
+expo install expo-media-library
+expo install expo-sqlite
+npm install react-native-gesture-handler --save
+npm install react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view --save
+
+https://aboutreact.com/example-of-sqlite-database-in-react-native/
+

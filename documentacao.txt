@@ -1,0 +1,41 @@
+Instaladores usados antes da utilização do expo:
+
+- Editor de texto: A base utilizada foi o  VSCode
+i) Como instalar? - Segue o fio - https://code.visualstudio.com/
+
+
+- Para SO Windows / Linux:
+
+i) Node js - https://nodejs.org/en/download/
+ii) npm - https://docs.npmjs.com/
+iii) Yarn - https://classic.yarnpkg.com/en/docs/install/#debian-stable
+
+-- observação - Para SO Windows - Tem-se a necessidade de instalar o chocolatey -  https://chocolatey.org/install#installing-chocolatey
+
+
+- Para inicializar com o expo - https://docs.expo.io/
+
+i) npm install --global expo-cli
+ii) expo init my-project
+
+- Base para o projeto - https://aboutreact.com/example-of-sqlite-database-in-react-native/
+ -- Dependências (instalar na pasta raiz do projeto)
+
+    i) npm install react-native-sqlite-storage --save
+    ii) npm install @react-navigation/native --save
+    iii) npm install @react-navigation/stack --save
+    iv) npm install react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view --save
+
+- Dependências expo (Pode instalar no terminal do VSCode)
+    -- Câmera - https://docs.expo.io/versions/v41.0.0/sdk/camera/
+
+        i) expo install expo-camera
+        ii) expo install expo-media-library
+
+    -- BarCodeScanner - https://docs.expo.io/versions/v41.0.0/sdk/bar-code-scanner/
+
+        i) expo install expo-barcode-scanner
+
+- Para conectar com a api - servidor
+
+i) yarn add axios
