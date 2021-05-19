@@ -10,3 +10,32 @@ npm install react-native-reanimated react-native-gesture-handler react-native-sc
 
 https://aboutreact.com/example-of-sqlite-database-in-react-native/
 
+ <SafeAreaView style={{flex:1}}>
+          
+        <View style={{flex:1, backgroundColor: 'white'}}>
+        <Mybutton 
+                        title = 'Formulario'
+                        customClick={() => navigation.navigate('Formulario')}
+                        icon={
+
+                            <Icon
+                              name="fa fa-camera"
+                              size={15}
+                              color="white"
+                            />
+                          }
+                    />
+        <Mybutton 
+                        title = 'Formulario2 '
+                        customClick={() => navigation.navigate('Formulario2')}
+                        icon={
+
+                            <Icon
+                              name="fa fa-camera"
+                              size={15}
+                              color="white"
+                            />
+                          }
+                    />
+        </View>
+        </SafeAreaView>

@@ -1,100 +1,232 @@
-import React from 'react';
-import { Text, SafeAreaView, View, StyleSheet, TextInput} from 'react-native';
+import React,  { useState, useEffect }from 'react';
+import { Text, View, TextInput, Button, StyleSheet } from "react-native";
+import { useForm, Controller } from "react-hook-form";
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const Formulario = () => {
+  const { control, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit = data => console.log(data);
+
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
     {label: 'Apple', value: 'apple'},
     {label: 'Banana', value: 'banana'}
   ]);
-
+  const [OpenAcesso, setOpenAcesso] = useState(false);
+  const [AcessoValue, setAcessoValue] = useState(null);
+  const [acesso, setAcesso] = useState([
+    {label: 'Estrada', value: 'Estrada'},
+    {label: 'Rio', value: 'Rio'}
+  ]);
+  
 return(
-    <SafeAreaView style={{ flex: 1 }}>
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
-    <View style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.text}>cnpj:</Text>
-        <Text style={styles.text}>nome:</Text>
-        <Text style={styles.text}>processo:</Text>
+  <View>
 
-        
-      
+<View style={styles.rectTitle}>
+    <View style={styles.containerTitle}>
+    <View>
+        <Text style={styles.tituloReact}>
+        DADOS DO REQUERENTE
+        </Text>
       </View>
-    </View>
+  <View>
+    <Text style={styles.cnpj}>
+      Cnpj:
+    </Text>
+    <Text style={styles.nome}>
+      Nome:
+    </Text>
+    <Text style={styles.processo}>
+      Processo:
+    </Text>
+  </View>
+</View>
+</View>
+    <View style={styles.rect2}>
+    <View>
+        <Text style={styles.titulo}>
+        ÁREA DE ABRANGÊNCIA
+        </Text>
+      </View>
     <View style={styles.container}>
-      <View style={styles.card}>
-      <Text style={styles.text2}>municipio:</Text>
-   <DropDownPicker
-      open={open}
+      <View>
+        <Text style={styles.text} >
+          Municipios
+        </Text>
+      </View>
+  <Controller
+    control={control}
+    render={({ field: { onChange, onBlur, value } }) => (
+      <DropDownPicker
+     style={styles.select} 
+     open={open}
       value={value}
       items={items}
       setOpen={setOpen}
       setValue={setValue}
       setItems={setItems}
     />
-        <View style={styles.card2}>
-        <Text>testefg</Text>
-        </View>
-      </View>
-    </View>
+    )}
+    name="firstName"
+    rules={{ required: true }}
+    defaultValue=""
+  />
+  {errors.firstName && <Text>This is required.</Text>}
 
-    
-    </View>
-  </SafeAreaView>
+   <View>
+    <Text style={styles.local}>
+   Localização
+    </Text>
+  </View>   
+  <Controller
+    control={control}
+    render={({ field: { onChange, onBlur, value } }) => (
+      <TextInput
+        style={styles.input}
+        onBlur={onBlur}
+        onChangeText={value => onChange(value)}
+        value={value}
+        />
+        )}
+        name="lastName"
+        defaultValue=""
+        />
+
+<View>
+<Text style={styles.acess}>
+Acesso
+</Text>
+  </View>   
+  <Controller
+    control={control}
+    render={({ field: { onChange, onBlur, value } }) => (
+      <DropDownPicker
+      style={styles.acesso} 
+      labelStyle={{
+        fontWeight: "bold",
+        backgroundColor:"black"
+      }}
+       open={OpenAcesso}
+       value={AcessoValue}
+       items={acesso}
+       setOpen={setOpenAcesso}
+       setValue={setAcessoValue}
+       setItems={setAcesso}
+     />
+    )}
+    name="lastName"
+    defaultValue=""
+  />
+  
+  {/* <Button title="Submit" 
+  style={styles.salvar}
+onPress={handleSubmit(onSubmit)} /> */}
+</View>
+
+</View>
+</View>
 )
 
 };
 
 
+
+
+
 const styles = StyleSheet.create({
-
-
-  
-  text: {
-    marginTop: 17,
-    marginLeft: 9,
-    //backgroundColor:'blue',
-    color: 'black',
-    fontSize: 14
-
-  },
-  text2: {
-    marginTop: 40,
-    marginLeft: 9,
-    //backgroundColor:'blue',
-    color: 'black',
-    fontSize: 14
-
-  },
-  card: {
-    //backgroundColor:'#f2f2f2',
-    marginTop: 10,
-    marginLeft: 20,
-    marginRight: 20,
-    borderColor: 'black',
-    borderRadius:5,
-    width: 340,
-    height: 141,
-    borderWidth: 1,
-    borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3
-
-  },
-  card2:{
-    position:'absolute',
-    width: 339,
-    height: 36,
+  rect2: {
+    marginTop:150,
+    width: 390,
+    height: 37,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3
   },
-  input: {
+  rectTitle: {
+    marginTop:25,
+    width: 390,
+    height: 37,
+    backgroundColor: "rgba(74,144,226,1)",
+    borderRadius: 3
+  },
+  acess:{
+    marginLeft:25,
+    marginTop:15,
+  },
+  local:{
+    marginLeft:25,
+    marginTop:15,
+  },
+  text:{
+    marginLeft:25,
+    marginTop:10,
+  },
+  cnpj:{
+    marginTop:25,
+    marginLeft:25,
+    fontSize:15,
+  },
+  nome:{
+    marginTop:15,
+    marginLeft:25,
+    fontSize:15,
+  },
+  processo:{
+    marginTop:15,
+    marginLeft:25,
+    fontSize:15,
+  },
+  titulo:{
+    color:"white",
+    marginLeft:25,
+    marginTop:5,
+  },
+  tituloReact:{
+    color:"white",
+    marginLeft:25,
+  },
+  container:{
+    marginTop:10,
+    width: 390,
+    height: 270,
+    borderWidth: 1,
+    borderColor: "rgba(74,144,226,1)",
+    borderRadius: 3
+  },
+  containerTitle:{
+    marginTop:10,
+    width: 390,
+    height: 150,
+    borderWidth: 1,
+    borderColor: "rgba(74,144,226,1)",
+    borderRadius: 3
+  },
+  salvar:{
+    marginTop: 25,
+    width: 324,
+    marginLeft:25,
     height: 40,
-    margin: 12,
+  },
+  select:{
+    marginTop: 13,
+    width: 324,
+    marginLeft:25,
+    height: 40,
+  },
+  acesso:{
+    marginTop: 13,
+    width: 324,
+    marginLeft:25,
+    height: 40,
+  },
+  input: {
+    marginTop: 13,
+    width: 324,
+    marginLeft:25,
+    height: 40,
     borderWidth: 1,
     borderRadius:5,
-    borderColor:'#fff',
+    borderColor:'black',
     backgroundColor:'#fff',
     color: 'black',
     //fontSize: 18,
@@ -102,4 +234,3 @@ const styles = StyleSheet.create({
 });
 
 export default Formulario;
-
