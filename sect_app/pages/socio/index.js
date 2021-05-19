@@ -28,8 +28,6 @@ const stepIndicatorStyles = {
 };
 
 
-
-
 const Socio = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const viewabilityConfig = React.useRef({ itemVisiblePercentThreshold: 40 })
