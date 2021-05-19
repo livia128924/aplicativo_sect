@@ -21,32 +21,14 @@ const Login = ({navigation}) => {
 
 
   handleSignInPress = async () => {
-    if (login.length === 0 || password.length === 0) {
+ if(login.length === 0 || password.length === 0) {
       setError( 'Preencha usuário e senha para continuar!');
     }else{
-      var dados ={ login, password};
-      api.post('http://192.168.0.151:8082/_apps/app_teste/login/index.php', {login, password})
-      .then(function (response) {
-          //alert(post);
-         
-          const {status, msg}= response.data;
-          console.log(status);
-          
-          if(status == 'OK'){
-
-            navigation.navigate('HomeScreen');
-            //alert(''); // imprimir o conteudo - alert(JSON.stringify(response))
-          }else{
-             setError(msg); 
-          }
-         })
-         .catch(function (error) {
-          alert(error); 
-          //console.log(JSON.stringify(error));
-         });
-      }
+      navigation.navigate('HomeScreen');
+      //alert("error");
+    }
     
-  };
+  }
 
     return (
       <SafeAreaView style={{flex:1}}>
