@@ -34,8 +34,8 @@ const HomeScreen = ({navigation}) => {
                     />
 
                      <Mybutton
-                        title = 'Socio'
-                        customClick={()=>navigation.navigate('Socio')}
+                        title = 'Stepper'
+                        customClick={()=>navigation.navigate('Stepper')}
                     />
                     
                 </View>

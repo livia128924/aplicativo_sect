@@ -6,7 +6,7 @@ import camera from './pages/camera';
 import leitor from './pages/leitor';
 import ViewAllUser from './pages/listar';
 import Login from "./pages/login";
-import Stepper from "./pages/socio/index";
+import Stepper from "./pages/socio";
 import Formulario from "./pages/socio/Formulario";
 
 
@@ -42,7 +42,7 @@ const App = () => {
           name = 'Stepper'
           component={Stepper}
           options={{
-            title:'Socio',
+            title:'Stepper',
             headerStyle: {
               backgroundColor: '#FFF',
             },

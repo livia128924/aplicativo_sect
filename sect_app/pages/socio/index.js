@@ -14,27 +14,20 @@ export default function Stepper() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[
-            styles.button,
-            currentPage === 0 ? styles.selected : styles.unSelected,
-          ]}
-          onPress={() => setCurrentPage(0)}
-        >
-          <Text style={styles.buttonLabel}>{'Horizontal'}</Text>
-        </TouchableOpacity>
+      
         <TouchableOpacity
           style={[
             styles.button,
             currentPage === 1 ? styles.selected : styles.unSelected,
           ]}
-          onPress={() => setCurrentPage(1)}
+          onPress={() => setCurrentPage(1)
+          }
         >
           <Text style={styles.buttonLabel}>{'Vertical'}</Text>
         </TouchableOpacity>
       </View>
       {currentPage === 0 ? (
-        <HorizontalStepIndicator />
+        <></>
       ) : (
         <VerticalStepIndicator />
       )}
