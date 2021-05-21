@@ -4,7 +4,7 @@
 
 import axios from 'axios';
 
-const url = 'https://moh1.com.br/spf/sis/_apps/app_teste/';
+const url = 'http://192.168.0.151:8082/_apps/app_teste/';
 
 
 const api = axios.create({

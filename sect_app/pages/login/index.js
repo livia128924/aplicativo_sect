@@ -25,7 +25,7 @@ const Login = ({navigation}) => {
       setError( 'Preencha usuário e senha para continuar!');
     }else{
       var dados ={ login, password};
-      api.post('http://192.168.0.151:8082/_apps/app_teste/login/index.php', {login, password})
+      api.post('/login/index.php', {login, password})
       .then(function (response) {
           //alert(post);
          

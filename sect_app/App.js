@@ -6,7 +6,10 @@ import camera from './pages/camera';
 import leitor from './pages/leitor';
 import ViewAllUser from './pages/listar';
 import Login from "./pages/login";
-import Stepper from "./pages/socio";
+import ExampleOne from './pages/socio/index';
+import ProgressSteps from './pages/socio/ProgressSteps';
+import ProgressStep from './pages/socio/ProgressStep';
+
 import Formulario from "./pages/socio/Formulario";
 
 
@@ -40,7 +43,7 @@ const App = () => {
         />
            <Stack.Screen
           name = 'Stepper'
-          component={Stepper}
+          component={ ExampleOne}
           options={{
             title:'Stepper',
             headerStyle: {
