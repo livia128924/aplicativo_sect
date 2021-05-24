@@ -4,44 +4,47 @@ const Container = styled.View`
   flex: 1;
   alignItems: center;
   justifyContent: center;
-  backgroundColor: #F5F5F5;
+  backgroundColor : #eee
+  paddingHorizontal:30px;
 `;
 
 const Logo = styled.Image`
-  height: 30%;
-  marginBottom: 40px;
+  height: 25%;
+  marginBottom: 10px;
 `;
 
 const Input = styled.TextInput`
+  color: #444;
   paddingHorizontal: 20px;
-  paddingVertical: 15px;
+  paddingVertical: 10px;
   borderRadius: 5px;
+  border : 1px solid #CCC;
   backgroundColor: #FFF;
   alignSelf: stretch;
-  marginBottom: 15px;
-  marginHorizontal: 20px;
+  marginBottom: 20px;
   fontSize: 16px;
 `;
 
 const ErrorMessage = styled.Text`
   textAlign: center;
-  color: #ce2029;
+  color: #721c24;
   fontSize: 16px;
   marginBottom: 15px;
   marginHorizontal: 20px;
 `;
 
 const Button = styled.TouchableHighlight`
-  padding: 20px;
+  justifyContent: center;
+  alignItems: center;
   borderRadius: 5px;
-  backgroundColor: #FFF;
+  backgroundColor: #0cb27a;
   alignSelf: stretch;
-  margin: 15px;
-  marginHorizontal: 20px;
+  marginTop: 10px;
+  height : 45px;
 `;
 
 const ButtonText = styled.Text`
-  color:  #000000;
+  color:  #FFF;
   fontWeight: bold;
   fontSize: 16px;
   textAlign: center;
@@ -59,4 +62,4 @@ const SignUpLinkText = styled.Text`
   textAlign: center;
 `;
 
-export { Container, Logo, Input, ErrorMessage, Button, ButtonText, SignUpLink, SignUpLinkText };
+export {Container, Logo, Input, ErrorMessage, Button, ButtonText, SignUpLink, SignUpLinkText};
