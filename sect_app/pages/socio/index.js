@@ -1,6 +1,7 @@
 import React, { Component, useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Button, Pressable, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { Checkbox } from 'react-native-paper';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import api from '../../services/api';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -9,6 +10,8 @@ function ExampleOne ()  {
   //const { control, handleSubmit, formState: { errors } } = useForm();
   //const onSubmit = data => console.log(data);
 
+  const [checked, setChecked] = React.useState(false);
+  const [se_ruj_material_cobertura, setSe_ruj_material_cobertura] = React.useState(false);
   
   const [aberto, setAberto] = useState(false);
   const [valor, setValor] = useState(null);
@@ -51,6 +54,34 @@ function ExampleOne ()  {
   const [itemSe_ruj_cooperados, setItemSe_ruj_cooperados] = useState([
     {label: '70', value: '70'},
     {label: '80', value: '80'}
+  ]);
+
+  const [openSe_ruj_beneficios_concedidos, setOpenSe_ruj_beneficios_concedidos] = useState(false);
+  const [valorSe_ruj_beneficios_concedidos, setValorSe_ruj_beneficios_concedidos] = useState(null);
+  const [itemSe_ruj_beneficios_concedidos, setItemSe_ruj_beneficios_concedidos] = useState([
+    {label: '800', value: '800'},
+    {label: '900', value: '900'}
+  ]);
+
+  const [openSe_ruj_tipo_construcao, setOpenSe_ruj_tipo_construcao] = useState(false);
+  const [valorSe_ruj_tipo_construcao, setValorSe_ruj_tipo_construcao] = useState(null);
+  const [itemSe_ruj_tipo_construcao, setItemSe_ruj_tipo_construcao] = useState([
+    {label: '950', value: '950'},
+    {label: '1050', value: '1050'}
+  ]);
+
+  const [openSe_ruj_numero_comodos, setOpenSe_ruj_numero_comodos] = useState(false);
+  const [valorSe_ruj_numero_comodos, setValorSe_ruj_numero_comodos] = useState(null);
+  const [itemSe_ruj_numero_comodos, setItemSe_ruj_numero_comodos] = useState([
+    {label: '147', value: '147'},
+    {label: '258', value: '258'}
+  ]);
+
+  const [openSe_ruj_numero_pisos, setOpenSe_ruj_numero_pisos] = useState(false);
+  const [valorSe_ruj_numero_pisos, setValorSe_ruj_numero_pisos] = useState(null);
+  const [itemSe_ruj_numero_pisos, setItemSe_ruj_numero_pisos] = useState([
+    {label: '123', value: '123'},
+    {label: '456', value: '456'}
   ]);
 
 
@@ -105,6 +136,8 @@ async function requerente (dados) {
   const [ industria, setIndustria] = useState('');
   const [ recursosNaturais, setRecursosNaturais] = useState('');
   const [ t_I, setT_I] = useState('');
+  const [outrosBeneficios, setOutrosBeneficios] = useState('');
+  const [outros_Se_ruj_tipo_construcao, setOutros_Se_ruj_tipo_construcao] = useState('');
 
   const [number,onChangeNumber] = useState('');
 
@@ -518,20 +551,26 @@ async function requerente (dados) {
             <Text style={styles.titulo} >POLÍTICA DE BENFÍCIOS</Text>
               </View>
               <View style={styles.municipio}>
-              <Text >Natureza da Atividade</Text>
+              <Text >Tipos de Benefícios Concedidos</Text>
               </View>
               <View>
               <DropDownPicker
             style={styles.Mao_de_obra} 
             open={openSe_ruj_beneficios_concedidos}
               value={valorSe_ruj_beneficios_concedidos}
-              items={itemSe_ruj_cooperados}
-              setOpen={setOpenSe_ruj_cooperados}
-              setValue={setValorSe_ruj_cooperados}
-              setItems={setItemSe_ruj_cooperados}
+              items={itemSe_ruj_beneficios_concedidos}
+              setOpen={setOpenSe_ruj_beneficios_concedidos}
+              setValue={setValorSe_ruj_beneficios_concedidos}
+              setItems={setItemSe_ruj_beneficios_concedidos}
               placeholder="Selecione::"
             />
               </View>
+              <TextInput
+              style={styles.inputOutrosBeneficios}
+              onChangeText={setOutrosBeneficios}
+              value={outrosBeneficios}
+              placeholder={"    Outros"}
+              />
               </View>
 
             <View style={{ alignItems: 'center' }}>
@@ -541,11 +580,100 @@ async function requerente (dados) {
           </ProgressStep>
 
           <ProgressStep
-            label="form5"
+            label="Infra"
             onPrevious={onPrevStep}
             onSubmit={onSubmitSteps}
-            scrollViewProps={defaultScrollViewProps}
+            scrollable={true}
           >
+              <View style={styles.form7}>
+            <View style={styles.rect2}>
+            <Text style={styles.titulo} >INFRAESTRUTURA DO IMÓVEL</Text>
+              </View>
+              <View style={styles.municipio}>
+              <Text >Tipo de Construção</Text>
+              </View>
+              <View>
+              <DropDownPicker
+              style={styles.Mao_de_obra} 
+              open={openSe_ruj_tipo_construcao}
+              value={valorSe_ruj_tipo_construcao}
+              items={itemSe_ruj_tipo_construcao}
+              setOpen={setOpenSe_ruj_tipo_construcao}
+              setValue={setValorSe_ruj_tipo_construcao}
+              setItems={setItemSe_ruj_tipo_construcao}
+              placeholder="Selecione::"
+            />
+              </View>
+              <TextInput
+              style={styles.inputOutrosBeneficios}
+              onChangeText={setOutros_Se_ruj_tipo_construcao}
+              value={outros_Se_ruj_tipo_construcao}
+              placeholder={"    Outros"}
+              />
+              
+              <View style={styles.municipio}>
+              <Text >Nº de Cômodos</Text>
+              </View>
+              <View>
+              <DropDownPicker
+              style={styles.Mao_de_obra} 
+              open={openSe_ruj_numero_comodos}
+              value={valorSe_ruj_numero_comodos}
+              items={itemSe_ruj_numero_comodos}
+              setOpen={setOpenSe_ruj_numero_comodos}
+              setValue={setValorSe_ruj_numero_comodos}
+              setItems={setItemSe_ruj_numero_comodos}
+              placeholder="Selecione::"
+            />
+              </View>
+
+              <View style={styles.municipio}>
+              <Text >Nº de Pisos</Text>
+              </View>
+              <View>
+              <DropDownPicker
+              style={styles.Mao_de_obra} 
+              open={openSe_ruj_numero_pisos}
+              value={valorSe_ruj_numero_pisos}
+              items={itemSe_ruj_numero_pisos}
+              setOpen={setOpenSe_ruj_numero_pisos}
+              setValue={setValorSe_ruj_numero_pisos}
+              setItems={setItemSe_ruj_numero_pisos}
+              placeholder="Selecione::"
+            />
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={checked ? 'checked' : 'unchecked'}
+              color={"blue"}
+              onPress={() => {
+                setChecked(!checked);
+              }}
+              />
+              <Text style={styles.checkboxText}>Telha de amianto</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_material_cobertura ? 'checked' : 'unchecked'}
+              color={"blue"}
+              onPress={() => {
+                setSe_ruj_material_cobertura(!se_ruj_material_cobertura);
+              }}
+              />
+              <Text style={styles.checkboxText}>Madeira aparelhado</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_material_cobertura ? 'checked' : 'unchecked'}
+              color={"blue"}
+              onPress={() => {
+                setSe_ruj_material_cobertura(!se_ruj_material_cobertura);
+              }}
+              />
+              <Text style={styles.checkboxText}>Alumínio ou zinco</Text>
+              </View>
+              </View>
+
             <View style={{ alignItems: 'center' }}>
           
               <Text>form 5 step content</Text>
@@ -649,9 +777,17 @@ const styles = StyleSheet.create({
   },
   form6: {
     width: 340,
-    height: 300,
+    height: 215,
     marginLeft:25,
     marginTop:10,
+    borderWidth: 1,
+    borderColor: "rgba(74,144,226,1)",
+    borderRadius: 3
+  },
+  form7: {
+    width: 340,
+    height: 500,
+    marginLeft:25,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3
@@ -699,6 +835,25 @@ const styles = StyleSheet.create({
     borderRadius:0,
     borderWidth: 1,
   },
+  checkbox:{
+    marginTop:5,
+    marginLeft:30,
+  },
+  checkboxlabel:{
+    marginTop:5,
+    height: 25,
+    width:'85%',
+    marginLeft:30,
+
+  },
+  checkboxText:{
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    position:'absolute',
+    marginTop:9,
+    marginLeft:40,
+  },
   acesso:{
     height: 40,
     width:'85%',
@@ -735,6 +890,14 @@ const styles = StyleSheet.create({
     width:'85%',
     marginTop:10,
     marginLeft:10,
+    borderWidth: 1,
+    backgroundColor:'white'
+  },
+  inputOutrosBeneficios: {
+    height: 40,
+    width:'85%',
+    marginTop:10,
+    marginLeft:30,
     borderWidth: 1,
     backgroundColor:'white'
   },
@@ -809,4 +972,5 @@ const styles = StyleSheet.create({
     marginLeft: 9,
     marginTop:1
   },
+ 
 });
