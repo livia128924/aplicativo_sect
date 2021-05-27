@@ -30,12 +30,14 @@ class ProgressStep extends Component {
     const btnStyle = {
       textAlign: 'center',
       padding: 8,
+      margintop:10,
       ...this.props.nextBtnStyle
     };
 
     const btnTextStyle = {
-      color: '#007AFF',
+      color: 'red',
       fontSize: 18,
+      margintop:10,
       ...this.props.nextBtnTextStyle
     };
 
@@ -135,7 +137,7 @@ ProgressStep.propTypes = {
 ProgressStep.defaultProps = {
   nextBtnText: 'Next',
   previousBtnText: 'Previous',
-  finishBtnText: 'Submit',
+  finishBtnText: 'Enviar',
   nextBtnDisabled: false,
   previousBtnDisabled: false,
   errors: false,

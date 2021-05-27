@@ -12,6 +12,13 @@ function ExampleOne ()  {
 
   const [checked, setChecked] = React.useState(false);
   const [se_ruj_material_cobertura, setSe_ruj_material_cobertura] = React.useState(false);
+  const [se_ruj_sanitario, setSe_ruj_sanitario] = React.useState(false);
+  const [se_ruj_coleta_lixo, setSe_ruj_coleta_lixo] = React.useState(false);
+  const [se_ruj_rede_energia, setSe_ruj_rede_energia] = React.useState(false);
+  const [se_ruj_rede_agua, setSe_ruj_rede_agua] = React.useState(false);
+  const [se_ruj_tratamento_agua, setSe_ruj_tratamento_agua] = React.useState(false);
+  const [se_ruj_bens_moveis, setSe_ruj_bens_moveis] = React.useState(false);
+  const [se_ruj_bens_imoveis, setSe_ruj_bens_imoveis] = React.useState(false);
   
   const [aberto, setAberto] = useState(false);
   const [valor, setValor] = useState(null);
@@ -84,6 +91,40 @@ function ExampleOne ()  {
     {label: '456', value: '456'}
   ]);
 
+  const [openSe_ruj_estado_conservacao, setOpenSe_ruj_estado_conservacao] = useState(false);
+  const [valorSe_ruj_estado_conservacao, setValorSe_ruj_estado_conservacao] = useState(null);
+  const [itemSe_ruj_estado_conservacao, setItemSe_ruj_estado_conservacao] = useState([
+    {label: '123', value: '123'},
+    {label: '456', value: '456'}
+  ]);
+  const [openSe_ruj_destino_dejetos, setOpenSe_ruj_destino_dejetos] = useState(false);
+  const [valorSe_ruj_destino_dejetos, setValorSe_ruj_destino_dejetos] = useState(null);
+  const [itemSe_ruj_destino_dejetos, setItemSe_ruj_destino_dejetos] = useState([
+    {label: '123', value: '123'},
+    {label: '456', value: '456'}
+  ]);
+  const [openSe_ruj_responsabilidade_social, setOpenSe_ruj_responsabilidade_social] = useState(false);
+  const [valorSe_ruj_responsabilidade_social, setValorSe_ruj_responsabilidade_social] = useState(null);
+  const [itemSe_ruj_responsabilidade_social, setItemSe_ruj_responsabilidade_social] = useState([
+    {label: 'Sim', value: 'Sim'},
+    {label: 'Nao', value: 'Nao'}
+  ]);
+  const [openSe_ruj_formacao_atuacao, setOpenSe_ruj_formacao_atuacao] = useState(false);
+  const [valorSe_ruj_formacao_atuacao, setValorSe_ruj_formacao_atuacao] = useState(null);
+  const [itemSe_ruj_formacao_atuacao, setItemSe_ruj_formacao_atuacao] = useState([
+    {label: 'Diretamente da Comunidade', value: 'Diretamente da Comunidade'},
+    {label: 'Indiretamente por meio dos colaboradores', value: 'Indiretamente por meio dos colaboradores'}
+  ]);
+  const [openSe_ruj_investimento_financeiro, setOpenSe_ruj_investimento_financeiro] = useState(false);
+  const [valorSe_ruj_investimento_financeiro, setValorSe_ruj_investimento_financeiro] = useState(null);
+  const [itemSe_ruj_investimento_financeiro, setItemSe_ruj_investimento_financeiro] = useState([
+    {label: 'Menos de 100 mil reais', value: 'Menos de 100 mil reais'},
+    {label: 'De 100 a 400 mil reais', value: 'De 100 a 400 mil reais'},
+    {label: 'De 400 a 800 mil reais', value: 'De 400 a 800 mil reais'},
+    {label: 'Acima de 800 mil reais', value: 'Acima de 800 mil reais'},
+
+  ]);
+
 
   useEffect (()=>{
   
@@ -138,6 +179,8 @@ async function requerente (dados) {
   const [ t_I, setT_I] = useState('');
   const [outrosBeneficios, setOutrosBeneficios] = useState('');
   const [outros_Se_ruj_tipo_construcao, setOutros_Se_ruj_tipo_construcao] = useState('');
+  const [outrosSe_ruj_destino_dejetos, setOutrosSe_ruj_destino_dejetos] = useState('');
+  const [se_ruj_coleta_lixo_outros, setOutrosSe_ruj_coleta_lixo_outros] = useState('');
 
   const [number,onChangeNumber] = useState('');
 
@@ -169,11 +212,11 @@ async function requerente (dados) {
   
     return (
       <View style={{ flex: 1, marginTop: 15 }}>
-        <View style={styles.rect}  {...requerente}>
+        {/* <View style={styles.rect}  {...requerente}>
             <Text style={styles.nome}>Nome:</Text>
             <Text style={styles.cnpj}>CNPJ:</Text>
             <Text style={styles.processo}>Processo:</Text>
-        </View>
+        </View> */}
         <ProgressSteps>
           <ProgressStep
             label="Area"
@@ -250,161 +293,11 @@ async function requerente (dados) {
             </View>
           </ProgressStep>
           <ProgressStep
-            label="Documentação"
-            onNext={onNextStep}
-            onPrevious={onPrevStep}
-            scrollable={true}
-            >
-            <View style={styles.form2}>
-            <View style={styles.rect2}>
-            <Text style={styles.titulo} >DOCUMENTAÇÃO COLHIDA EM CAMPO</Text>
-              </View>
-            <View style={styles.inputGroup}>
-          
-              <Text style={styles.campo}>Cadastro Nacional de Pessoa Jurídica - CNPJ</Text>
-              
-            <TouchableOpacity style={styles.button}>
-            <Icon
-            name="camera"
-            size={15}
-            color="white"
-            style={styles.icon}
-            />
-            </TouchableOpacity>
-            </View>
-            <View style={styles.inputGroup}>
-            <Text style={styles.campo}>Cópia de Identidade do Representante Legal</Text>
-            <TouchableOpacity style={styles.button}>
-            <Icon
-            name="camera"
-            size={15}
-            color="white"
-            style={styles.icon}
-            />
-            </TouchableOpacity>
-            </View>
-            <View style={styles.inputGroup}>
-            <Text style={styles.campo}>Cópia do CPF do Representante Legal</Text>
-            <TouchableOpacity style={styles.button}>
-            <Icon
-            name="camera"
-            size={15}
-            color="white"
-            style={styles.icon}
-            />
-            </TouchableOpacity>
-            </View>
-            <View style={styles.inputGroup}>
-            <Text style={styles.campo}>Contrato ou Estatuto Social</Text>
-            <TouchableOpacity style={styles.button}>
-            <Icon
-            name="camera"
-            size={15}
-            color="white"
-            style={styles.icon}
-            />
-            </TouchableOpacity>
-            </View>
-            <View style={styles.inputGroup}>
-            <Text style={styles.campo}>Termo de Posse (em se tratando de Associação)</Text>
-            <TouchableOpacity style={styles.button}>
-            <Icon
-            name="camera"
-            size={15}
-            color="white"
-            style={styles.icon}
-            />
-            </TouchableOpacity>
-            </View>
-            <View style={styles.inputGroup}>
-            <Text style={styles.campo}>Ata de Eleição, devidamente assinada pelos associados</Text>
-            <TouchableOpacity style={styles.button}>
-            <Icon
-            name="camera"
-            size={15}
-            color="white"
-            style={styles.icon}
-            />
-            </TouchableOpacity>
-            </View>
-            <View style={styles.inputGroup}>
-            <Text style={styles.campo}>Comprovante de Residência da Área (Água, Luz ou IPTU)</Text>
-            <TouchableOpacity style={styles.button}>
-            <Icon
-            name="camera"
-            size={15}
-            color="white"
-            style={styles.icon}
-            />
-            </TouchableOpacity>
-            </View>
-            <View style={styles.inputGroup}>
-            <Text style={styles.campo}>Balanço Patrimonial e Livro Caixa</Text>
-            <TouchableOpacity style={styles.button}>
-            <Icon
-            name="camera"
-            size={15}
-            color="white"
-            style={styles.icon}
-            />
-            </TouchableOpacity>
-            </View>
-            <View style={styles.inputGroup}>
-            <Text style={styles.campo}>Cópia da Dec. do Inp. de Renda (último exercício entregue a Receita Federal)</Text>
-            <TouchableOpacity style={styles.button}>
-            <Icon
-            name="camera"
-            size={15}
-            color="white"
-            style={styles.icon}
-            />
-            </TouchableOpacity>
-            </View>
-            <View style={styles.inputGroup}>
-            <Text style={styles.campo}>Comprovante de Posse (Recibo de compra e venda com e/ou sem registro)</Text>
-            <TouchableOpacity style={styles.button}>
-            <Icon
-            name="camera"
-            size={15}
-            color="white"
-            style={styles.icon}
-            />
-            </TouchableOpacity>
-            </View>
-            <View style={styles.inputGroup}>
-            <Text style={styles.campo}>Instrumento Público de Representação (validade de 1 (um) ano...)</Text>
-            <TouchableOpacity style={styles.button}>
-            <Icon
-            name="camera"
-            size={15}
-            color="white"
-            style={styles.icon}
-            />
-            </TouchableOpacity>
-            </View>
-            <View style={styles.inputGroup}>
-            <Text style={styles.campo}>Declaração, devidamente, assinada de que não é, bem como seus sócios, proprietário de outro imóvel rural ou urbano</Text>
-            <TouchableOpacity style={styles.button}>
-            <Icon
-            name="camera"
-            size={15}
-            color="white"
-            style={styles.icon}
-            />
-            </TouchableOpacity>
-            </View>
-
-            </View>
-            <View style={{ alignItems: 'center' }}>
-
-              <Text>formulario2 step content</Text>
-            </View>
-          </ProgressStep>
-          <ProgressStep
             label="Atividades"
             onNext={onNextStep}
             onPrevious={onPrevStep}
             scrollable={true}
+            
           >
             <View style={styles.form3}>
             <View style={styles.rect2}>
@@ -646,6 +539,7 @@ async function requerente (dados) {
               <Checkbox
               status={checked ? 'checked' : 'unchecked'}
               color={"blue"}
+              testID={"1"}
               onPress={() => {
                 setChecked(!checked);
               }}
@@ -656,6 +550,7 @@ async function requerente (dados) {
               <Checkbox
               status={se_ruj_material_cobertura ? 'checked' : 'unchecked'}
               color={"blue"}
+              testID={"2"}
               onPress={() => {
                 setSe_ruj_material_cobertura(!se_ruj_material_cobertura);
               }}
@@ -666,19 +561,721 @@ async function requerente (dados) {
               <Checkbox
               status={se_ruj_material_cobertura ? 'checked' : 'unchecked'}
               color={"blue"}
+              testID={"3"}
               onPress={() => {
                 setSe_ruj_material_cobertura(!se_ruj_material_cobertura);
               }}
               />
               <Text style={styles.checkboxText}>Alumínio ou zinco</Text>
               </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_material_cobertura ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"4"}
+              onPress={() => {
+                setSe_ruj_material_cobertura(!se_ruj_material_cobertura);
+              }}
+              />
+              <Text style={styles.checkboxText}>Laje de concreto</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_material_cobertura ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"5"}
+              onPress={() => {
+                setSe_ruj_material_cobertura(!se_ruj_material_cobertura);
+              }}
+              />
+              <Text style={styles.checkboxText}>Telha de barro</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_material_cobertura ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"5"}
+              onPress={() => {
+                setSe_ruj_material_cobertura(!se_ruj_material_cobertura);
+              }}
+              />
+              <Text style={styles.checkboxText}>Alumínio Galvanizado</Text>
+              </View>
+              
+              <View style={styles.municipio}>
+              <Text >Estado de Conservação do Imóvel</Text>
+              </View>
+              <View>
+              <DropDownPicker
+              style={styles.Mao_de_obra} 
+              open={openSe_ruj_estado_conservacao}
+              value={valorSe_ruj_estado_conservacao}
+              items={itemSe_ruj_estado_conservacao}
+              setOpen={setOpenSe_ruj_estado_conservacao}
+              setValue={setValorSe_ruj_estado_conservacao}
+              setItems={setItemSe_ruj_estado_conservacao}
+              placeholder="Selecione::"
+            />
+              </View>
               </View>
 
             <View style={{ alignItems: 'center' }}>
           
-              <Text>form 5 step content</Text>
+              <Text>form 5 step conten0t</Text>
             </View>
           </ProgressStep>
+
+          <ProgressStep
+            label="Saneamento"
+            onPrevious={onPrevStep}
+            onSubmit={onSubmitSteps}
+            //scrollViewProps={defaultScrollViewProps}
+            scrollable={true}
+          >
+            <View style={styles.form8}>
+            <View style={styles.rect2}>
+            <Text style={styles.titulo} >SANEAMENTO BÁSICO E INSTALAÇÕES SANITÁRIAS</Text>
+              </View>
+              <View style={styles.municipio}>
+              <Text >Sanitário</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_sanitario ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"1"}
+              onPress={() => {
+                setSe_ruj_sanitario(!se_ruj_sanitario);
+              }}
+              />
+              <Text style={styles.checkboxText}>Interno</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_sanitario ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"1"}
+              onPress={() => {
+                setSe_ruj_sanitario(!se_ruj_sanitario);
+              }}
+              />
+              <Text style={styles.checkboxText}>Externo</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_sanitario ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"1"}
+              onPress={() => {
+                setSe_ruj_sanitario(!se_ruj_sanitario);
+              }}
+              />
+              <Text style={styles.checkboxText}>Ceu aberto</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_sanitario ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"1"}
+              onPress={() => {
+                setSe_ruj_sanitario(!se_ruj_sanitario);
+              }}
+              />
+              <Text style={styles.checkboxText}>Nao possui</Text>
+              </View>
+              <View style={styles.municipio}>
+                <Text>Destino dos Dejetos</Text>
+              </View>
+              <View>
+            <DropDownPicker
+            style={styles.Dejetos} 
+            open={openSe_ruj_destino_dejetos}
+              value={valorSe_ruj_destino_dejetos}
+              items={itemSe_ruj_destino_dejetos}
+              setOpen={setOpenSe_ruj_destino_dejetos}
+              setValue={setValorSe_ruj_destino_dejetos}
+              setItems={setItemSe_ruj_destino_dejetos}
+              placeholder="Selecione::"
+            />
+              </View>
+            
+            <View style={{ alignItems: 'center' }}> 
+            <TextInput 
+            style={styles.inputOutrosDejetos}
+            onChangeText={setOutrosSe_ruj_destino_dejetos}
+            value={outrosSe_ruj_destino_dejetos}
+            placeholder={" Outros"}
+            />
+            </View>
+            <View style={styles.municipio}>
+              <Text>Lixo</Text>
+              </View>
+              
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_coleta_lixo ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"1"}
+              onPress={() => {
+                setSe_ruj_coleta_lixo(!se_ruj_coleta_lixo);
+              }}
+              />
+              <Text style={styles.checkboxText}>Pública</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_coleta_lixo ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"2"}
+              onPress={() => {
+                setSe_ruj_coleta_lixo(!se_ruj_coleta_lixo);
+              }}
+              />
+              <Text style={styles.checkboxText}>Queima</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_coleta_lixo ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"3"}
+              onPress={() => {
+                setSe_ruj_coleta_lixo(!se_ruj_coleta_lixo);
+              }}
+              />
+              <Text style={styles.checkboxText}>Enterra</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_coleta_lixo ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"4"}
+              onPress={() => {
+                setSe_ruj_coleta_lixo(!se_ruj_coleta_lixo);
+              }}
+              />
+              <Text style={styles.checkboxText}>Reaproveita</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_coleta_lixo ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"5"}
+              onPress={() => {
+                setSe_ruj_coleta_lixo(!se_ruj_coleta_lixo);
+              }}
+              />
+              <Text style={styles.checkboxText}>Outros</Text>
+              </View>
+              <View style={{ alignItems: 'center' }}> 
+            <TextInput 
+            style={styles.inputOutrosDejetos}
+            onChangeText={setOutrosSe_ruj_coleta_lixo_outros}
+            value={se_ruj_coleta_lixo_outros}
+            placeholder={" Outros"}
+            />
+            </View>
+            <View style={styles.municipio}>
+              <Text>Rede de Energia</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_rede_energia ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"1"}
+              onPress={() => {
+                setSe_ruj_rede_energia(!se_ruj_rede_energia);
+              }}
+              />
+              <Text style={styles.checkboxText}>Pública</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_rede_energia ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"2"}
+              onPress={() => {
+                setSe_ruj_rede_energia(!se_ruj_rede_energia);
+              }}
+              />
+              <Text style={styles.checkboxText}>Gerador Particular</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_rede_energia ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"3"}
+              onPress={() => {
+                setSe_ruj_rede_energia(!se_ruj_rede_energia);
+              }}
+              />
+              <Text style={styles.checkboxText}>Solar</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_rede_energia ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"4"}
+              onPress={() => {
+                setSe_ruj_rede_energia(!se_ruj_rede_energia);
+              }}
+              />
+              <Text style={styles.checkboxText}>Outros</Text>
+              </View>
+              <View style={styles.municipio}>
+              <Text>Rede de Agua</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_rede_agua ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"1"}
+              onPress={() => {
+                setSe_ruj_rede_agua(!se_ruj_rede_agua);
+              }}
+              />
+              <Text style={styles.checkboxText}>Rede pública de abastecimento</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_rede_agua ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"2"}
+              onPress={() => {
+                setSe_ruj_rede_agua(!se_ruj_rede_agua);
+              }}
+              />
+              <Text style={styles.checkboxText}>Manual</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_rede_agua ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"3"}
+              onPress={() => {
+                setSe_ruj_rede_agua(!se_ruj_rede_agua);
+              }}
+              />
+              <Text style={styles.checkboxText}>Poço artesiano</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_rede_agua ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"4"}
+              onPress={() => {
+                setSe_ruj_rede_agua(!se_ruj_rede_agua);
+              }}
+              />
+              <Text style={styles.checkboxText}>Outros</Text>
+              </View>
+              <View style={styles.municipio}>
+              <Text>Tratamento da agua</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_tratamento_agua ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"1"}
+              onPress={() => {
+                setSe_ruj_tratamento_agua(!se_ruj_tratamento_agua);
+              }}
+              />
+              <Text style={styles.checkboxText}>Clorada</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_tratamento_agua ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"2"}
+              onPress={() => {
+                setSe_ruj_tratamento_agua(!se_ruj_tratamento_agua);
+              }}
+              />
+              <Text style={styles.checkboxText}>Filtrada</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_tratamento_agua ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"3"}
+              onPress={() => {
+                setSe_ruj_tratamento_agua(!se_ruj_tratamento_agua);
+              }}
+              />
+              <Text style={styles.checkboxText}>Coada</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_tratamento_agua ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"4"}
+              onPress={() => {
+                setSe_ruj_tratamento_agua(!se_ruj_tratamento_agua);
+              }}
+              />
+              <Text style={styles.checkboxText}>Fervida</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_tratamento_agua ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"5"}
+              onPress={() => {
+                setSe_ruj_tratamento_agua(!se_ruj_tratamento_agua);
+              }}
+              />
+              <Text style={styles.checkboxText}>Não realiza nenhum tratamento</Text>
+              </View>
+            </View>
+            </ProgressStep>
+            <ProgressStep
+            label="Patrimonio"
+            onPrevious={onPrevStep}
+            onSubmit={onSubmitSteps}
+            scrollable={true}
+          >
+            <View style={styles.form9}>
+            <View style={styles.rect2}>
+            <Text style={styles.titulo}>Patrimonio</Text>
+              </View>
+              <View style={styles.municipio}>
+              <Text>Bens Móveis</Text>
+              </View>
+               
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"1"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Geladeira comercial</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"2"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Máquinas industriais</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"3"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Equipamento para embalagem</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"4"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Balcão de atendimento</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"5"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Prateleiras</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"5"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Fax</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"6"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Telefone</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"7"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Computador</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"8"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Gerador</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"9"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Moveis para escritório</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"10"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Exaustor</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"11"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Empilhadeira</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"12"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Freezer comercial</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"13"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Fogão industrial</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"14"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Forno Industrial</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"15"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Caixa registradora</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"16"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Balanças eletrônicas</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"17"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Transporte</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"18"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Ar condicionado</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"19"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Equipamento de elevação e transferência</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"20"}
+              onPress={() => {
+                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Guindaste</Text>
+              </View>
+              
+              <View style={styles.municipio}>
+              <Text>Bens Imóveis</Text>
+              </View>
+
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_imoveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"1"}
+              onPress={() => {
+                setSe_ruj_bens_imoveis(!se_ruj_bens_imoveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Lote</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_imoveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"2"}
+              onPress={() => {
+                setSe_ruj_bens_imoveis(!se_ruj_bens_imoveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Casa</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_imoveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"3"}
+              onPress={() => {
+                setSe_ruj_bens_imoveis(!se_ruj_bens_imoveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Prédio</Text>
+              </View>
+              <View style={styles.checkboxlabel}>
+              <Checkbox
+              status={se_ruj_bens_imoveis ? 'checked' : 'unchecked'}
+              color={"blue"}
+              testID={"4"}
+              onPress={() => {
+                setSe_ruj_bens_imoveis(!se_ruj_bens_imoveis);
+              }}
+              />
+              <Text style={styles.checkboxText}>Apartamento</Text>
+              </View>
+
+            </View>
+
+            <View style={styles.form10}>
+            <View style={styles.rect2}>
+            <Text style={styles.titulo}>RESPONSABILIDADE SOCIAL NA ORGANIZAÇÃO</Text>
+              </View>
+              <View style={styles.municipio}>
+              <Text>Possui programa de responsabilidade social</Text>
+              </View>
+              <View>
+            <DropDownPicker
+            style={styles.select} 
+            open={openSe_ruj_responsabilidade_social}
+            value={valorSe_ruj_responsabilidade_social}
+            items={itemSe_ruj_responsabilidade_social}
+            setOpen={setOpenSe_ruj_responsabilidade_social}
+            setValue={setValorSe_ruj_responsabilidade_social}
+              setItems={setItemSe_ruj_responsabilidade_social}
+              placeholder="Selecione"
+              />
+              </View>
+              <View style={styles.municipio}>
+              <Text>Formação de Atuação</Text>
+              </View>
+              <View>
+            <DropDownPicker
+            style={styles.select} 
+            open={openSe_ruj_formacao_atuacao}
+            value={valorSe_ruj_formacao_atuacao}
+            items={itemSe_ruj_formacao_atuacao}
+            setOpen={setOpenSe_ruj_formacao_atuacao}
+            setValue={setValorSe_ruj_formacao_atuacao}
+              setItems={setItemSe_ruj_formacao_atuacao}
+              placeholder="Selecione"
+              />
+              </View>
+              <View style={styles.municipio}>
+              <Text>Investimento Financeiro destinado</Text>
+              </View>
+              <View>
+            <DropDownPicker
+            style={styles.select} 
+            open={openSe_ruj_investimento_financeiro}
+            value={valorSe_ruj_investimento_financeiro}
+            items={itemSe_ruj_investimento_financeiro}
+            setOpen={setOpenSe_ruj_investimento_financeiro}
+            setValue={setValorSe_ruj_investimento_financeiro}
+              setItems={setItemSe_ruj_investimento_financeiro}
+              placeholder="Selecione"
+              />
+              </View>
+              </View>
+            </ProgressStep>
         </ProgressSteps>
       </View>
     );
@@ -786,8 +1383,35 @@ const styles = StyleSheet.create({
   },
   form7: {
     width: 340,
-    height: 500,
+    height: 650,
     marginLeft:25,
+    borderWidth: 1,
+    borderColor: "rgba(74,144,226,1)",
+    borderRadius: 3
+  },
+  form8: {
+    width: 340,
+    height: 1070,
+    marginLeft:25,
+    marginTop:10,
+    borderWidth: 1,
+    borderColor: "rgba(74,144,226,1)",
+    borderRadius: 3
+  },
+  form9: {
+    width: 340,
+    height: 890,
+    marginLeft:25,
+    marginTop:10,
+    borderWidth: 1,
+    borderColor: "rgba(74,144,226,1)",
+    borderRadius: 3
+  },
+  form10: {
+    width: 340,
+    height: 310,
+    marginLeft:25,
+    marginTop:10,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3
@@ -835,6 +1459,15 @@ const styles = StyleSheet.create({
     borderRadius:0,
     borderWidth: 1,
   },
+  Dejetos:{
+    marginTop:5,
+    height: 40,
+    width:'85%',
+    marginLeft:30,
+    borderRadius:0,
+    borderWidth: 1,
+  },
+  
   checkbox:{
     marginTop:5,
     marginLeft:30,
@@ -893,10 +1526,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor:'white'
   },
-  inputOutrosBeneficios: {
+  inputOutrosDejetos: {
     height: 40,
     width:'85%',
     marginTop:10,
+    marginLeft:10,
+    borderWidth: 1,
+    backgroundColor:'white'
+  },
+  inputOutrosBeneficios: {
+    height: 40,
+    width:'85%',
+    marginTop:5,
     marginLeft:30,
     borderWidth: 1,
     backgroundColor:'white'
@@ -933,7 +1574,6 @@ const styles = StyleSheet.create({
     color: "#121212",
     marginLeft:30,
     marginTop:15,
-    marginBottom:9
   },
   atividadeTitle: {
     color: "#121212",
