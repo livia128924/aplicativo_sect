@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, Pressable, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, TextInput, Button, Pressable, TouchableOpacity } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Checkbox } from 'react-native-paper';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
@@ -119,9 +119,7 @@ function ExampleOne ()  {
   const [valorSe_ruj_investimento_financeiro, setValorSe_ruj_investimento_financeiro] = useState(null);
   const [itemSe_ruj_investimento_financeiro, setItemSe_ruj_investimento_financeiro] = useState([
     {label: 'Menos de 100 mil reais', value: 'Menos de 100 mil reais'},
-    {label: 'De 100 a 400 mil reais', value: 'De 100 a 400 mil reais'},
-    {label: 'De 400 a 800 mil reais', value: 'De 400 a 800 mil reais'},
-    {label: 'Acima de 800 mil reais', value: 'Acima de 800 mil reais'},
+   
 
   ]);
 
@@ -134,13 +132,124 @@ function ExampleOne ()  {
           const {label}= response.data;
           console.log(response.data);
           setItem(response.data);
-      })
+      });
+      
+      api.post('socio/acesso.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemAcesso(response.data);
+      });
+
+      
+      api.post('socio/setor_abrangencia.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemAbrangencia(response.data);
+      });
+
+      api.post('socio/atividades.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemDescricao(response.data);
+      });
+      api.post('socio/natureza_atividade.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemNaturezaAtv(response.data);
+      });
+      api.post('socio/mao_obra.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemMao_de_obra(response.data);
+      });
+ 
+      api.post('socio/associados.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemSe_ruj_associados(response.data);
+      });
+      api.post('socio/cooperados.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemSe_ruj_cooperados(response.data);
+      });
+      api.post('socio/politica_beneficios.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemSe_ruj_beneficios_concedidos(response.data);
+      });
+      api.post('socio/tipo_construcao.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemSe_ruj_tipo_construcao(response.data);
+      });
+      api.post('socio/comodos.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemSe_ruj_numero_comodos(response.data);
+      });
+      api.post('socio/pisos.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemSe_ruj_numero_pisos(response.data);
+      });
+      api.post('socio/conservacao.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemSe_ruj_estado_conservacao(response.data);
+      });
+      api.post('socio/destino_dejetos.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemSe_ruj_destino_dejetos(response.data);
+      });
+      api.post('socio/investimento_financeiro.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemSe_ruj_investimento_financeiro(response.data);
+      });
+      api.post('socio/formacao_atuacao.php', {})
+      .then(function (response) {
+         
+          const {label}= response.data;
+          console.log(response.data);
+          setItemSe_ruj_formacao_atuacao(response.data);
+      });
+ 
 },[]);
+
+
 
 const [openDescricao, setOpenDescricao] = useState(false);
 const [valorAtividade, setValorAtividade ] = useState(null);
-
-
 const [itemDescricao, setItemDescricao] = useState([
   {label: 'descricao', value: 'descricao'},
   {label: 'valor', value: 'valor'}
@@ -152,23 +261,6 @@ const [itemNaturezaAtv, setItemNaturezaAtv] = useState([
   {label: 'val', value: 'val'},
   {label: 'lab', value: 'lab'}
 ]);
-
-
-async function requerente (dados) {
-
-  const [nome,setNome] = useState();
-
-  api.post('socio/requerente.php', {dados})
-   .then(function (response) {
-
-    const {nome}=response.data;
-   
-    setNome(response.data);
-   })
-   .catch(function (error) {
-    alert('Erro ao enviar'); // imprimir o conteudo - console.log(JSON.stringify(error))
-   });
-}
 
   
   const [localizacao, setLocalizacao] = useState('');
@@ -222,15 +314,15 @@ async function requerente (dados) {
             label="Area"
             onNext={onformularioStepComplete}
             onPrevious={onPrevStep}
+            scrollable={false}
           >
         <View style={styles.form}>
           <View style={styles.rect2}>
               <Text>ÁREA DE ABRANGÊNCIA</Text>
           </View>
             <View style={styles.municipio}>
-              <Text >MUNICIPIOS</Text>
-              </View>
-            <View>
+              <Text >MUNICIPIIIOS</Text>
+              </View> 
             <DropDownPicker
             style={styles.select} 
             open={aberto}
@@ -241,13 +333,12 @@ async function requerente (dados) {
               setItems={setItem}
               placeholder="Municipios"
               />
-              </View>
              <View>
             <Text style={styles.acessoText}>ACESSO</Text>
             </View>
             <View style={{ alignItems: 'center' }}>
             </View>
-            <View>
+            <View style={styles.dropdown}>
             <DropDownPicker
             style={styles.acesso} 
             open={abertoAcesso}
@@ -286,8 +377,8 @@ async function requerente (dados) {
             items={itemAbrangencia}
             setOpen={setAbertoAbrangencia}
             setValue={setValorAbrangencia}
-              setItems={setItemAbrangencia}
-              placeholder="Selecione::"
+            setItems={setItemAbrangencia}
+            placeholder="Selecione::"
               />
               </View>
             </View>
@@ -306,7 +397,7 @@ async function requerente (dados) {
               <View style={styles.atividadeTitle}>
               <Text >Inicio da Atividade</Text>
               </View>
-            <View>
+            <View >
             <DropDownPicker
             style={styles.atividade} 
             open={openDescricao}
@@ -327,7 +418,7 @@ async function requerente (dados) {
               <View style={styles.municipio}>
               <Text >Natureza da Atividade</Text>
               </View>
-            <View>
+            <View  style={styles.dropdownAtv} >
             <DropDownPicker
             style={styles.NaturezaAtv} 
             open={openNaturezaAtv}
@@ -394,7 +485,7 @@ async function requerente (dados) {
               <View style={styles.municipio}>
               <Text >Mão de Obra Empregada</Text>
               </View>
-              <View>
+              <View style={styles.dropdownObra}>
             <DropDownPicker
             style={styles.Mao_de_obra} 
             open={openMao_de_obra}
@@ -409,7 +500,7 @@ async function requerente (dados) {
             <View style={styles.municipio}>
               <Text >Número de Associados</Text>
               </View>
-              <View>
+              <View style={styles.dropdowAss}>
               <DropDownPicker
             style={styles.Mao_de_obra} 
             open={openSe_ruj_associados}
@@ -425,7 +516,7 @@ async function requerente (dados) {
               <View style={styles.municipio}>
               <Text >Número de Cooperados</Text>
               </View>
-              <View>
+              <View View style={styles.dropdownCoo}>
               <DropDownPicker
             style={styles.Mao_de_obra} 
             open={openSe_ruj_cooperados}
@@ -485,7 +576,7 @@ async function requerente (dados) {
               <View style={styles.municipio}>
               <Text >Tipo de Construção</Text>
               </View>
-              <View>
+              <View style={styles.dropContrucao} >
               <DropDownPicker
               style={styles.Mao_de_obra} 
               open={openSe_ruj_tipo_construcao}
@@ -507,7 +598,7 @@ async function requerente (dados) {
               <View style={styles.municipio}>
               <Text >Nº de Cômodos</Text>
               </View>
-              <View>
+              <View  style={styles.dropComodos}>
               <DropDownPicker
               style={styles.Mao_de_obra} 
               open={openSe_ruj_numero_comodos}
@@ -1232,7 +1323,7 @@ async function requerente (dados) {
               <View style={styles.municipio}>
               <Text>Possui programa de responsabilidade social</Text>
               </View>
-              <View>
+              <View  style={styles.dropdownResponsabilidade} >
             <DropDownPicker
             style={styles.select} 
             open={openSe_ruj_responsabilidade_social}
@@ -1352,7 +1443,8 @@ const styles = StyleSheet.create({
     marginLeft:25,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3
+    borderRadius: 3,
+    zIndex:9999
   },
   form4: {
     width: 340,
@@ -1361,7 +1453,8 @@ const styles = StyleSheet.create({
     marginTop:10,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3
+    borderRadius: 3,
+    
   },
   form5: {
     width: 340,
@@ -1370,7 +1463,8 @@ const styles = StyleSheet.create({
     marginTop:10,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3
+    borderRadius: 3,
+    
   },
   form6: {
     width: 340,
@@ -1379,7 +1473,8 @@ const styles = StyleSheet.create({
     marginTop:10,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3
+    borderRadius: 3,
+    
   },
   form7: {
     width: 340,
@@ -1430,13 +1525,11 @@ const styles = StyleSheet.create({
     width:'85%',
     marginLeft:30,
     height: 40,
-    zIndex:9999,
     borderRadius:0,
     borderWidth: 1,
   },
   atividade:{
     marginTop:15,
-    zIndex:1000,
     height: 40,
     width:'85%',
     marginLeft:30,
@@ -1450,6 +1543,7 @@ const styles = StyleSheet.create({
     marginLeft:30,
     borderRadius:0,
     borderWidth: 1,
+
   },
   Mao_de_obra:{
     marginTop:5,
@@ -1458,6 +1552,7 @@ const styles = StyleSheet.create({
     marginLeft:30,
     borderRadius:0,
     borderWidth: 1,
+    
   },
   Dejetos:{
     marginTop:5,
@@ -1495,6 +1590,33 @@ const styles = StyleSheet.create({
     marginTop:5,
     borderRadius:0,
     borderWidth: 1,
+  },
+  dropdown:{
+    zIndex:5,
+  },
+  dropdowInicioAtv:{
+    zIndex:7000,
+  },
+  dropdownAtv:{
+    zIndex:6000,
+  },
+  dropdownObra:{
+    zIndex:9999,
+  },
+  dropdownCoo:{
+    zIndex:3000,
+  },
+  dropdowAss:{
+    zIndex:9000,
+  },
+  dropContrucao:{
+    zIndex:9999,
+  },
+  dropComodos:{
+    zIndex:9999,
+  },
+  dropdownResponsabilidade:{
+    zIndex:6000,
   },
   abrangencia:{
     height: 40,
@@ -1557,8 +1679,8 @@ const styles = StyleSheet.create({
     width: 340,
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
-    borderRadius: 3
-  },
+    borderRadius: 3,
+    },
   
   loremIpsum: {
     color: "rgba(255,255,255,1)",
