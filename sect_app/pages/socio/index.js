@@ -10,16 +10,73 @@ function ExampleOne ()  {
   //const { control, handleSubmit, formState: { errors } } = useForm();
   //const onSubmit = data => console.log(data);
 
-  const [checked, setChecked] = React.useState(false);
-  const [se_ruj_material_cobertura, setSe_ruj_material_cobertura] = React.useState(false);
-  const [se_ruj_sanitario, setSe_ruj_sanitario] = React.useState(false);
-  const [se_ruj_coleta_lixo, setSe_ruj_coleta_lixo] = React.useState(false);
-  const [se_ruj_rede_energia, setSe_ruj_rede_energia] = React.useState(false);
-  const [se_ruj_rede_agua, setSe_ruj_rede_agua] = React.useState(false);
-  const [se_ruj_tratamento_agua, setSe_ruj_tratamento_agua] = React.useState(false);
-  const [se_ruj_bens_moveis, setSe_ruj_bens_moveis] = React.useState(false);
-  const [se_ruj_bens_imoveis, setSe_ruj_bens_imoveis] = React.useState(false);
+  const [telhaDeAmianto, setTelhaDeAmianto] = React.useState(false);
+  const [madeiraAparelhado, setMadeiraAparelhado] = React.useState(false);
+  const [aluminioOuZinco, setAluminioOuZinco] = React.useState(false);
+  const [lageDeConcreto, setLageDeConcreto] = React.useState(false);
+  const [telhaDeBarro, setTelhaDeBarro] = React.useState(false);
+  const [aluminioGalvanizado, setAluminioGalvanizado] = React.useState(false);
+
+  const [se_ruj_sanitario_Interno, setSe_ruj_sanitario_Interno] = React.useState(false);
+  const [se_ruj_sanitario_externo, setSe_ruj_sanitario_externo] = React.useState(false);
+  const [se_ruj_sanitario_ceu_aberto, setSe_ruj_sanitario_ceu_aberto] = React.useState(false);
+  const [se_ruj_sanitario_nao_possui, setSe_ruj_sanitario_nao_possui] = React.useState(false);
+
+
+
+  const [se_ruj_coleta_lixo_publica, setSe_ruj_coleta_lixo_publica] = React.useState(false);
+  const [se_ruj_coleta_lixo_queima, setSe_ruj_coleta_lixo_queima] = React.useState(false);
+  const [se_ruj_coleta_lixo_enterra, setSe_ruj_coleta_lixo_enterra] = React.useState(false);
+  const [se_ruj_coleta_lixo_reaproveita, setSe_ruj_coleta_lixo_reaproveita] = React.useState(false);
+  const [se_ruj_coleta_lixo_outros_, setSe_ruj_coleta_lixo_outros] = React.useState(false);
+
+  const [se_ruj_rede_energia_publica, setSe_ruj_rede_energia_publica] = React.useState(false);
+  const [se_ruj_rede_energia_solar, setSe_ruj_rede_energia_solar] = React.useState(false);
+  const [se_ruj_rede_energia_outros, setSe_ruj_rede_energia_outros] = React.useState(false);
+  const [se_ruj_rede_energia_gerador_part, setSe_ruj_rede_energia_gerador_part] = React.useState(false);
+
+
+  const [se_ruj_rede_agua_publica,setSe_ruj_rede_agua_publica] = React.useState(false);
+  const [se_ruj_rede_agua_manual,setSe_ruj_rede_agua_manual] = React.useState(false);
+  const [se_ruj_rede_agua_poco,setSe_ruj_rede_agua_poco] = React.useState(false);
+  const [se_ruj_rede_agua_outros,setSe_ruj_rede_agua_outros] = React.useState(false);
+
+  const [se_ruj_tratamento_agua_clorada, setSe_ruj_tratamento_agua_clorada] = React.useState(false);
+  const [se_ruj_tratamento_agua_filtrada, setSe_ruj_tratamento_agua_filtrada] = React.useState(false);
+  const [se_ruj_tratamento_agua_coada, setSe_ruj_tratamento_agua_coada] = React.useState(false);
+  const [se_ruj_tratamento_agua_fervida, setSe_ruj_tratamento_agua_fervida] = React.useState(false);
+  const [se_ruj_tratamento_agua_nenhum, setSe_ruj_tratamento_agua_nenhum] = React.useState(false);
+
+  const [se_ruj_bens_moveis_geladeira, setSe_ruj_bens_moveis_geladeira] = React.useState(false);
+  const [se_ruj_bens_moveis_maquinas, setSe_ruj_bens_moveis_maquinas] = React.useState(false);
+  const [se_ruj_bens_moveis_equipamento, setSe_ruj_bens_moveis_equipamento] = React.useState(false);
+  const [se_ruj_bens_moveis_balcao, setSe_ruj_bens_moveis_balcao] = React.useState(false);
+  const [se_ruj_bens_moveis_prateleiras, setSe_ruj_bens_moveis_prateleiras] = React.useState(false);
+  const [se_ruj_bens_moveis_fax, setSe_ruj_bens_moveis_fax] = React.useState(false);
+  const [se_ruj_bens_moveis_telefone, setSe_ruj_bens_moveis_telefone] = React.useState(false);
+  const [se_ruj_bens_moveis_computador, setSe_ruj_bens_moveis_computador] = React.useState(false);
+  const [se_ruj_bens_moveis_gerador, setSe_ruj_bens_moveis_gerador] = React.useState(false);
+  const [se_ruj_bens_moveis_escritorio, setSe_ruj_bens_moveis_escritorio] = React.useState(false);
+  const [se_ruj_bens_moveis_exaustor, setSe_ruj_bens_moveis_exaustor] = React.useState(false);
+  const [se_ruj_bens_moveis_empilhadeira, setSe_ruj_bens_moveis_empilhadeira] = React.useState(false);
+  const [se_ruj_bens_moveis_freezer, setSe_ruj_bens_moveis_freezer] = React.useState(false);
+  const [se_ruj_bens_moveis_fogao, setSe_ruj_bens_moveis_fogao] = React.useState(false);
+  const [se_ruj_bens_moveis_forno, setSe_ruj_bens_moveis_forno] = React.useState(false);
+  const [se_ruj_bens_moveis_caixa, setSe_ruj_bens_moveis_caixa] = React.useState(false);
+  const [se_ruj_bens_moveis_balanca, setSe_ruj_bens_moveis_balanca] = React.useState(false);
+  const [se_ruj_bens_moveis_transporte, setSe_ruj_bens_moveis_transporte] = React.useState(false);
+  const [se_ruj_bens_moveis_ar, setSe_ruj_bens_moveis_ar] = React.useState(false);
+  const [se_ruj_bens_moveis_guindaste, setSe_ruj_bens_moveis_guindaste] = React.useState(false);
+  const [se_ruj_bens_moveis_equipamento_elev, setSe_ruj_bens_moveis_equipamento_elev] = React.useState(false);
+
+  const [se_ruj_bens_imoveis_lote, setSe_ruj_bens_imoveis_lote] = React.useState(false);
+  const [se_ruj_bens_imoveis_casa, setSe_ruj_bens_imoveis_casa] = React.useState(false);
+  const [se_ruj_bens_imoveis_predio, setSe_ruj_bens_imoveis_predio] = React.useState(false);
+  const [se_ruj_bens_imoveis_apart, setSe_ruj_bens_imoveis_apart] = React.useState(false);
   
+
+
+
   const [aberto, setAberto] = useState(false);
   const [valor, setValor] = useState(null);
   const [item, setItem] = useState([
@@ -628,66 +685,67 @@ const [itemNaturezaAtv, setItemNaturezaAtv] = useState([
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={checked ? 'checked' : 'unchecked'}
+              status={telhaDeAmianto ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"1"}
               onPress={() => {
-                setChecked(!checked);
+                setTelhaDeAmianto(!telhaDeAmianto);
               }}
               />
               <Text style={styles.checkboxText}>Telha de amianto</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_material_cobertura ? 'checked' : 'unchecked'}
+              status={madeiraAparelhado ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"2"}
               onPress={() => {
-                setSe_ruj_material_cobertura(!se_ruj_material_cobertura);
+                setMadeiraAparelhado(!madeiraAparelhado);
               }}
               />
               <Text style={styles.checkboxText}>Madeira aparelhado</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_material_cobertura ? 'checked' : 'unchecked'}
+              status={aluminioOuZinco ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"3"}
               onPress={() => {
-                setSe_ruj_material_cobertura(!se_ruj_material_cobertura);
+                setAluminioOuZinco(!aluminioOuZinco);
               }}
               />
               <Text style={styles.checkboxText}>Alumínio ou zinco</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_material_cobertura ? 'checked' : 'unchecked'}
+              status={lageDeConcreto ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"4"}
               onPress={() => {
-                setSe_ruj_material_cobertura(!se_ruj_material_cobertura);
+                setLageDeConcreto(!lageDeConcreto);
               }}
               />
               <Text style={styles.checkboxText}>Laje de concreto</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_material_cobertura ? 'checked' : 'unchecked'}
+              status={telhaDeBarro ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"5"}
               onPress={() => {
-                setSe_ruj_material_cobertura(!se_ruj_material_cobertura);
+                setTelhaDeBarro(!telhaDeBarro);
               }}
               />
               <Text style={styles.checkboxText}>Telha de barro</Text>
               </View>
+
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_material_cobertura ? 'checked' : 'unchecked'}
+              status={aluminioGalvanizado ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"5"}
               onPress={() => {
-                setSe_ruj_material_cobertura(!se_ruj_material_cobertura);
+                setAluminioGalvanizado(!aluminioGalvanizado);
               }}
               />
               <Text style={styles.checkboxText}>Alumínio Galvanizado</Text>
@@ -732,44 +790,44 @@ const [itemNaturezaAtv, setItemNaturezaAtv] = useState([
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_sanitario ? 'checked' : 'unchecked'}
+              status={se_ruj_sanitario_Interno ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"1"}
               onPress={() => {
-                setSe_ruj_sanitario(!se_ruj_sanitario);
+                setSe_ruj_sanitario_Interno(!se_ruj_sanitario_Interno);
               }}
               />
               <Text style={styles.checkboxText}>Interno</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_sanitario ? 'checked' : 'unchecked'}
+              status={se_ruj_sanitario_externo ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"1"}
               onPress={() => {
-                setSe_ruj_sanitario(!se_ruj_sanitario);
+                setSe_ruj_sanitario_externo(!se_ruj_sanitario_externo);
               }}
               />
               <Text style={styles.checkboxText}>Externo</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_sanitario ? 'checked' : 'unchecked'}
+              status={se_ruj_sanitario_ceu_aberto ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"1"}
               onPress={() => {
-                setSe_ruj_sanitario(!se_ruj_sanitario);
+                setSe_ruj_sanitario_ceu_aberto(!se_ruj_sanitario_ceu_aberto);
               }}
               />
               <Text style={styles.checkboxText}>Ceu aberto</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_sanitario ? 'checked' : 'unchecked'}
+              status={se_ruj_sanitario_nao_possui ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"1"}
               onPress={() => {
-                setSe_ruj_sanitario(!se_ruj_sanitario);
+                setSe_ruj_sanitario_nao_possui(!se_ruj_sanitario_nao_possui);
               }}
               />
               <Text style={styles.checkboxText}>Nao possui</Text>
@@ -804,55 +862,55 @@ const [itemNaturezaAtv, setItemNaturezaAtv] = useState([
               
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_coleta_lixo ? 'checked' : 'unchecked'}
+              status={se_ruj_coleta_lixo_publica ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"1"}
               onPress={() => {
-                setSe_ruj_coleta_lixo(!se_ruj_coleta_lixo);
+                setSe_ruj_coleta_lixo_publica(!se_ruj_coleta_lixo_publica);
               }}
               />
               <Text style={styles.checkboxText}>Pública</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_coleta_lixo ? 'checked' : 'unchecked'}
+              status={se_ruj_coleta_lixo_queima ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"2"}
               onPress={() => {
-                setSe_ruj_coleta_lixo(!se_ruj_coleta_lixo);
+                setSe_ruj_coleta_lixo_queima(!se_ruj_coleta_lixo_queima);
               }}
               />
               <Text style={styles.checkboxText}>Queima</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_coleta_lixo ? 'checked' : 'unchecked'}
+              status={se_ruj_coleta_lixo_enterra ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"3"}
               onPress={() => {
-                setSe_ruj_coleta_lixo(!se_ruj_coleta_lixo);
+                setSe_ruj_coleta_lixo_enterra(!se_ruj_coleta_lixo_enterra);
               }}
               />
               <Text style={styles.checkboxText}>Enterra</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_coleta_lixo ? 'checked' : 'unchecked'}
+              status={se_ruj_coleta_lixo_reaproveita ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"4"}
               onPress={() => {
-                setSe_ruj_coleta_lixo(!se_ruj_coleta_lixo);
+                setSe_ruj_coleta_lixo_reaproveita(!se_ruj_coleta_lixo_reaproveita);
               }}
               />
               <Text style={styles.checkboxText}>Reaproveita</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_coleta_lixo ? 'checked' : 'unchecked'}
+              status={se_ruj_coleta_lixo_outros_ ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"5"}
               onPress={() => {
-                setSe_ruj_coleta_lixo(!se_ruj_coleta_lixo);
+                setSe_ruj_coleta_lixo_outros(!se_ruj_coleta_lixo_outros_);
               }}
               />
               <Text style={styles.checkboxText}>Outros</Text>
@@ -870,44 +928,44 @@ const [itemNaturezaAtv, setItemNaturezaAtv] = useState([
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_rede_energia ? 'checked' : 'unchecked'}
+              status={se_ruj_rede_energia_publica ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"1"}
               onPress={() => {
-                setSe_ruj_rede_energia(!se_ruj_rede_energia);
+                setSe_ruj_rede_energia_publica(!se_ruj_rede_energia_publica);
               }}
               />
               <Text style={styles.checkboxText}>Pública</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_rede_energia ? 'checked' : 'unchecked'}
+              status={se_ruj_rede_energia_gerador_part ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"2"}
               onPress={() => {
-                setSe_ruj_rede_energia(!se_ruj_rede_energia);
+                setSe_ruj_rede_energia_gerador_part(!se_ruj_rede_energia_gerador_part);
               }}
               />
               <Text style={styles.checkboxText}>Gerador Particular</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_rede_energia ? 'checked' : 'unchecked'}
+              status={se_ruj_rede_energia_solar ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"3"}
               onPress={() => {
-                setSe_ruj_rede_energia(!se_ruj_rede_energia);
+                setSe_ruj_rede_energia_solar(!se_ruj_rede_energia_solar);
               }}
               />
               <Text style={styles.checkboxText}>Solar</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_rede_energia ? 'checked' : 'unchecked'}
+              status={se_ruj_rede_energia_outros ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"4"}
               onPress={() => {
-                setSe_ruj_rede_energia(!se_ruj_rede_energia);
+                setSe_ruj_rede_energia_outros(!se_ruj_rede_energia_outros);
               }}
               />
               <Text style={styles.checkboxText}>Outros</Text>
@@ -917,44 +975,44 @@ const [itemNaturezaAtv, setItemNaturezaAtv] = useState([
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_rede_agua ? 'checked' : 'unchecked'}
+              status={se_ruj_rede_agua_publica ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"1"}
               onPress={() => {
-                setSe_ruj_rede_agua(!se_ruj_rede_agua);
+                setSe_ruj_rede_agua_publica(!se_ruj_rede_agua_publica);
               }}
               />
               <Text style={styles.checkboxText}>Rede pública de abastecimento</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_rede_agua ? 'checked' : 'unchecked'}
+              status={se_ruj_rede_agua_manual ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"2"}
               onPress={() => {
-                setSe_ruj_rede_agua(!se_ruj_rede_agua);
+                setSe_ruj_rede_agua_manual(!se_ruj_rede_agua_manual);
               }}
               />
               <Text style={styles.checkboxText}>Manual</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_rede_agua ? 'checked' : 'unchecked'}
+              status={se_ruj_rede_agua_poco ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"3"}
               onPress={() => {
-                setSe_ruj_rede_agua(!se_ruj_rede_agua);
+                setSe_ruj_rede_agua_poco(!se_ruj_rede_agua_poco);
               }}
               />
               <Text style={styles.checkboxText}>Poço artesiano</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_rede_agua ? 'checked' : 'unchecked'}
+              status={se_ruj_rede_agua_outros ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"4"}
               onPress={() => {
-                setSe_ruj_rede_agua(!se_ruj_rede_agua);
+                setSe_ruj_rede_agua_outros(!se_ruj_rede_agua_outros);
               }}
               />
               <Text style={styles.checkboxText}>Outros</Text>
@@ -964,55 +1022,55 @@ const [itemNaturezaAtv, setItemNaturezaAtv] = useState([
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_tratamento_agua ? 'checked' : 'unchecked'}
+              status={se_ruj_tratamento_agua_clorada ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"1"}
               onPress={() => {
-                setSe_ruj_tratamento_agua(!se_ruj_tratamento_agua);
+                setSe_ruj_tratamento_agua_clorada(!se_ruj_tratamento_agua_clorada);
               }}
               />
               <Text style={styles.checkboxText}>Clorada</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_tratamento_agua ? 'checked' : 'unchecked'}
+              status={se_ruj_tratamento_agua_filtrada ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"2"}
               onPress={() => {
-                setSe_ruj_tratamento_agua(!se_ruj_tratamento_agua);
+                setSe_ruj_tratamento_agua_filtrada(!se_ruj_tratamento_agua_filtrada);
               }}
               />
               <Text style={styles.checkboxText}>Filtrada</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_tratamento_agua ? 'checked' : 'unchecked'}
+              status={se_ruj_tratamento_agua_coada ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"3"}
               onPress={() => {
-                setSe_ruj_tratamento_agua(!se_ruj_tratamento_agua);
+                setSe_ruj_tratamento_agua_coada(!se_ruj_tratamento_agua_coada);
               }}
               />
               <Text style={styles.checkboxText}>Coada</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_tratamento_agua ? 'checked' : 'unchecked'}
+              status={se_ruj_tratamento_agua_fervida ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"4"}
               onPress={() => {
-                setSe_ruj_tratamento_agua(!se_ruj_tratamento_agua);
+                setSe_ruj_tratamento_agua_fervida(!se_ruj_tratamento_agua_fervida);
               }}
               />
               <Text style={styles.checkboxText}>Fervida</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_tratamento_agua ? 'checked' : 'unchecked'}
+              status={se_ruj_tratamento_agua_nenhum ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"5"}
               onPress={() => {
-                setSe_ruj_tratamento_agua(!se_ruj_tratamento_agua);
+                setSe_ruj_tratamento_agua_nenhum(!se_ruj_tratamento_agua_nenhum);
               }}
               />
               <Text style={styles.checkboxText}>Não realiza nenhum tratamento</Text>
@@ -1035,231 +1093,231 @@ const [itemNaturezaAtv, setItemNaturezaAtv] = useState([
                
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_geladeira ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"1"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_geladeira(!se_ruj_bens_moveis_geladeira);
               }}
               />
               <Text style={styles.checkboxText}>Geladeira comercial</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_maquinas ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"2"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_maquinas(!se_ruj_bens_moveis_maquinas);
               }}
               />
               <Text style={styles.checkboxText}>Máquinas industriais</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_equipamento ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"3"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_equipamento(!se_ruj_bens_moveis_equipamento);
               }}
               />
               <Text style={styles.checkboxText}>Equipamento para embalagem</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_balcao ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"4"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_balcao(!se_ruj_bens_moveis_balcao);
               }}
               />
               <Text style={styles.checkboxText}>Balcão de atendimento</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_prateleiras ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"5"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_prateleiras(!se_ruj_bens_moveis_prateleiras);
               }}
               />
               <Text style={styles.checkboxText}>Prateleiras</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_fax ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"5"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_fax(!se_ruj_bens_moveis_fax);
               }}
               />
               <Text style={styles.checkboxText}>Fax</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_telefone ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"6"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_telefone(!se_ruj_bens_moveis_telefone);
               }}
               />
               <Text style={styles.checkboxText}>Telefone</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_computador ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"7"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_computador(!se_ruj_bens_moveis_computador);
               }}
               />
               <Text style={styles.checkboxText}>Computador</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_gerador ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"8"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_gerador(!se_ruj_bens_moveis_gerador);
               }}
               />
               <Text style={styles.checkboxText}>Gerador</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_escritorio ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"9"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_escritorio(!se_ruj_bens_moveis_escritorio);
               }}
               />
               <Text style={styles.checkboxText}>Moveis para escritório</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_exaustor ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"10"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_exaustor(!se_ruj_bens_moveis_exaustor);
               }}
               />
               <Text style={styles.checkboxText}>Exaustor</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_empilhadeira ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"11"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_empilhadeira(!se_ruj_bens_moveis_empilhadeira);
               }}
               />
               <Text style={styles.checkboxText}>Empilhadeira</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_freezer ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"12"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_freezer(!se_ruj_bens_moveis_freezer);
               }}
               />
               <Text style={styles.checkboxText}>Freezer comercial</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_fogao ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"13"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_fogao(!se_ruj_bens_moveis_fogao);
               }}
               />
               <Text style={styles.checkboxText}>Fogão industrial</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_forno ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"14"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_forno(!se_ruj_bens_moveis_forno);
               }}
               />
               <Text style={styles.checkboxText}>Forno Industrial</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_caixa ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"15"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_caixa(!se_ruj_bens_moveis_caixa);
               }}
               />
               <Text style={styles.checkboxText}>Caixa registradora</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_balanca ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"16"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_balanca(!se_ruj_bens_moveis_balanca);
               }}
               />
               <Text style={styles.checkboxText}>Balanças eletrônicas</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_transporte ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"17"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_transporte(!se_ruj_bens_moveis_transporte);
               }}
               />
               <Text style={styles.checkboxText}>Transporte</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_ar ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"18"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_ar(!se_ruj_bens_moveis_ar);
               }}
               />
               <Text style={styles.checkboxText}>Ar condicionado</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_equipamento_elev ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"19"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_equipamento_elev(!se_ruj_bens_moveis_equipamento_elev);
               }}
               />
               <Text style={styles.checkboxText}>Equipamento de elevação e transferência</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_moveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_moveis_guindaste ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"20"}
               onPress={() => {
-                setSe_ruj_bens_moveis(!se_ruj_bens_moveis);
+                setSe_ruj_bens_moveis_guindaste(!se_ruj_bens_moveis_guindaste);
               }}
               />
               <Text style={styles.checkboxText}>Guindaste</Text>
@@ -1271,44 +1329,44 @@ const [itemNaturezaAtv, setItemNaturezaAtv] = useState([
 
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_imoveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_imoveis_lote ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"1"}
               onPress={() => {
-                setSe_ruj_bens_imoveis(!se_ruj_bens_imoveis);
+                setSe_ruj_bens_imoveis_lote(!se_ruj_bens_imoveis_lote);
               }}
               />
               <Text style={styles.checkboxText}>Lote</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_imoveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_imoveis_casa ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"2"}
               onPress={() => {
-                setSe_ruj_bens_imoveis(!se_ruj_bens_imoveis);
+                setSe_ruj_bens_imoveis_casa(!se_ruj_bens_imoveis_casa);
               }}
               />
               <Text style={styles.checkboxText}>Casa</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_imoveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_imoveis_predio ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"3"}
               onPress={() => {
-                setSe_ruj_bens_imoveis(!se_ruj_bens_imoveis);
+                setSe_ruj_bens_imoveis_predio(!se_ruj_bens_imoveis_predio);
               }}
               />
               <Text style={styles.checkboxText}>Prédio</Text>
               </View>
               <View style={styles.checkboxlabel}>
               <Checkbox
-              status={se_ruj_bens_imoveis ? 'checked' : 'unchecked'}
+              status={se_ruj_bens_imoveis_apart ? 'checked' : 'unchecked'}
               color={"blue"}
               testID={"4"}
               onPress={() => {
-                setSe_ruj_bens_imoveis(!se_ruj_bens_imoveis);
+                setSe_ruj_bens_imoveis_apart(!se_ruj_bens_imoveis_apart);
               }}
               />
               <Text style={styles.checkboxText}>Apartamento</Text>
