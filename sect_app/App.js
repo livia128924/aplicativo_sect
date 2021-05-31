@@ -8,7 +8,7 @@ import leitor from './pages/leitor';
 import ViewAllUser from './pages/listar';
 import Login from "./pages/login";
 import ExampleOne from './pages/socio/index'
-import Formulario from "./pages/socio/Formulario";
+import Relatorio from "./pages/socio/Relatorio";
 
 const Stack = createStackNavigator();
 
@@ -62,10 +62,10 @@ const App = () => {
                         }}
                     />
                     <Stack.Screen
-                        name='Formulario'
-                        component={Formulario}
+                        name='Relatorio'
+                        component={Relatorio}
                         options={{
-                            title: 'Formulario',
+                            title: 'Relatorio',
                             headerStyle: {
                                 backgroundColor: '#FFF',
                             },
