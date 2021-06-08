@@ -3,7 +3,7 @@ import { StyleSheet, Text, View , SafeAreaView, TouchableOpacity,Modal, Image} f
 import {Camera} from 'expo-camera';
 import {FontAwesome} from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';
-import {DatabaseConnection} from './database/database';
+import {DatabaseConnection} from '../database/database';
 
 //sis.sect.am.gov.br/_apps/app_teste
 //expo install expo-media-library
@@ -41,7 +41,7 @@ export default function App() {
 
       db.transaction(tx => {
         tx.executeSql(
-          "create table if not exists foto_relatorio (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, image TEXT);"
+          "create table if not exists foto_relatorio (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, image TEXT, name TEXT);"
         );
       });
 
@@ -175,7 +175,7 @@ export default function App() {
             </View>
 
             <Image
-              style={{width: '100%', height: 450, borderRadius: 20}}
+              style={{width: '100%', height: 450}}
               source={{uri: capturedPhoto}}
             />
 

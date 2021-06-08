@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from './pages/HomeScreen';
 import camera from './pages/camera';
+import relatorio_camera from './pages/socio/relatorio_camera';
 import leitor from './pages/leitor';
 import ViewAllUser from './pages/listar';
 import Login from "./pages/login";
@@ -80,6 +81,21 @@ const App = () => {
                         component={camera}
                         options={{
                             title: 'Câmera',
+                            headerStyle: {
+                                backgroundColor: '#FFF',
+                            },
+
+                            headerTintColor: 'black',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                            },
+                        }}
+                    />
+                    <Stack.Screen
+                        name='Relatorio_camera'
+                        component={relatorio_camera}
+                        options={{
+                            title: 'Relatorio_camera',
                             headerStyle: {
                                 backgroundColor: '#FFF',
                             },
