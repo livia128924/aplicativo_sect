@@ -1,0 +1,1 @@
+{"aux_acesso":{"codigo":{"COLUMN_TYPE":"bigint(20)","COLUMN_KEY":"PRI","EXTRA":"auto_increment","COLUMN_COMMENT":""},"descricao":{"COLUMN_TYPE":"varchar(255)","COLUMN_KEY":"","EXTRA":"","COLUMN_COMMENT":""},"ordem":{"COLUMN_TYPE":"int(11)","COLUMN_KEY":"","EXTRA":"","COLUMN_COMMENT":""}}}

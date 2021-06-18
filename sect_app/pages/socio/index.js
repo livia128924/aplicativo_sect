@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
+import api from '../../services/api';
 import Step1 from '../components/Step1';
 import Step2 from '../components/Step2';
 import Step3 from '../components/Step3';
@@ -8,7 +9,9 @@ import Step4 from '../components/Step4';
 import Step5 from '../components/Step5';
 import Step6 from '../components/Step6';
 
+
 function ExampleOne({ navigation }) {
+
 
   const defaultScrollViewProps = {
     keyboardShouldPersistTaps: 'handled',
