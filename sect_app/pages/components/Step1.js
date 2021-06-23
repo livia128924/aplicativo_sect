@@ -10,7 +10,7 @@ const db = DatabaseConnection.getConnection();
 const Step1 = (props) => {
 
   useEffect(() => {
-
+    //cria as tabelas
     api.post('socio/municipios.json', {})
       .then(function (response) {
         const { dados } = response.data;
@@ -26,22 +26,80 @@ const Step1 = (props) => {
           novo_array[item] = Object.keys(dados[item]);
         });
         arr.forEach((item, i) => {
-          console.log("tabela = " + item + " campos: " + novo_array[item]); // lista tabelas e colunas
+          //var dados;
+          //console.log("tabela = " + item + " campos: " + novo_array[item]); // lista tabelas e colunas
           var tabela = [item];
-          var dados = [novo_array[item]];
+          //var dados = [novo_array[item]];
 
-          db.transaction(tx =>  {
-
+          db.transaction(tx => {
             tx.executeSql(
-              "create table if not exists "+item+" ("+dados+");",
+              "drop table if exists " + item + ";",
             );
           });
-          console.log( "create table if not exists "+item+" ("+dados+");");
+
+          db.transaction(tx => {
+            tx.executeSql(
+              "create table if not exists " + item + " (" + novo_array[item] + ");",
+            );
+          });
+          console.log("create table if not exists " + item + " (" + novo_array[item] + ");");
+          console.log(dados);
+          //nomes_colunas = dados;
+
         });
 
       });
 
-      api.post('sincroninzacao/dados.json', {})
+    //console.log(nomes_colunas);
+
+    // async function select_json(nome_tabela, item) {
+    //   db.transaction((tx) => {
+    //     tx.executeSql(
+    //       "SELECT * FROM " + nome_tabela + " ",
+    //       [],
+    //       (tx, results) => {
+    //         //var len = results.rows.length;
+    //         var temp = [];
+    //         for (let i = 0; i < results.rows.length; ++i) {
+    //           //temp.push(results.rows.item(i));
+    //           temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+    //         }
+    //         //var y =nome_tabela;
+    //         // var x = "setItem_";
+    //         // //eval("x+nome_tabela");
+    //         // var nome = eval("x+nome_tabela");
+    //         // //eval("window[nome](temp)");
+    //         // //var obj = { a: 20, b: 30 };
+    //         // //var propname = getPropname();  //retorna "a" ou "b"
+    //         // //var result = obj;
+    //         // console.log(eval("nome=temp"));
+    //         // var novo = eval;
+    //         // novo(temp);
+    //         //console.log(eval(novo(temp)));
+    //         //console.log(eval("x+nome_tabela"));
+
+    //         console.log(temp);
+    //         if(nome_tabela =="cidades"){
+    //           console.log(nome_tabela);
+    //           setItem_cidades(temp);
+    //         }else if(nome_tabela =="aux_acesso"){
+    //           setItem_aux_acesso(temp)
+    //         }else if(nome_tabela == "aux_setor_abrangencia"){
+    //           setItem_aux_setor_abrangencia(temp)
+    //         }
+
+    //         //console.log("ok");
+    //         //setItem_cidades(temp);
+
+    //       }
+    //     )
+    //   });
+
+
+    // }
+
+    //da o insert na tabela criada pegando os dados via api em formato json
+    api.post('sincroninzacao/dados.json', {})
       .then(function (response) {
         const { dados } = response.data;
         var arr = [];
@@ -55,88 +113,70 @@ const Step1 = (props) => {
           arr_colunas.push(Object.keys(dados[nome_tabela]));
           dados_array[nome_tabela] = Object.keys(dados[nome_tabela]);
         });
+
+        console.log(arr_colunas);
         arr.forEach((nome_tabela, i) => {
-          console.log("tabela_nome = " + nome_tabela + " valores: " + dados_array[nome_tabela]); // lista tabelas e colunas
-          var tabela = [nome_tabela];
-          var valores = [dados_array[nome_tabela][1]];
-          var dados = ["ok"];
 
-          db.transaction(tx =>  {
+          var lista_colunas = dados[nome_tabela];
+          //console.log(lista_colunas);
+          Object.keys(lista_colunas).forEach(function (item, indice) {
+            var variavel = "(";
+            Object.keys(lista_colunas[item]).forEach(function (subItem, subIndice) {
+              variavel += "'" + lista_colunas[item][subItem] + "'";// coloca o valor atual na string
+              if (lista_colunas[item][subIndice + 1] != null) {
+                variavel += ","
+              }
+            });
+            variavel += ")";
+            if (lista_colunas[item + 1] != null) {
+              variavel += "(";
+            } else {
+              //variavel += '\n';
+            }
 
-            tx.executeSql(
-              "insert into "+tabela+" ("+dados+") values ("+valores+");",
-            );
+            db.transaction(tx => {
+
+              tx.executeSql(
+                "insert into " + nome_tabela + " values " + variavel + ";",
+              );
+            });
+            //console.log("insert into " + nome_tabela + " values " + variavel + ";");
           });
-          console.log( "insert into "+tabela+" ("+dados+") values ("+valores+");");
-        });
+          //console.log(dados[nome_tabela].codigo);
 
+          // //console.log(temp);
+          // setItem(temp);
+          // setItemAcesso(temp);
+          //setItem(select_json(temp));
+          // select_json(nome_tabela, setItem);
+          //(select_json(nome_tabela));
+
+
+        });
       });
 
   }, []);
 
-  // async function inserir() {
-  //   if (aberto) {
 
-  //     db.transaction(function (tx) {
-  //       tx.executeSql(
-  //         'INSERT INTO teste (descricao) VALUES (\'manaus\'), (\'sgsgs\')',
-  //         [],
-  //         (tx, results) => {
-  //           console.log('Results', results.rowsAffected);
-  //           if (results.rowsAffected > 0) {
-  //             console.log(results);
-  //             alert(
-  //               'Sucesso',
-  //               [
-  //                 {
-  //                   text: 'Ok'
-  //                 },
-  //               ],
-  //               { cancelable: false }
-  //             );
-  //           } else alert('Erro ao tentar Registrar');
-  //         }
-  //       );
-  //     });
-  //   }
-  // }
-
-  // async function itemTeste() {
-  //   db.transaction((tx) => {
-  //     tx.executeSql(
-  //       'SELECT * FROM teste',
-  //       [],
-  //       (tx, results) => {
-  //         var temp = [];
-  //         for (let i = 0; i < results.rows.length; ++i) {
-  //           //temp.push(results.rows.item(i));
-  //           temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
-  //           //console.log(results.rows.item(i).descricao);
-  //         }
-  //         setItem(temp);
-  //         //console.log(item)
-  //       }
-  //     );
-  //   });
-  // }
 
   const [localizacao, setLocalizacao] = useState('');
+
   const [aberto, setAberto] = useState(false);
   const [valor, setValor] = useState(null);
-  const [item, setItem] = useState([
+  const [item, setItem_cidades] = useState([
     { label: 'Apple', value: 'apple' },
     { label: 'Banana', value: 'banana' }
   ]);
 
   const [abertoAcesso, setAbertoAcesso] = useState(false);
   const [valorAcesso, setValorAcesso] = useState(null);
-  const [itemAcesso, setItemAcesso] = useState([
+  const [itemAcesso, setItem_aux_acesso] = useState([
     { label: 'samsung', value: 'samsung' },
     { label: 'motorola', value: 'motorola' }
   ]);
   const [abertoAbrangencia, setAbertoAbrangencia] = useState(false);
   const [valorAbrangencia, setValorAbrangencia] = useState(null);
-  const [itemAbrangencia, setItemAbrangencia] = useState([
+  const [itemAbrangencia, setItem_aux_setor_abrangencia] = useState([
     { label: '100', value: '100' },
     { label: '200', value: '200' }
   ]);
@@ -158,12 +198,10 @@ const Step1 = (props) => {
           items={item}
           setOpen={setAberto}
           setValue={setValor}
-          setItems={setItem}
+          setItems={setItem_cidades}//cidades
           zIndex={9999}
           listMode="SCROLLVIEW"
           placeholder="Municipios"
-        //onPress={inserir}
-        //onOpen={() => alert('hi!')}
         />
         <View>
           <Text style={styles.acessoText}>ACESSO</Text>
@@ -175,7 +213,7 @@ const Step1 = (props) => {
           items={itemAcesso}
           setOpen={setAbertoAcesso}
           setValue={setValorAcesso}
-          setItems={setItemAcesso}
+          setItems={setItem_aux_acesso}//aux_acesso
           listMode="SCROLLVIEW"
           placeholder="acesso"
         />
@@ -206,7 +244,7 @@ const Step1 = (props) => {
             items={itemAbrangencia}
             setOpen={setAbertoAbrangencia}
             setValue={setValorAbrangencia}
-            setItems={setItemAbrangencia}
+            setItems={setItem_aux_setor_abrangencia}//aux_setor_abrangencia
             listMode="SCROLLVIEW"
 
             placeholder="Selecione::"
