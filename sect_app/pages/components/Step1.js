@@ -42,8 +42,8 @@ const Step1 = (props) => {
               "create table if not exists " + item + " (" + novo_array[item] + ");",
             );
           });
-          console.log("create table if not exists " + item + " (" + novo_array[item] + ");");
-          console.log(dados);
+          //console.log("create table if not exists " + item + " (" + novo_array[item] + ");");
+          //console.log(dados);
           //nomes_colunas = dados;
 
         });
@@ -52,51 +52,51 @@ const Step1 = (props) => {
 
     //console.log(nomes_colunas);
 
-    // async function select_json(nome_tabela, item) {
-    //   db.transaction((tx) => {
-    //     tx.executeSql(
-    //       "SELECT * FROM " + nome_tabela + " ",
-    //       [],
-    //       (tx, results) => {
-    //         //var len = results.rows.length;
-    //         var temp = [];
-    //         for (let i = 0; i < results.rows.length; ++i) {
-    //           //temp.push(results.rows.item(i));
-    //           temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
-    //         }
-    //         //var y =nome_tabela;
-    //         // var x = "setItem_";
-    //         // //eval("x+nome_tabela");
-    //         // var nome = eval("x+nome_tabela");
-    //         // //eval("window[nome](temp)");
-    //         // //var obj = { a: 20, b: 30 };
-    //         // //var propname = getPropname();  //retorna "a" ou "b"
-    //         // //var result = obj;
-    //         // console.log(eval("nome=temp"));
-    //         // var novo = eval;
-    //         // novo(temp);
-    //         //console.log(eval(novo(temp)));
-    //         //console.log(eval("x+nome_tabela"));
+    async function select_json(nome_tabela, item) {
+      db.transaction((tx) => {
+        tx.executeSql(
+          "SELECT * FROM " + nome_tabela + " ",
+          [],
+          (tx, results) => {
+            //var len = results.rows.length;
+            var temp = [];
+            for (let i = 0; i < results.rows.length; ++i) {
+              //temp.push(results.rows.item(i));
+              temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+            }
+            //var y =nome_tabela;
+            // var x = "setItem_";
+            // //eval("x+nome_tabela");
+            // var nome = eval("x+nome_tabela");
+            // //eval("window[nome](temp)");
+            // //var obj = { a: 20, b: 30 };
+            // //var propname = getPropname();  //retorna "a" ou "b"
+            // //var result = obj;
+            // console.log(eval("nome=temp"));
+            // var novo = eval;
+            // novo(temp);
+            //console.log(eval(novo(temp)));
+            //console.log(eval("x+nome_tabela"));
 
-    //         console.log(temp);
-    //         if(nome_tabela =="cidades"){
-    //           console.log(nome_tabela);
-    //           setItem_cidades(temp);
-    //         }else if(nome_tabela =="aux_acesso"){
-    //           setItem_aux_acesso(temp)
-    //         }else if(nome_tabela == "aux_setor_abrangencia"){
-    //           setItem_aux_setor_abrangencia(temp)
-    //         }
+            console.log(temp);
+            if(nome_tabela =="cidades"){
+              console.log(nome_tabela);
+              setItem_cidades(temp);
+            }else if(nome_tabela =="aux_acesso"){
+              setItem_aux_acesso(temp)
+            }else if(nome_tabela == "aux_setor_abrangencia"){
+              setItem_aux_setor_abrangencia(temp)
+            }
 
-    //         //console.log("ok");
-    //         //setItem_cidades(temp);
+            //console.log("ok");
+            //setItem_cidades(temp);
 
-    //       }
-    //     )
-    //   });
+          }
+        )
+      });
 
 
-    // }
+    }
 
     //da o insert na tabela criada pegando os dados via api em formato json
     api.post('sincroninzacao/dados.json', {})
@@ -149,7 +149,7 @@ const Step1 = (props) => {
           // setItemAcesso(temp);
           //setItem(select_json(temp));
           // select_json(nome_tabela, setItem);
-          //(select_json(nome_tabela));
+          (select_json(nome_tabela));
 
 
         });
