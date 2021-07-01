@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Button } from 'react-native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import api from '../../services/api';
 import Step1 from '../components/Step1';
@@ -39,7 +39,8 @@ function ExampleOne({ navigation }) {
 
 
   return (
-    <View style={{ flex: 1, marginTop: 15 }}>
+    <View style={{ flex: 1, marginTop: 0 }}>
+
       {/* <View style={styles.rect}  {...requerente}>
             <Text style={styles.nome}>Nome:</Text>
             <Text style={styles.cnpj}>CNPJ:</Text>

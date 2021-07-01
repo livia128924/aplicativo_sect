@@ -1,163 +1,71 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Text, StyleSheet, View, TextInput } from 'react-native';
+import { Text, StyleSheet, View, TextInput , Fragment, Picker} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import api from '../../services/api';
 import { DatabaseConnection } from '../database/database';
-
+import { Formik, useFormik } from 'formik';
+import Yup from 'yup';
 const db = DatabaseConnection.getConnection();
+import NetInfo from '@react-native-community/netinfo';
+import Mybutton from './Mybutton';
 
 const Step1 = (props) => {
 
+  // NetInfo.fetch().then(state => {
+  //   console.log('Connection type', state.type);
+  //   console.log('Is connected?', state.isConnected);
+  // });
+
+
   useEffect(() => {
     //cria as tabelas
-    api.post('socio/municipios.json', {})
-      .then(function (response) {
-        const { dados } = response.data;
-        var arr = [];
-        var arr_colunas = [];
-        Object.keys(dados).forEach(function (key, i) {
-          arr.push(key);
-        });
-        var arr_colunas = [];
-        var novo_array = [];
-        arr.forEach((item) => {
-          arr_colunas.push(Object.keys(dados[item]));
-          novo_array[item] = Object.keys(dados[item]);
-        });
-        arr.forEach((item, i) => {
-          //var dados;
-          //console.log("tabela = " + item + " campos: " + novo_array[item]); // lista tabelas e colunas
-          var tabela = [item];
-          //var dados = [novo_array[item]];
+    db.transaction((tx) => {
+      tx.executeSql(
+        "select * from aux_acesso",[],  (tx, results) =>{
+         //var len = results.rows.length, i;
+         var temp = [];
+         //console.log(len);
+         for(let i = 0; i < results.rows.length; ++i){
+          temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+         }
+          setItem_aux_acesso(temp);
+        }
+      );
+      tx.executeSql(
+        "select * from cidades",[],  (tx, results) =>{
+         //var len = results.rows.length, i;
+         var temp = [];
+         //console.log(len);
+         for(let i = 0; i < results.rows.length; ++i){
+          temp.push({ label: results.rows.item(i).nome, value: results.rows.item(i).codigo });
+          //console.log( results.rows.item(i).nome);
+         }
+          setItem_cidades(temp);
+        }
+      );
+      tx.executeSql(
+        "select * from aux_setor_abrangencia",[],  (tx, results) =>{
+         //var len = results.rows.length, i;
+         var temp = [];
+         //console.log(len);
+         for(let i = 0; i < results.rows.length; ++i){
+          temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+          //console.log( results.rows.item(i).nome);
+         }
+         setItem_aux_setor_abrangencia(temp);
+        }
+      );
 
-          db.transaction(tx => {
-            tx.executeSql(
-              "drop table if exists " + item + ";",
-            );
-          });
+    },(err) => {
+      console.error("There was a problem with the tx", err);
+      return true;
+    },(success ) => {
+      console.log("all done",success );
+    });
 
-          db.transaction(tx => {
-            tx.executeSql(
-              "create table if not exists " + item + " (" + novo_array[item] + ");",
-            );
-          });
-          //console.log("create table if not exists " + item + " (" + novo_array[item] + ");");
-          //console.log(dados);
-          //nomes_colunas = dados;
-
-        });
-
-      });
-
-    //console.log(nomes_colunas);
-
-    async function select_json(nome_tabela, item) {
-      db.transaction((tx) => {
-        tx.executeSql(
-          "SELECT * FROM " + nome_tabela + " ",
-          [],
-          (tx, results) => {
-            //var len = results.rows.length;
-            var temp = [];
-            for (let i = 0; i < results.rows.length; ++i) {
-              //temp.push(results.rows.item(i));
-              temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
-            }
-            //var y =nome_tabela;
-            // var x = "setItem_";
-            // //eval("x+nome_tabela");
-            // var nome = eval("x+nome_tabela");
-            // //eval("window[nome](temp)");
-            // //var obj = { a: 20, b: 30 };
-            // //var propname = getPropname();  //retorna "a" ou "b"
-            // //var result = obj;
-            // console.log(eval("nome=temp"));
-            // var novo = eval;
-            // novo(temp);
-            //console.log(eval(novo(temp)));
-            //console.log(eval("x+nome_tabela"));
-
-            console.log(temp);
-            if(nome_tabela =="cidades"){
-              console.log(nome_tabela);
-              setItem_cidades(temp);
-            }else if(nome_tabela =="aux_acesso"){
-              setItem_aux_acesso(temp)
-            }else if(nome_tabela == "aux_setor_abrangencia"){
-              setItem_aux_setor_abrangencia(temp)
-            }
-
-            //console.log("ok");
-            //setItem_cidades(temp);
-
-          }
-        )
-      });
-
-
-    }
-
-    //da o insert na tabela criada pegando os dados via api em formato json
-    api.post('sincroninzacao/dados.json', {})
-      .then(function (response) {
-        const { dados } = response.data;
-        var arr = [];
-        var arr_colunas = [];
-        Object.keys(dados).forEach(function (key, i) {
-          arr.push(key);
-        });
-        var arr_colunas = [];
-        var dados_array = [];
-        arr.forEach((nome_tabela) => {
-          arr_colunas.push(Object.keys(dados[nome_tabela]));
-          dados_array[nome_tabela] = Object.keys(dados[nome_tabela]);
-        });
-
-        console.log(arr_colunas);
-        arr.forEach((nome_tabela, i) => {
-
-          var lista_colunas = dados[nome_tabela];
-          //console.log(lista_colunas);
-          Object.keys(lista_colunas).forEach(function (item, indice) {
-            var variavel = "(";
-            Object.keys(lista_colunas[item]).forEach(function (subItem, subIndice) {
-              variavel += "'" + lista_colunas[item][subItem] + "'";// coloca o valor atual na string
-              if (lista_colunas[item][subIndice + 1] != null) {
-                variavel += ","
-              }
-            });
-            variavel += ")";
-            if (lista_colunas[item + 1] != null) {
-              variavel += "(";
-            } else {
-              //variavel += '\n';
-            }
-
-            db.transaction(tx => {
-
-              tx.executeSql(
-                "insert into " + nome_tabela + " values " + variavel + ";",
-              );
-            });
-            //console.log("insert into " + nome_tabela + " values " + variavel + ";");
-          });
-          //console.log(dados[nome_tabela].codigo);
-
-          // //console.log(temp);
-          // setItem(temp);
-          // setItemAcesso(temp);
-          //setItem(select_json(temp));
-          // select_json(nome_tabela, setItem);
-          (select_json(nome_tabela));
-
-
-        });
-      });
 
   }, []);
-
-
 
   const [localizacao, setLocalizacao] = useState('');
 
@@ -182,8 +90,27 @@ const Step1 = (props) => {
   ]);
 
 
+  // const yupSchema = Yup.object().shape({
+  //     localizacao: Yup
+  //         .string()
+  //         .required()
+  // });
+
+  const initialValues = {
+      cidades: '',
+      localizacao: '',
+      acesso:'',
+  }
+
   return (
-    <>
+    <View>
+     <Formik
+    initialValues={initialValues}
+    //validationSchema={yupSchema}
+    onSubmit={values => console.log(values)}
+   >
+       {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
+        <>
       <View style={styles.form}>
         <View style={styles.rect2}>
           <Text>ÁREA DE ABRANGÊNCIA</Text>
@@ -201,11 +128,14 @@ const Step1 = (props) => {
           setItems={setItem_cidades}//cidades
           zIndex={9999}
           listMode="SCROLLVIEW"
+          onChangeValue={itemValue => handleChange('cidades', itemValue)}
+          //onPress={() => enviar_()}
           placeholder="Municipios"
         />
         <View>
           <Text style={styles.acessoText}>ACESSO</Text>
         </View>
+
         <DropDownPicker
           style={styles.acesso}
           open={abertoAcesso}
@@ -214,6 +144,9 @@ const Step1 = (props) => {
           setOpen={setAbertoAcesso}
           setValue={setValorAcesso}
           setItems={setItem_aux_acesso}//aux_acesso
+          //onPress={(value) =>  handleChange(value)}
+
+
           listMode="SCROLLVIEW"
           placeholder="acesso"
         />
@@ -224,10 +157,11 @@ const Step1 = (props) => {
         <View style={{ alignItems: 'center' }}>
           <TextInput
             style={styles.input2}
-            onChangeText={setLocalizacao}
-            value={localizacao}
+            onChangeText={handleChange('localizacao')}
+            value={values.localizacao}
+            onBlur={handleBlur('localizacao')}
             placeholder={"    Localização"}
-          />
+            />
           <Text>formulario step content</Text>
         </View>
       </View>
@@ -244,14 +178,23 @@ const Step1 = (props) => {
             items={itemAbrangencia}
             setOpen={setAbertoAbrangencia}
             setValue={setValorAbrangencia}
+            onChangeValue={value => console.log(value)}
             setItems={setItem_aux_setor_abrangencia}//aux_setor_abrangencia
             listMode="SCROLLVIEW"
-
             placeholder="Selecione::"
-          />
+            />
         </View>
       </View>
-    </>
+      <View>
+        <Mybutton
+       title='Enviar'
+       customClick={() =>console.log(setValor)}
+        />
+      </View>
+      </>
+      )}
+      </Formik>
+    </View>
 
 
   )

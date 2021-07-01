@@ -76,6 +76,11 @@ const HomeScreen = ({navigation}) => {
                     <Mybutton
                         title='Stepper'
                         customClick={() => navigation.navigate('Stepper')}
+
+                    />
+                    <Mybutton
+                        title='Config'
+                        customClick={() => navigation.navigate('Config')}
                     />
 
                 </View>

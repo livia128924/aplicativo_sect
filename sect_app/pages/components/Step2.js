@@ -2,24 +2,44 @@ import React, { useEffect, useState } from 'react';
 import { Text, StyleSheet, View, TextInput } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import api from '../../services/api';
+import { DatabaseConnection } from '../database/database';
+import { Formik, useFormik } from 'formik';
+import Yup from 'yup';
+const db = DatabaseConnection.getConnection();
 
 const Step2 = (props) => {
     useEffect(() => {
-        api.post('socio/natureza_atividade.php', {})
-        .then(function (response) {
+        // db.transaction((tx) => {
+        //     tx.executeSql(
+        //       "select * from aux_inicio_atividades",[],  (tx, results) =>{
+        //        //var len = results.rows.length, i;
+        //        var temp = [];
+        //        //console.log(len);
+        //        for(let i = 0; i < results.rows.length; ++i){
+        //         temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+        //        }
+        //        setItem_aux_inicio_atividades(temp);
+        //       }
+        //     );
+        //     tx.executeSql(
+        //       "select * from aux_natureza_atividades",[],  (tx, results) =>{
+        //        //var len = results.rows.length, i;
+        //        var temp = [];
+        //        //console.log(len);
+        //        for(let i = 0; i < results.rows.length; ++i){
+        //         temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+        //         //console.log( results.rows.item(i).nome);
+        //        }
+        //        setItem_aux_natureza_atividades(temp);
+        //       }
+        //     );
 
-          const { label } = response.data;
-          //console.log(response.data);
-          setItemNaturezaAtv(response.data);
-        });
-        api.post('socio/atividades.php', {})
-        .then(function (response) {
-
-          const { label } = response.data;
-          //console.log(response.data);
-          setItemDescricao(response.data);
-        });
-
+        //   },(err) => {
+        //     console.error("There was a problem with the tx", err);
+        //     return true;
+        //   },(success ) => {
+        //     console.log("all done",success );
+        //   });
 
     }, []);
     const [outros, setOutros] = useState('');
@@ -29,14 +49,14 @@ const Step2 = (props) => {
     const [t_I, setT_I] = useState('');
     const [openDescricao, setOpenDescricao] = useState(false);
     const [valorAtividade, setValorAtividade] = useState(null);
-    const [itemDescricao, setItemDescricao] = useState([
+    const [itemDescricao, setItem_aux_inicio_atividades] = useState([
         { label: 'descricao', value: 'descricao' },
         { label: 'valor', value: 'valor' }
     ]);
 
     const [openNaturezaAtv, setOpenNaturezaAtv] = useState(false);
     const [valorNaturezaAtv, setValorNaturezaAtv] = useState(null);
-    const [itemNaturezaAtv, setItemNaturezaAtv] = useState([
+    const [itemNaturezaAtv, setItem_aux_natureza_atividades] = useState([
         { label: 'val', value: 'val' },
         { label: 'lab', value: 'lab' }
     ]);
@@ -58,7 +78,7 @@ const Step2 = (props) => {
                     items={itemDescricao}
                     setOpen={setOpenDescricao}
                     setValue={setValorAtividade}
-                    setItems={setItemDescricao}
+                    setItems={setItem_aux_inicio_atividades}
                     listMode="SCROLLVIEW"
 
                     placeholder="Selecione::"
@@ -79,7 +99,7 @@ const Step2 = (props) => {
                     items={itemNaturezaAtv}
                     setOpen={setOpenNaturezaAtv}
                     setValue={setValorNaturezaAtv}
-                    setItems={setItemNaturezaAtv}
+                    setItems={setItem_aux_natureza_atividades}
                     listMode="SCROLLVIEW"
                     placeholder="Selecione::"
                 />

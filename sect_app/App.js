@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {AsyncStorage, Button, Text} from "react-native";
+import {AsyncStorage, Button, Text, Pressable, StyleSheet} from "react-native";
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from './pages/HomeScreen';
@@ -10,7 +10,10 @@ import ViewAllUser from './pages/listar';
 import Login from "./pages/login";
 import ExampleOne from './pages/socio/index'
 import Relatorio from "./pages/socio/Relatorio";
-
+import Config from './pages/socio/config';
+import { IconButton, Colors } from 'react-native-paper';
+//import { mdiDotsVerticalCircle } from '@mdi/js';
+import Icon from 'react-native-vector-icons/Ionicons';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -53,6 +56,29 @@ const App = () => {
                         component={ExampleOne}
                         options={{
                             title: 'Stepper',
+                            // headerRight: () => (
+                            //     <IconButton
+                            //     style={styles.button}
+                            //     icon="camera"
+                            //     color={Colors.red500}
+                            //     size={20}
+                            //     onPress={() => console.log('Pressed')}
+                            //   />
+                            //   ),
+                            headerStyle: {
+                                backgroundColor: '#FFF',
+                            },
+                            headerTintColor: 'black',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                            },
+                        }}
+                    />
+                    <Stack.Screen
+                        name='Config'
+                        component={Config}
+                        options={{
+                            title: 'Config',
                             headerStyle: {
                                 backgroundColor: '#FFF',
                             },
@@ -143,5 +169,21 @@ const App = () => {
         );
     }
 ;
+
+
+const styles = StyleSheet.create({
+    button: {
+    left:350,
+
+      elevation: 3,
+    },
+    text: {
+      fontSize: 16,
+      lineHeight: 21,
+      fontWeight: 'bold',
+      letterSpacing: 0.25,
+      color: 'white',
+    },
+  });
 
 export default App;
