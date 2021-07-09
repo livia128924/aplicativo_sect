@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, Button } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, StyleSheet, Text, Button, AsyncStorage } from 'react-native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import api from '../../services/api';
 import Step1 from '../components/Step1';
@@ -8,9 +8,47 @@ import Step3 from '../components/Step3';
 import Step4 from '../components/Step4';
 import Step5 from '../components/Step5';
 import Step6 from '../components/Step6';
+const db = DatabaseConnection.getConnection();
+import { DatabaseConnection } from '../database/database';
+
 
 
 function ExampleOne({ navigation }) {
+
+  // const { codigo_pr } = useContext(AuthContext);
+
+  // console.log(codigo_pr);
+
+  useEffect(()=>{
+    db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT s.*,r.codigo as codigo_rq, p.codigo as codigo_pr FROM pr p INNER JOIN rq r ON r.codigo = p.pr_requerente inner join se_rrj s ON s.se_rrj_cod_processo = p.codigo  where p.pr_numero_processo = 'C1118' ", [], (tx, results) => {
+
+            var temp = [];
+            //console.log(len);
+            for(let i = 0; i < results.rows.length; i++){
+              temp.push({ label: results.rows.item(i)});
+
+             setTitleText(results.rows.item(i).codigo_pr);
+             setTitleText2(results.rows.item(i).codigo_rq );
+             setTitleText3(results.rows.item(i).codigo );
+
+
+         AsyncStorage.setItem('codigo_pr', results.rows.item(i).codigo_pr.toString());
+           //console.log(AuthContext);
+             //codigo_se = results.rows.item(i).codigo;
+            }
+        }
+      );
+    },(err) => {
+      console.error("There was a problem with the tx", err);
+      return true;
+    },(success ) => {
+      console.log("all done",success );
+    });
+
+  },[]);
+
 
 
   const defaultScrollViewProps = {
@@ -37,24 +75,27 @@ function ExampleOne({ navigation }) {
     navigation.navigate('Relatorio');
   };
 
-
+  const [titleText, setTitleText] = useState('');
+  const [titleText2, setTitleText2] = useState('');
+  const [titleText3, setTitleText3] = useState('');
   return (
     <View style={{ flex: 1, marginTop: 0 }}>
 
-      {/* <View style={styles.rect}  {...requerente}>
-            <Text style={styles.nome}>Nome:</Text>
-            <Text style={styles.cnpj}>CNPJ:</Text>
-            <Text style={styles.processo}>Processo:</Text>
-        </View> */}
+      <View style={styles.rect} >
+      <Text style={styles.processo}>Processo:  {titleText}</Text>
+      <Text style={styles.nome}>requerente:  {titleText2}</Text>
+      <Text style={styles.nome}>socio:  {titleText3}</Text>
+        </View>
       <ProgressSteps>
-        {/* step1 */}
         <ProgressStep
           label="Area"
           onNext={onformularioStepComplete}
           onPrevious={onPrevStep}
         >
           <View>
-            <Step1 />
+            <Step1
+
+            />
           </View>
         </ProgressStep>
 
@@ -120,6 +161,24 @@ function ExampleOne({ navigation }) {
 export default ExampleOne;
 
 const styles = StyleSheet.create({
+  rect: {
+    width: '100%',
+    height: 75,
+    borderWidth: 1,
+    borderColor: "rgba(74,144,226,1)",
+    borderRadius: 3
+  },
+  processo: {
+    color: "#121212",
+    marginTop: 10,
+    marginLeft: 9
+  },
+  nome: {
+
+    color: "#121212",
+    marginTop: 10,
+    marginLeft: 9
+  },
   campo: {
     marginLeft: 5,
     top: 3,

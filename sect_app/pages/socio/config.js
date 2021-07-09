@@ -8,37 +8,40 @@ const db = DatabaseConnection.getConnection();
 function Config({ navigation }) {
 
 //cria e faz o drop das tabelas principais
+// useEffect(() => {
+
+
+// },[]);
+
   async function load_dados() {
 
-    axios.post('http://192.168.0.151:8082/api/metas.php', {})
-      .then(function (response) {
-        const metas = response.data;
-        var arr = [];
-        Object.keys(metas).forEach(function (key, i) {
-          arr.push(key);
-        });
-        var arr_colunas = [];
-        var novo_array = [];
-        arr.forEach((item) => {
-          arr_colunas.push(Object.keys(metas[item]));
-          novo_array[item] = Object.keys(metas[item]);
-          db.transaction((tx) => {
-            tx.executeSql(metas[item], []);
-
-
-          }, (err) => {
-            console.error("There was a problem with the tx metas", err);
-            return true;
-          }, (success) => {
-            console.log("metas", success);
-          });
-
-
-        });
-      })
-      .catch(function (error) {
-        console.log('Erro');
+  axios.post('http://192.168.0.151:8082/api/metas.php', {})
+  .then(function (response) {
+    const metas = response.data;
+    var arr = [];
+    Object.keys(metas).forEach(function (key, i) {
+      arr.push(key);
+    });
+    var arr_colunas = [];
+    var novo_array = [];
+    arr.forEach((item) => {
+      arr_colunas.push(Object.keys(metas[item]));
+      novo_array[item] = Object.keys(metas[item]);
+      db.transaction((tx) => {
+        tx.executeSql(metas[item], []);
+      }, (err) => {
+        console.error("There was a problem with the tx metas", err);
+        return true;
+      }, (success) => {
+        console.log("metas", success);
       });
+
+
+    });
+  })
+  .catch(function (error) {
+    console.log('Erro');
+  });
 
       //inseri os dados e select nas tabelas pri
       axios.post('http://192.168.0.151:8082/api/metas_dados.php', {})
@@ -53,13 +56,20 @@ function Config({ navigation }) {
         arr.forEach((item) => {
           arr_colunas.push(Object.keys(metas_dados[item]));
           novo_array[item] = Object.keys(metas_dados[item]);
-          console.log(metas_dados[item]);
+          //console.log(metas_dados[item]);
           db.transaction((tx) => {
             tx.executeSql(metas_dados[item], []);
-
-
+            tx.executeSql(
+              "select * from vu", [], (tx, results) => {
+                var len = results.rows.length, i;
+                //console.log(len);
+                for (i = 0; i < len; i++) {
+                console.log(results.rows.item(i));
+                }
+              }
+            );
           }, (err) => {
-            console.error("There was a problem with the tx insert metas", err);
+            console.error("There was a problem with the tx insert metas_dados", err);
             return true;
           }, (success) => {
             console.log("metas_dados", success);
@@ -149,9 +159,9 @@ function Config({ navigation }) {
             tx.executeSql(
               "select descricao from aux_acesso", [], (tx, results) => {
                 var len = results.rows.length, i;
-                console.log(len);
+                //console.log(len);
                 for (i = 0; i < len; i++) {
-                  console.log(results.rows.item(i));
+                  //console.log(results.rows.item(i));
                 }
               }
             );

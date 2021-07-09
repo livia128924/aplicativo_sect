@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Text, StyleSheet, View, TextInput , Fragment, Picker} from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { Text, StyleSheet, View, TextInput, AsyncStorage } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import api from '../../services/api';
 import { DatabaseConnection } from '../database/database';
 import { Formik, useFormik } from 'formik';
-import Yup from 'yup';
 const db = DatabaseConnection.getConnection();
-import NetInfo from '@react-native-community/netinfo';
 import Mybutton from './Mybutton';
 
 const Step1 = (props) => {
@@ -16,52 +12,81 @@ const Step1 = (props) => {
   //   console.log('Connection type', state.type);
   //   console.log('Is connected?', state.isConnected);
   // });
-
+  const [sync, setSync]  = useState(false);
 
   useEffect(() => {
+
+  AsyncStorage.getItem('codigo_pr').then(value => {
+      console.log(value);
+      setSync(value);
+    });
+
+
+retrieveData = async (key) => {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      // We have data!!
+      console.log(value);
+      // do something with the value
+    }
+   } catch (error) {
+     // Error retrieving data
+   }
+}
     //cria as tabelas
     db.transaction((tx) => {
       tx.executeSql(
-        "select * from aux_acesso",[],  (tx, results) =>{
-         //var len = results.rows.length, i;
-         var temp = [];
-         //console.log(len);
-         for(let i = 0; i < results.rows.length; ++i){
-          temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
-         }
+        "select * from pr where pr_numero_processo = 'c1118'", [], (tx, results) => {
+          var len = results.rows.length, i;
+          //console.log(len);
+          for (i = 0; i < len; i++) {
+            console.log(results.rows.item(i));
+          }
+        }
+      );
+
+      tx.executeSql(
+        "select * from aux_acesso", [], (tx, results) => {
+          //var len = results.rows.length, i;
+          var temp = [];
+          //console.log(len);
+          for (let i = 0; i < results.rows.length; ++i) {
+            temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+          }
           setItem_aux_acesso(temp);
         }
       );
       tx.executeSql(
-        "select * from cidades",[],  (tx, results) =>{
-         //var len = results.rows.length, i;
-         var temp = [];
-         //console.log(len);
-         for(let i = 0; i < results.rows.length; ++i){
-          temp.push({ label: results.rows.item(i).nome, value: results.rows.item(i).codigo });
-          //console.log( results.rows.item(i).nome);
-         }
+        "select * from cidades", [], (tx, results) => {
+          //var len = results.rows.length, i;
+          var temp = [];
+          //console.log(len);
+          for (let i = 0; i < results.rows.length; ++i) {
+            temp.push({ label: results.rows.item(i).nome, value: results.rows.item(i).codigo });
+            //console.log( results.rows.item(i).nome);
+          }
           setItem_cidades(temp);
         }
       );
       tx.executeSql(
-        "select * from aux_setor_abrangencia",[],  (tx, results) =>{
-         //var len = results.rows.length, i;
-         var temp = [];
-         //console.log(len);
-         for(let i = 0; i < results.rows.length; ++i){
-          temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
-          //console.log( results.rows.item(i).nome);
-         }
-         setItem_aux_setor_abrangencia(temp);
+        "select * from aux_setor_abrangencia", [], (tx, results) => {
+          //var len = results.rows.length, i;
+          var temp = [];
+          //console.log(len);
+          for (let i = 0; i < results.rows.length; ++i) {
+            temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+            //console.log( results.rows.item(i).nome);
+          }
+          setItem_aux_setor_abrangencia(temp);
         }
       );
 
-    },(err) => {
+    }, (err) => {
       console.error("There was a problem with the tx", err);
       return true;
-    },(success ) => {
-      console.log("all done",success );
+    }, (success) => {
+      console.log("all done", success);
     });
 
 
@@ -90,6 +115,18 @@ const Step1 = (props) => {
   ]);
 
 
+
+  function onPressTitle(tabela, campo, valor, codigo,) {
+    console.log("update " + tabela + " set " + campo + " = '" + valor + "' where codigo = " + codigo);
+  };
+
+  // onFocusInput = () => {
+  //   this.setState({applyAditionalStyles: true})
+  // }
+  // onBlurInput = () => {
+  //   this.setState({applyAditionalStyles: false})
+  // }
+
   // const yupSchema = Yup.object().shape({
   //     localizacao: Yup
   //         .string()
@@ -97,103 +134,106 @@ const Step1 = (props) => {
   // });
 
   const initialValues = {
-      cidades: '',
-      localizacao: '',
-      acesso:'',
+    cidades: '',
+    localizacao: '',
+    acesso: '',
   }
 
   return (
     <View>
-     <Formik
-    initialValues={initialValues}
-    //validationSchema={yupSchema}
-    onSubmit={values => console.log(values)}
-   >
-       {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
-        <>
-      <View style={styles.form}>
-        <View style={styles.rect2}>
-          <Text>ÁREA DE ABRANGÊNCIA</Text>
-        </View>
-        <View style={styles.municipio}>
-          <Text >MUNICIPIOS</Text>
-        </View>
-        <DropDownPicker
-          style={styles.select}
-          open={aberto}
-          value={valor}
-          items={item}
-          setOpen={setAberto}
-          setValue={setValor}
-          setItems={setItem_cidades}//cidades
-          zIndex={9999}
-          listMode="SCROLLVIEW"
-          onChangeValue={itemValue => handleChange('cidades', itemValue)}
-          //onPress={() => enviar_()}
-          placeholder="Municipios"
-        />
-        <View>
-          <Text style={styles.acessoText}>ACESSO</Text>
-        </View>
 
-        <DropDownPicker
-          style={styles.acesso}
-          open={abertoAcesso}
-          value={valorAcesso}
-          items={itemAcesso}
-          setOpen={setAbertoAcesso}
-          setValue={setValorAcesso}
-          setItems={setItem_aux_acesso}//aux_acesso
-          //onPress={(value) =>  handleChange(value)}
+        <Formik
+          initialValues={initialValues}
+          //validationSchema={yupSchema}
+          onSubmit={values => console.log(values)}
+        >
+          {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
+            <>
+
+              <View style={styles.form}>
+                <View style={styles.rect2}>
+                  <Text>ÁREA DE ABRANGÊNCIA</Text>
+                </View>
+                <View style={styles.municipio}>
+                  <Text >MUNICIPIOS</Text>
+                </View>
+                <DropDownPicker
+                  style={styles.select}
+                  open={aberto}
+                  value={valor}
+                  items={item}
+                  setOpen={setAberto}
+                  setValue={setValor}
+                  setItems={setItem_cidades}//cidades
+                  zIndex={9999}
+                  listMode="SCROLLVIEW"
+                  onChangeValue={() => onPressTitle("se_rrj", "se_rrj_municipio", valor, sync)}
+                  //onPress={() => enviar_()}
+                  placeholder="Municipios"
+                />
+                <View>
+                  <Text style={styles.acessoText}>ACESSO</Text>
+                </View>
+
+                <DropDownPicker
+                  style={styles.acesso}
+                  open={abertoAcesso}
+                  value={valorAcesso}
+                  items={itemAcesso}
+                  setOpen={setAbertoAcesso}
+                  setValue={setValorAcesso}
+                  setItems={setItem_aux_acesso}//aux_acesso
+                  //onPress={(value) =>  handleChange(value)}
 
 
-          listMode="SCROLLVIEW"
-          placeholder="acesso"
-        />
+                  listMode="SCROLLVIEW"
+                  placeholder="acesso"
+                />
 
-        <View>
-          <Text style={styles.localizacao}>LOCALIZAÇÃO</Text>
-        </View>
-        <View style={{ alignItems: 'center' }}>
-          <TextInput
-            style={styles.input2}
-            onChangeText={handleChange('localizacao')}
-            value={values.localizacao}
-            onBlur={handleBlur('localizacao')}
-            placeholder={"    Localização"}
-            />
-          <Text>formulario step content</Text>
-        </View>
-      </View>
+                <View>
+                  <Text style={styles.localizacao}>LOCALIZAÇÃO</Text>
+                </View>
+                <View style={{ alignItems: 'center' }}>
+                  <TextInput
+                    style={styles.input2}
+                    onChangeText={localizacao => setLocalizacao(localizacao)}
+                    value={localizacao}
+                    // onFocus={()=>onFocusInput(setLocalizacao)}
+                    // onBlur={()=>onPressTitle(localizacao)}
+                    placeholder={"    Localização"}
+                  />
+                  <Text>formulario step content</Text>
+                </View>
+              </View>
 
-      <View style={styles.form_step1}>
-        <View style={styles.rect2}>
-          <Text style={styles.titulo} >SETOR DE ABRANGÊNCIA</Text>
-        </View>
-        <View style={styles.dropAtividades}>
-          <DropDownPicker
-            style={styles.abrangencia}
-            open={abertoAbrangencia}
-            value={valorAbrangencia}
-            items={itemAbrangencia}
-            setOpen={setAbertoAbrangencia}
-            setValue={setValorAbrangencia}
-            onChangeValue={value => console.log(value)}
-            setItems={setItem_aux_setor_abrangencia}//aux_setor_abrangencia
-            listMode="SCROLLVIEW"
-            placeholder="Selecione::"
-            />
-        </View>
-      </View>
-      <View>
-        <Mybutton
-       title='Enviar'
-       customClick={() =>console.log(setValor)}
-        />
-      </View>
-      </>
-      )}
-      </Formik>
+              <View style={styles.form_step1}>
+                <View style={styles.rect2}>
+                  <Text style={styles.titulo} >SETOR DE ABRANGÊNCIA</Text>
+                </View>
+                <View style={styles.dropAtividades}>
+                  <DropDownPicker
+                    style={styles.abrangencia}
+                    open={abertoAbrangencia}
+                    value={valorAbrangencia}
+                    items={itemAbrangencia}
+                    setOpen={setAbertoAbrangencia}
+                    setValue={setValorAbrangencia}
+                    onChangeValue={value => console.log(value)}
+                    setItems={setItem_aux_setor_abrangencia}//aux_setor_abrangencia
+                    listMode="SCROLLVIEW"
+                    placeholder="Selecione::"
+                  />
+                </View>
+              </View>
+              <View>
+                <Mybutton
+                  title='Enviar'
+                  customClick={() => console.log(setValor)}
+                />
+              </View>
+            </>
+          )}
+        </Formik>
     </View>
 
 
