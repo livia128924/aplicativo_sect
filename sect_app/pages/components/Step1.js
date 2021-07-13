@@ -7,34 +7,17 @@ const db = DatabaseConnection.getConnection();
 import Mybutton from './Mybutton';
 
 
-
-
 const Step1 = (props) => {
 
   const [sync, setSync]  = useState(false);
 
   useEffect(() => {
 
-
   //carrega o valor do select na tela index.js
   AsyncStorage.getItem('codigo_pr').then(value => {
-      console.log(value);
+      //console.log(value);
       setSync(value);
     });
-
-
-// retrieveData = async (key) => {
-//   try {
-//     const value = await AsyncStorage.getItem(key);
-//     if (value !== null) {
-//       // We have data!!
-//       console.log(value);
-//       // do something with the value
-//     }
-//    } catch (error) {
-//      // Error retrieving data
-//    }
-// }
 
     //////////////primeira coisa que faz quando entra na tela:  faz um select das tabelas aux para carregar nos components //////////////
     db.transaction((tx) => {
@@ -73,7 +56,6 @@ const Step1 = (props) => {
           setItem_aux_setor_abrangencia(temp);
         }
       );
-
     }, (err) => {
       console.error("There was a problem with the tx", err);
       return true;
@@ -89,7 +71,7 @@ const Step1 = (props) => {
   const [localizacao, setLocalizacao] = useState('');
 const[teste, get_valor_in]= useState('');
   const [aberto, setAberto] = useState(false);
-  const [valor, setValor] = useState(null);
+  const [valor, setValor] = useState('null');
 
   const [item, setItem_cidades] = useState([
     { label: 'Apple', value: 'apple' },
@@ -112,97 +94,51 @@ const[teste, get_valor_in]= useState('');
 
 //função que aciona quando o estado do componente muda e seta os valores correspondente
   function onPressTitle(tabela, campo, valor, codigo) {
-
-    //var x = eval(" 'update ' + tabela +  ' set ' +campo+'  =  ' + valor + ' where se_ruj_cod_processo = '+ codigo");
-    //console.log(x);
-
     db.transaction((tx) => {
-      tx.executeSql(
+      tx.executeSql('update \'' + tabela + '\' set \'' + campo + '\' = \'' + valor + '\' where se_ruj_cod_processo = \'' + codigo+'\'',[]);
+          console.log('update \'' + tabela + '\' set \'' + campo + '\' = \'' + valor + '\' where se_ruj_cod_processo = \'' + codigo+'\'');
+          tx.executeSql(
+            "select * from " +tabela, (tx, results) => {
 
-        "update " + tabela + " set " + campo + " = '" + valor + "' where se_ruj_cod_processo = " + codigo, [], (tx, results) => {
-          var len = results.rows.length, i;
-          //console.log(len);
-          for (i = 0; i < len; i++) {
-            console.log(results.rows.item(i));
-          }
-        }
+            },(tx, err) => {
+              console.error("error", err);
+              return true;
+            }, (tx,success) => {
+            console.log("tudo certo por aqui", success);
+           //get_values(tabela, campo, sync);
+            }
       );
-
-
-
-    }, (err) => {
-      console.error("There was a problem with the eval insert", err);
-      return true;
-    }, (success) => {
-    console.log("Inseriu na tabela se_ruj", success);
-    get_values(tabela, campo, sync);
     });
   };
 
-  function get_values (tabela, campo, codigo){
 
-    db.transaction((tx) => {
+  // function get_values (tabela, campo, codigo){
 
-      tx.executeSql(
-      "select "+campo+" from " +tabela+" where codigo = "+codigo+"" , [], (tx, results) => {
-        var temp = [];
-        //console.log(len);
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push({ label: results.rows.item(i).nome, value:results.rows.item(i).codigo});
-          console.log( results.rows.item(i).se_ruj_municipio);
-          //console.log(results.rows.item(i).se_ruj_municipio)
-        }
-        get_valor_in(results.rows.item(i).se_ruj_municipio);
+  //   db.transaction((tx) => {
 
-        }
-      );
+  //     tx.executeSql(
+  //     "select "+campo+" from " +tabela+" where codigo = "+codigo+"" , [], (tx, results) => {
+  //       var temp = [];
+  //       //console.log(len);
+  //       for (let i = 0; i < results.rows.length; ++i) {
+  //         temp.push({ label: results.rows.item(i).nome, value:results.rows.item(i).codigo});
+  //         console.log(results.rows);
 
-    }, (err) => {
-      console.error("error", err);
-      return true;
-    }, (success) => {
-    console.log("select", success);
-    });
+  //       }
+  //       // get_valor_in(results.rows.item(i).se_ruj_municipio);
 
-  }
+  //       }
+  //     );
 
-
-  // const yupSchema = Yup.object().shape({
-  //     localizacao: Yup
-  //         .string()
-  //         .required()
-  // });
-
-  // const [state, setState] = useState({
-  //   valor: '',
-  //   localizacao: '',
-  //   valorAcesso: '',
-  //   errorMessage: null
-  // })
-
-  // const { errorMessage } = state;
-
-  // const handleChange = event => {
-  //   console.log("I am event", event);
-  //   setState({
-  //     ...state,
-  //     [event.target.id]: event.target.value
+  //   }, (err) => {
+  //     console.error("error", err);
+  //     return true;
+  //   }, (success) => {
+  //   console.log("select", success);
   //   });
-  // };
 
-  // const handleSubmit = event => {
-  //   event.preventDefault();
-  //   const { valor, localizacao, valorAcesso } = state;
-  //   if(valor= ''){
-
-  //  setState({ errorMessage: error.message });
   // }
-  // };
 
-    // const handleSubmit = () => {
-  //   const { email, password } = state;
-  //   firebase.auth().signInWithEmailAndPassword(email, password).catch(error => setState({ errorMessage: error.message }))
-  // }
 
 
   return (
@@ -226,7 +162,7 @@ const[teste, get_valor_in]= useState('');
                   zIndex={9999}
                   listMode="SCROLLVIEW"
                   onChangeValue={() => onPressTitle("se_ruj", "se_ruj_municipio", valor, sync)}
-                  placeholder={get_valor_in }
+                  placeholder={"get_valor_in "}
                 />
                 <View>
                   <Text style={styles.acessoText}>ACESSO</Text>
