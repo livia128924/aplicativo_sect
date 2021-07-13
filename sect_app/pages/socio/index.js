@@ -22,7 +22,7 @@ function ExampleOne({ navigation }) {
   useEffect(()=>{
     db.transaction((tx) => {
       tx.executeSql(
-        "SELECT s.*,r.codigo as codigo_rq, p.codigo as codigo_pr FROM pr p INNER JOIN rq r ON r.codigo = p.pr_requerente inner join se_rrj s ON s.se_rrj_cod_processo = p.codigo  where p.pr_numero_processo = 'C1118' ", [], (tx, results) => {
+        "SELECT s.*,r.codigo as codigo_rq, p.codigo as codigo_pr FROM pr p INNER JOIN rq r ON r.codigo = p.pr_requerente inner join se_ruj s ON s.se_ruj_cod_processo = p.codigo  where p.pr_numero_processo = 'C1118' ", [], (tx, results) => {
 
             var temp = [];
             //console.log(len);
@@ -44,7 +44,7 @@ function ExampleOne({ navigation }) {
       console.error("There was a problem with the tx", err);
       return true;
     },(success ) => {
-      console.log("all done",success );
+      console.log("all done with select",success );
     });
 
   },[]);
@@ -84,12 +84,11 @@ function ExampleOne({ navigation }) {
       <View style={styles.rect} >
       <Text style={styles.processo}>Processo:  {titleText}</Text>
       <Text style={styles.nome}>requerente:  {titleText2}</Text>
-      <Text style={styles.nome}>socio:  {titleText3}</Text>
         </View>
       <ProgressSteps>
         <ProgressStep
           label="Area"
-          onNext={onformularioStepComplete}
+          onNext={onNextStep}
           onPrevious={onPrevStep}
         >
           <View>
@@ -111,7 +110,6 @@ function ExampleOne({ navigation }) {
           label="Empregados/Associados"
           onPrevious={onPrevStep}
           onNext={onNextStep}
-
         >
           <Step3 />
 

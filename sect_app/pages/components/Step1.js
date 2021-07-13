@@ -6,46 +6,38 @@ import { Formik, useFormik } from 'formik';
 const db = DatabaseConnection.getConnection();
 import Mybutton from './Mybutton';
 
+
+
+
 const Step1 = (props) => {
 
-  // NetInfo.fetch().then(state => {
-  //   console.log('Connection type', state.type);
-  //   console.log('Is connected?', state.isConnected);
-  // });
   const [sync, setSync]  = useState(false);
 
   useEffect(() => {
 
+
+  //carrega o valor do select na tela index.js
   AsyncStorage.getItem('codigo_pr').then(value => {
       console.log(value);
       setSync(value);
     });
 
 
-retrieveData = async (key) => {
-  try {
-    const value = await AsyncStorage.getItem(key);
-    if (value !== null) {
-      // We have data!!
-      console.log(value);
-      // do something with the value
-    }
-   } catch (error) {
-     // Error retrieving data
-   }
-}
-    //cria as tabelas
-    db.transaction((tx) => {
-      tx.executeSql(
-        "select * from pr where pr_numero_processo = 'c1118'", [], (tx, results) => {
-          var len = results.rows.length, i;
-          //console.log(len);
-          for (i = 0; i < len; i++) {
-            console.log(results.rows.item(i));
-          }
-        }
-      );
+// retrieveData = async (key) => {
+//   try {
+//     const value = await AsyncStorage.getItem(key);
+//     if (value !== null) {
+//       // We have data!!
+//       console.log(value);
+//       // do something with the value
+//     }
+//    } catch (error) {
+//      // Error retrieving data
+//    }
+// }
 
+    //////////////primeira coisa que faz quando entra na tela:  faz um select das tabelas aux para carregar nos components //////////////
+    db.transaction((tx) => {
       tx.executeSql(
         "select * from aux_acesso", [], (tx, results) => {
           //var len = results.rows.length, i;
@@ -86,16 +78,19 @@ retrieveData = async (key) => {
       console.error("There was a problem with the tx", err);
       return true;
     }, (success) => {
-      console.log("all done", success);
     });
 
 
   }, []);
 
-  const [localizacao, setLocalizacao] = useState('');
+//estado inicial e as funçoes para poder ser atualizadas posteriormente ,
 
+
+  const [localizacao, setLocalizacao] = useState('');
+const[teste, get_valor_in]= useState('');
   const [aberto, setAberto] = useState(false);
   const [valor, setValor] = useState(null);
+
   const [item, setItem_cidades] = useState([
     { label: 'Apple', value: 'apple' },
     { label: 'Banana', value: 'banana' }
@@ -115,17 +110,62 @@ retrieveData = async (key) => {
   ]);
 
 
+//função que aciona quando o estado do componente muda e seta os valores correspondente
+  function onPressTitle(tabela, campo, valor, codigo) {
 
-  function onPressTitle(tabela, campo, valor, codigo,) {
-    console.log("update " + tabela + " set " + campo + " = '" + valor + "' where codigo = " + codigo);
+    //var x = eval(" 'update ' + tabela +  ' set ' +campo+'  =  ' + valor + ' where se_ruj_cod_processo = '+ codigo");
+    //console.log(x);
+
+    db.transaction((tx) => {
+      tx.executeSql(
+
+        "update " + tabela + " set " + campo + " = '" + valor + "' where se_ruj_cod_processo = " + codigo, [], (tx, results) => {
+          var len = results.rows.length, i;
+          //console.log(len);
+          for (i = 0; i < len; i++) {
+            console.log(results.rows.item(i));
+          }
+        }
+      );
+
+
+
+    }, (err) => {
+      console.error("There was a problem with the eval insert", err);
+      return true;
+    }, (success) => {
+    console.log("Inseriu na tabela se_ruj", success);
+    get_values(tabela, campo, sync);
+    });
   };
 
-  // onFocusInput = () => {
-  //   this.setState({applyAditionalStyles: true})
-  // }
-  // onBlurInput = () => {
-  //   this.setState({applyAditionalStyles: false})
-  // }
+  function get_values (tabela, campo, codigo){
+
+    db.transaction((tx) => {
+
+      tx.executeSql(
+      "select "+campo+" from " +tabela+" where codigo = "+codigo+"" , [], (tx, results) => {
+        var temp = [];
+        //console.log(len);
+        for (let i = 0; i < results.rows.length; ++i) {
+          temp.push({ label: results.rows.item(i).nome, value:results.rows.item(i).codigo});
+          console.log( results.rows.item(i).se_ruj_municipio);
+          //console.log(results.rows.item(i).se_ruj_municipio)
+        }
+        get_valor_in(results.rows.item(i).se_ruj_municipio);
+
+        }
+      );
+
+    }, (err) => {
+      console.error("error", err);
+      return true;
+    }, (success) => {
+    console.log("select", success);
+    });
+
+  }
+
 
   // const yupSchema = Yup.object().shape({
   //     localizacao: Yup
@@ -133,23 +173,41 @@ retrieveData = async (key) => {
   //         .required()
   // });
 
-  const initialValues = {
-    cidades: '',
-    localizacao: '',
-    acesso: '',
-  }
+  // const [state, setState] = useState({
+  //   valor: '',
+  //   localizacao: '',
+  //   valorAcesso: '',
+  //   errorMessage: null
+  // })
+
+  // const { errorMessage } = state;
+
+  // const handleChange = event => {
+  //   console.log("I am event", event);
+  //   setState({
+  //     ...state,
+  //     [event.target.id]: event.target.value
+  //   });
+  // };
+
+  // const handleSubmit = event => {
+  //   event.preventDefault();
+  //   const { valor, localizacao, valorAcesso } = state;
+  //   if(valor= ''){
+
+  //  setState({ errorMessage: error.message });
+  // }
+  // };
+
+    // const handleSubmit = () => {
+  //   const { email, password } = state;
+  //   firebase.auth().signInWithEmailAndPassword(email, password).catch(error => setState({ errorMessage: error.message }))
+  // }
+
 
   return (
     <View>
-
-        <Formik
-          initialValues={initialValues}
-          //validationSchema={yupSchema}
-          onSubmit={values => console.log(values)}
-        >
-          {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
-            <>
-
+       {/* {ErrorMessage && <View style={styles.ErrorMessage} >{errorMessage} </View>} */}
               <View style={styles.form}>
                 <View style={styles.rect2}>
                   <Text>ÁREA DE ABRANGÊNCIA</Text>
@@ -167,14 +225,12 @@ retrieveData = async (key) => {
                   setItems={setItem_cidades}//cidades
                   zIndex={9999}
                   listMode="SCROLLVIEW"
-                  onChangeValue={() => onPressTitle("se_rrj", "se_rrj_municipio", valor, sync)}
-                  //onPress={() => enviar_()}
-                  placeholder="Municipios"
+                  onChangeValue={() => onPressTitle("se_ruj", "se_ruj_municipio", valor, sync)}
+                  placeholder={get_valor_in }
                 />
                 <View>
                   <Text style={styles.acessoText}>ACESSO</Text>
                 </View>
-
                 <DropDownPicker
                   style={styles.acesso}
                   open={abertoAcesso}
@@ -183,9 +239,7 @@ retrieveData = async (key) => {
                   setOpen={setAbertoAcesso}
                   setValue={setValorAcesso}
                   setItems={setItem_aux_acesso}//aux_acesso
-                  //onPress={(value) =>  handleChange(value)}
-
-
+                  onChangeValue={() => onPressTitle("se_ruj", "se_ruj_acesso", valorAcesso, sync)}
                   listMode="SCROLLVIEW"
                   placeholder="acesso"
                 />
@@ -198,8 +252,7 @@ retrieveData = async (key) => {
                     style={styles.input2}
                     onChangeText={localizacao => setLocalizacao(localizacao)}
                     value={localizacao}
-                    // onFocus={()=>onFocusInput(setLocalizacao)}
-                    // onBlur={()=>onPressTitle(localizacao)}
+                    onBlur={()=>onPressTitle("se_ruj", "se_ruj_localizacao", localizacao, sync)}
                     placeholder={"    Localização"}
                   />
                   <Text>formulario step content</Text>
@@ -218,7 +271,7 @@ retrieveData = async (key) => {
                     items={itemAbrangencia}
                     setOpen={setAbertoAbrangencia}
                     setValue={setValorAbrangencia}
-                    onChangeValue={value => console.log(value)}
+                    onChangeValue={() => onPressTitle("se_ruj", "se_ruj_setor_abrangencia", valorAcesso, sync)}
                     setItems={setItem_aux_setor_abrangencia}//aux_setor_abrangencia
                     listMode="SCROLLVIEW"
                     placeholder="Selecione::"
@@ -231,12 +284,8 @@ retrieveData = async (key) => {
                   customClick={() => console.log(setValor)}
                 />
               </View>
-            </>
-          )}
-        </Formik>
+
     </View>
-
-
   )
 };
 

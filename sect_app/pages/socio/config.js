@@ -7,44 +7,44 @@ const db = DatabaseConnection.getConnection();
 
 function Config({ navigation }) {
 
-//cria e faz o drop das tabelas principais
-// useEffect(() => {
+  //cria e faz o drop das tabelas principais
+  // useEffect(() => {
 
 
-// },[]);
+  // },[]);
 
   async function load_dados() {
 
-  axios.post('http://192.168.0.151:8082/api/metas.php', {})
-  .then(function (response) {
-    const metas = response.data;
-    var arr = [];
-    Object.keys(metas).forEach(function (key, i) {
-      arr.push(key);
-    });
-    var arr_colunas = [];
-    var novo_array = [];
-    arr.forEach((item) => {
-      arr_colunas.push(Object.keys(metas[item]));
-      novo_array[item] = Object.keys(metas[item]);
-      db.transaction((tx) => {
-        tx.executeSql(metas[item], []);
-      }, (err) => {
-        console.error("There was a problem with the tx metas", err);
-        return true;
-      }, (success) => {
-        console.log("metas", success);
+    axios.post('http://192.168.0.151:8082/api/metas.php', {})
+      .then(function (response) {
+        const metas = response.data;
+        var arr = [];
+        Object.keys(metas).forEach(function (key, i) {
+          arr.push(key);
+        });
+        var arr_colunas = [];
+        var novo_array = [];
+        arr.forEach((item) => {
+          arr_colunas.push(Object.keys(metas[item]));
+          novo_array[item] = Object.keys(metas[item]);
+          db.transaction((tx) => {
+            tx.executeSql(metas[item], []);
+          }, (err) => {
+            console.error("There was a problem with the tx metas", err);
+            return true;
+          }, (success) => {
+            console.log("metas", success);
+          });
+
+
+        });
+      })
+      .catch(function (error) {
+        console.log('Erro');
       });
 
-
-    });
-  })
-  .catch(function (error) {
-    console.log('Erro');
-  });
-
-      //inseri os dados e select nas tabelas pri
-      axios.post('http://192.168.0.151:8082/api/metas_dados.php', {})
+    //inseri os dados e select nas tabelas pri
+    axios.post('http://192.168.0.151:8082/api/metas_dados.php', {})
       .then(function (response) {
         const metas_dados = response.data;
         var arr = [];
@@ -64,7 +64,7 @@ function Config({ navigation }) {
                 var len = results.rows.length, i;
                 //console.log(len);
                 for (i = 0; i < len; i++) {
-                console.log(results.rows.item(i));
+                  console.log(results.rows.item(i));
                 }
               }
             );
@@ -82,9 +82,36 @@ function Config({ navigation }) {
 
   }
 
+//////////////////fim ////////////
 
-//////////////////////////////////////////////tabelas auxiliares///////////////////////////////////
-  async function aux_dados (){
+async function sync_dados(){
+
+  db.transaction((tx) => {
+    tx.executeSql(
+      "select * from se_ruj ", [], (tx, results) => {
+        //var len = results.rows.length, i;
+        var temp = [];
+        //console.log(len);
+        for (let i = 0; i < results.rows.length; ++i) {
+          console.log(results.rows.item(i))
+        }
+      }
+    );
+
+
+  }, (err) => {
+    console.error("There was a problem with the tx", err);
+    return true;
+  }, (success) => {
+  });
+
+
+}
+
+
+
+  //////////////////////////////////////////////tabelas auxiliares///////////////////////////////////
+  async function aux_dados() {
     //cria as tabelas e faz o drop das tabelas auxiliares
     axios.post('http://192.168.0.151:8082/api/estrutura2.php', {})
       .then(function (response) {
@@ -139,7 +166,7 @@ function Config({ navigation }) {
       });
 
 
-//faz o insert e select das tabelas auxiliares
+    //faz o insert e select das tabelas auxiliares
     axios.post('http://192.168.0.151:8082/api/dados2.php', {})
       .then(function (response) {
         const dados2 = response.data;
@@ -188,13 +215,18 @@ function Config({ navigation }) {
       </Text>
 
       <Mybutton
-        title='tabelas principais'
+        title='criar tabelas principais'
         customClick={load_dados}
       />
 
       <Mybutton
-        title='tabelas auxiliares'
-      customClick={aux_dados}
+        title='sincronizar tabelas principais'
+        customClick={sync_dados}
+      />
+
+      <Mybutton
+        title='criar tabelas auxiliares'
+        customClick={aux_dados}
       />
     </View>
   )
