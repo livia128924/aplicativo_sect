@@ -18,9 +18,7 @@ const ViewAllUser = () => {
 
       db.transaction((tx) => {
         tx.executeSql(
-          'SELECT * FROM items',
-          [],
-          (tx, results) => {
+          'SELECT * FROM items',[],(tx, results) => {
             var temp = [];
             for (let i = 0; i < results.rows.length; ++i)
               temp.push(results.rows.item(i));
@@ -40,7 +38,7 @@ const ViewAllUser = () => {
         alert('Erro ao enviar'); // imprimir o conteudo - console.log(JSON.stringify(error))
        });
     }
-  
+
     let listItemView = (item) => {
       return (
         <View
@@ -51,13 +49,13 @@ const ViewAllUser = () => {
               style={{width: '50%', height: 450, borderRadius: 20}}
               source={{uri: item.image}}
             />
-          
-          <Mybutton title='Enviar' customClick={() => enviar_foto(item.image)}/> 
+
+          <Mybutton title='Enviar' customClick={() => enviar_foto(item.image)}/>
 
         </View>
       );
     };
-  
+
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -75,18 +73,18 @@ const ViewAllUser = () => {
       </SafeAreaView>
     );
   };
-  
+
   const styles = StyleSheet.create({
     textheader: {
       color: '#111',
       fontSize: 12,
       fontWeight: '700',
-  
+
     },
     textbottom: {
       color: '#111',
       fontSize: 18,
     },
   });
-  
+
   export default ViewAllUser;

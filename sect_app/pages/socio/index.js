@@ -15,10 +15,6 @@ import { DatabaseConnection } from '../database/database';
 
 function ExampleOne({ navigation }) {
 
-  // const { codigo_pr } = useContext(AuthContext);
-
-  // console.log(codigo_pr);
-
   useEffect(()=>{
     db.transaction((tx) => {
       tx.executeSql(
