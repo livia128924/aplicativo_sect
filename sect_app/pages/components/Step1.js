@@ -24,24 +24,20 @@ const Step1 = (props) => {
 
         db.transaction((tx) => {
           tx.executeSql(
-            "select * from " + tabela+ " where se_ruj_cod_processo = '"  +sync+"'" , [], (tx, results) => {
+            "select * from " + tabela + " where se_ruj_cod_processo = '" + sync + "'", [], (tx, results) => {
               //console.log(results.rows);
               var row = [];
-              if (results.rows.length > 0 ) {
+              if (results.rows.length > 0) {
                 //row.push({label: results.rows.item(0).se_ruj_acesso, value:results.item(0).codigo});
                 //console.log(results.rows.item(0).se_ruj_municipio);
                 setLocalizacao(results.rows.item(0).se_ruj_localizacao);
-                setSelectedLanguage(results.rows.item(0).se_ruj_municipio.toString());
-                // if( row == setValor){
-                //   setItem_aux_acesso
-                // }
+                setValor(results.rows.item(0).se_ruj_municipio);
+
               }
-              // setItem_aux_acesso({label:results.rows.item(0).se_ruj_acesso, value:results.rows.item(i).codigo});
-              // setItem_aux_setor_abrangencia({label:results.rows.item(0).se_ruj_setor_abrangencia, value:results.rows.item(i).codigo })
-              //setItem_cidades(row);
+
             });
         })
-      }//fim
+      }//
     });
 
     //////////////primeira coisa que faz quando entra na tela:  faz um select das tabelas aux para carregar nos components //////////////
@@ -138,37 +134,8 @@ const Step1 = (props) => {
       //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
     });
 
-    AsyncStorage.setItem('nome_tabela', tabela );
+    AsyncStorage.setItem('nome_tabela', tabela);
   };
-
-
-  // function get_values (tabela, campo, codigo){
-
-  //   db.transaction((tx) => {
-
-  //     tx.executeSql(
-  //     "select "+campo+" from " +tabela+" where codigo = "+codigo+"" , [], (tx, results) => {
-  //       var temp = [];
-  //       //console.log(len);
-  //       for (let i = 0; i < results.rows.length; ++i) {
-  //         temp.push({ label: results.rows.item(i).nome, value:results.rows.item(i).codigo});
-  //         console.log(results.rows);
-
-  //       }
-  //       // get_valor_in(results.rows.item(i).se_ruj_municipio);
-
-  //       }
-  //     );
-
-  //   }, (err) => {
-  //     console.error("error", err);
-  //     return true;
-  //   }, (success) => {
-  //   console.log("select", success);
-  //   });
-
-  // }
-
 
 
   return (
@@ -183,18 +150,6 @@ const Step1 = (props) => {
 
         </View>
 
-        <Picker
-        selectedValue={selectedLanguage}
-        onValueChange={(itemValue, itemIndex) =>{
-        setSelectedLanguage (itemValue)
-        onPressTitle("se_ruj", "se_ruj_municipio", itemValue, sync)
-        }}
-        >
-          {item.map((cidades, value)=>(
-            <Picker.Item label={cidades.label} value={cidades.value} key={cidades.value} />
-          ))}
-
-        </Picker>
 
         <DropDownPicker
           style={styles.select}
