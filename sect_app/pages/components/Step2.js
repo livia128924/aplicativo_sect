@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View, TextInput } from 'react-native';
+import { Text, StyleSheet, View, TextInput, AsyncStorage } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import api from '../../services/api';
 import { DatabaseConnection } from '../database/database';
@@ -8,40 +8,8 @@ import Yup from 'yup';
 const db = DatabaseConnection.getConnection();
 
 const Step2 = (props) => {
-    useEffect(() => {
-        // db.transaction((tx) => {
-        //     tx.executeSql(
-        //       "select * from aux_inicio_atividades",[],  (tx, results) =>{
-        //        //var len = results.rows.length, i;
-        //        var temp = [];
-        //        //console.log(len);
-        //        for(let i = 0; i < results.rows.length; ++i){
-        //         temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
-        //        }
-        //        setItem_aux_inicio_atividades(temp);
-        //       }
-        //     );
-        //     tx.executeSql(
-        //       "select * from aux_natureza_atividades",[],  (tx, results) =>{
-        //        //var len = results.rows.length, i;
-        //        var temp = [];
-        //        //console.log(len);
-        //        for(let i = 0; i < results.rows.length; ++i){
-        //         temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
-        //         //console.log( results.rows.item(i).nome);
-        //        }
-        //        setItem_aux_natureza_atividades(temp);
-        //       }
-        //     );
-
-        //   },(err) => {
-        //     console.error("There was a problem with the tx", err);
-        //     return true;
-        //   },(success ) => {
-        //     console.log("all done",success );
-        //   });
-
-    }, []);
+    const [sync, setSync] = useState('');
+    const [dados_valor, setDados_valor] = useState('');
     const [outros, setOutros] = useState('');
     const [comercio, setComercio] = useState('');
     const [industria, setIndustria] = useState('');
@@ -62,27 +30,146 @@ const Step2 = (props) => {
     ]);
 
 
+
+    useEffect(() => {
+
+        var cod_processo = '';
+        //carrega o valor do select na tela index.js
+        AsyncStorage.getItem('codigo_pr').then(value => {
+            //console.log(value);
+            setSync(value);
+            cod_processo = value;
+
+        });
+
+        AsyncStorage.getItem('codigo').then(codigo => {
+            setDados_valor(codigo);
+        })
+
+
+        loadStep2();
+
+        AsyncStorage.getItem('nome_tabela').then(tabela => {
+            //console.log(cod_processo);
+            if (tabela) {
+
+                db.transaction((tx) => {
+
+                    tx.executeSql(
+                        "select * from " + tabela + " where se_ruj_cod_processo = '" + cod_processo + "'", [], (tx, results) => {
+
+                            var row = [];
+                            for (let i = 0; i < results.rows.length; ++i) {
+                                console.log(results.rows.item(0).se_ruj_acesso);
+
+                                setValorAtividade(results.rows.item(0).se_ruj_inicio_atividades);
+
+                                setValorNaturezaAtv(results.rows.item(i).se_ruj_natureza_atividades);
+
+                                setOutros(results.rows.item(i).se_ruj_natureza_atividades_outros);
+
+                                setComercio(results.rows.item(i).se_ruj_ramo_atividade_comercio);
+
+                                setIndustria(results.rows.item(i).se_ruj_ramo_atividade_industria);
+
+                                setRecursosNaturais(results.rows.item(i).se_ruj_ramo_atividade_recursos_naturais);
+
+                                setT_I(results.rows.item(i).se_ruj_ramo_atividade_tic);
+
+                                //console.log(typeof (results.rows.item(i).se_ruj_municipio));
+                                //valor(row);
+                            }
+
+                        });
+                })
+            }//
+        });
+    }, []);
+
+    async function loadStep2() {
+
+        await db.transaction((tx) => {
+            tx.executeSql(
+                "select * from aux_inicio_atividades", [], (tx, results) => {
+                    //var len = results.rows.length, i;
+                    var temp = [];
+                    //console.log(len);
+                    for (let i = 0; i < results.rows.length; ++i) {
+                        temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+                    }
+                    setItem_aux_inicio_atividades(temp);
+                }
+            );
+            tx.executeSql(
+                "select * from aux_natureza_atividades", [], (tx, results) => {
+                    //var len = results.rows.length, i;
+                    var temp = [];
+                    //console.log(len);
+                    for (let i = 0; i < results.rows.length; ++i) {
+                        temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+                        //console.log( results.rows.item(i).nome);
+                    }
+                    setItem_aux_natureza_atividades(temp);
+                }
+            );
+
+        }, (err) => {
+            console.error("There was a problem with the tx", err);
+            return true;
+        }, (success) => {
+            console.log("all done", success);
+        });
+
+    }
+
+    //função que aciona quando o estado do componente muda e seta os valores correspondente
+    function onPressTitle(tabela, campo, valor, codigo) {
+        db.transaction((tx) => {
+            const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_ruj_cod_processo = '${codigo}'`;
+            console.log(query);
+            tx.executeSql(query, [], (tx, results) => {
+                for (let i = 0; i < results.rows.length; ++i) {
+                    alert("INSERIDO COM SUCESSO");
+                }
+            });
+
+        }, (tx, err) => {
+            console.error("error", err);
+            return true;
+        }, (tx, success) => {
+            console.log("tudo certo por aqui", success);
+            //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
+        });
+
+        AsyncStorage.setItem('nome_tabela', tabela);
+
+        AsyncStorage.setItem('codigo', valor.toString());
+    };
     return (
         <>
             <View style={styles.form3}>
                 <View style={styles.rect2}>
                     <Text style={styles.titulo} >INÍCIO DAS ATIVIDADES</Text>
                 </View>
+
                 <View style={styles.atividadeTitle}>
                     <Text >Inicio da Atividade</Text>
                 </View>
+
                 <DropDownPicker
                     style={styles.atividade}
                     open={openDescricao}
-                    value={valorAtividade}
+                    value={parseInt(valorAtividade)}
                     items={itemDescricao}
                     setOpen={setOpenDescricao}
                     setValue={setValorAtividade}
                     setItems={setItem_aux_inicio_atividades}
+                    onChangeValue={() => onPressTitle("se_ruj", "se_ruj_inicio_atividades", valorAtividade, sync)}
                     listMode="SCROLLVIEW"
 
                     placeholder="Selecione::"
                 />
+                <View ></View>
             </View>
 
             <View style={styles.form4}>
@@ -95,19 +182,21 @@ const Step2 = (props) => {
                 <DropDownPicker
                     style={styles.NaturezaAtv}
                     open={openNaturezaAtv}
-                    value={valorNaturezaAtv}
+                    value={parseInt(valorNaturezaAtv)}
                     items={itemNaturezaAtv}
                     setOpen={setOpenNaturezaAtv}
                     setValue={setValorNaturezaAtv}
                     setItems={setItem_aux_natureza_atividades}
+                    onChangeValue={() => onPressTitle("se_ruj", "se_ruj_natureza_atividades", valorNaturezaAtv, sync)}
                     listMode="SCROLLVIEW"
                     placeholder="Selecione::"
                 />
                 <View style={{ alignItems: 'center' }}>
                     <TextInput
                         style={styles.inputOutros}
-                        onChangeText={setOutros}
+                        onChangeText={outros => setOutros(outros)}
                         value={outros}
+                        onBlur={() => onPressTitle("se_ruj", "se_ruj_natureza_atividades_outros", outros, sync)}
                         placeholder={" Outros"}
                     />
                 </View>
@@ -117,26 +206,30 @@ const Step2 = (props) => {
                 <View style={{ alignItems: 'center' }}>
                     <TextInput
                         style={styles.inputOutros}
-                        onChangeText={setComercio}
+                        onChangeText={comercio => setComercio(comercio)}
                         value={comercio}
+                        onBlur={() => onPressTitle("se_ruj", "se_ruj_ramo_atividade_comercio", comercio, sync)}
                         placeholder={"  Comércio"}
                     />
                     <TextInput
                         style={styles.inputOutros}
-                        onChangeText={setIndustria}
+                        onChangeText={industria=>setIndustria(industria)}
                         value={industria}
+                        onBlur={() => onPressTitle("se_ruj", "se_ruj_ramo_atividade_industria", industria, sync)}
                         placeholder={"  Indústria"}
                     />
                     <TextInput
                         style={styles.inputOutros}
-                        onChangeText={setRecursosNaturais}
+                        onChangeText={recursosNaturais=> setRecursosNaturais(recursosNaturais)}
                         value={recursosNaturais}
+                        onBlur={() => onPressTitle("se_ruj", "se_ruj_ramo_atividade_recursos_naturais", recursosNaturais, sync)}
                         placeholder={"  Recursos Naturais"}
                     />
                     <TextInput
                         style={styles.inputOutros}
-                        onChangeText={setT_I}
+                        onChangeText={t_I=> setT_I(t_I)}
                         value={t_I}
+                        onBlur={() => onPressTitle("se_ruj", "se_ruj_ramo_atividade_tic", t_I, sync)}
                         placeholder={"   Tecnologia da Informação/Comunicação"}
                     />
 
@@ -154,7 +247,7 @@ const styles = StyleSheet.create({
         color: "#121212",
         marginLeft: 30,
         marginTop: 10,
-      },
+    },
     inputOutros: {
         height: 40,
         width: '85%',
@@ -171,6 +264,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "rgba(74,144,226,1)",
         borderRadius: 3,
+        zIndex:10,
 
     },
     NaturezaAtv: {
@@ -189,6 +283,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "rgba(74,144,226,1)",
         borderRadius: 3,
+
     },
     input2: {
         height: 40,

@@ -3,40 +3,77 @@ import { Text, StyleSheet, View, TextInput, AsyncStorage, Picker } from 'react-n
 import DropDownPicker from 'react-native-dropdown-picker';
 import { DatabaseConnection } from '../database/database';
 import { Formik, useFormik } from 'formik';
+
 const db = DatabaseConnection.getConnection();
 import Mybutton from './Mybutton';
 
 
 const Step1 = (props) => {
 
-  const [sync, setSync] = useState(false);
+  const [sync, setSync] = useState('');
   const [dados_valor, setDados_valor] = useState('');
+  const [localizacao, setLocalizacao] = useState('');
+  const [aberto, setAberto] = useState(false);
+  const [valor, setValor] = useState('');
+
+  const [item, setItem_cidades] = useState([
+    { label: 'Apple', value: 'apple' },
+    { label: 'Banana', value: 'banana' }
+  ]);
+
+  const [abertoAcesso, setAbertoAcesso] = useState(false);
+  const [valorAcesso, setValorAcesso] = useState(null);
+  const [itemAcesso, setItem_aux_acesso] = useState([
+    { label: 'samsung', value: 'samsung' },
+    { label: 'motorola', value: 'motorola' }
+  ]);
+  const [abertoAbrangencia, setAbertoAbrangencia] = useState(false);
+  const [valorAbrangencia, setValorAbrangencia] = useState(null);
+  const [itemAbrangencia, setItem_aux_setor_abrangencia] = useState([
+    { label: '100', value: '100' },
+    { label: '200', value: '200' }
+  ]);
 
   useEffect(() => {
-
+    var cod_processo = '';
     //carrega o valor do select na tela index.js
     AsyncStorage.getItem('codigo_pr').then(value => {
       //console.log(value);
       setSync(value);
+      cod_processo = value;
+
     });
 
-    AsyncStorage.getItem('codigo').then(codigo=>{
+    AsyncStorage.getItem('codigo').then(codigo => {
       setDados_valor(codigo);
     })
 
 
+    loadDados();
+
+
     AsyncStorage.getItem('nome_tabela').then(tabela => {
+      //console.log(cod_processo);
       if (tabela) {
 
         db.transaction((tx) => {
+
           tx.executeSql(
-            "select * from " + tabela + " where se_ruj_cod_processo = '" + sync + "'", [], (tx, results) => {
-              //console.log(results.rows);
+            "select * from " + tabela + " where se_ruj_cod_processo = '" + cod_processo + "'", [], (tx, results) => {
+
               var row = [];
               for (let i = 0; i < results.rows.length; ++i) {
-                row.push({label: results.rows.item(0).se_ruj_municipio, value:results.rows.item(0).codigo});
-                //console.log(results.rows.item(0).se_ruj_municipio);
+                //console.log(results.rows.item(0).se_ruj_acesso);
+
                 setLocalizacao(results.rows.item(0).se_ruj_localizacao);
+
+                setValor(results.rows.item(i).se_ruj_municipio);
+
+                setValorAcesso(results.rows.item(i).se_ruj_acesso);
+
+                setValorAbrangencia(results.rows.item(i).se_ruj_setor_abrangencia);
+
+                //console.log(typeof (results.rows.item(i).se_ruj_municipio));
                 //valor(row);
               }
 
@@ -45,9 +82,12 @@ const Step1 = (props) => {
       }//
     });
 
+  }, []);
 
+
+  async function loadDados() {
     //////////////primeira coisa que faz quando entra na tela:  faz um select das tabelas aux para carregar nos components //////////////
-    db.transaction((tx) => {
+    await db.transaction((tx) => {
       tx.executeSql(
         "select * from aux_acesso", [], (tx, results) => {
           //var len = results.rows.length, i;
@@ -88,36 +128,7 @@ const Step1 = (props) => {
       return true;
     }, (success) => {
     });
-
-
-  }, []);
-
-  //estado inicial e as funçoes para poder ser atualizadas posteriormente ,
-
-
-  const [localizacao, setLocalizacao] = useState('');
-  const [aberto, setAberto] = useState(false);
-  const [valor, setValor] = useState('null');
-
-  const [item, setItem_cidades] = useState([
-    { label: 'Apple', value: 'apple' },
-    { label: 'Banana', value: 'banana' }
-  ]);
-
-  const [abertoAcesso, setAbertoAcesso] = useState(false);
-  const [valorAcesso, setValorAcesso] = useState(null);
-  const [itemAcesso, setItem_aux_acesso] = useState([
-    { label: 'samsung', value: 'samsung' },
-    { label: 'motorola', value: 'motorola' }
-  ]);
-  const [abertoAbrangencia, setAbertoAbrangencia] = useState(false);
-  const [valorAbrangencia, setValorAbrangencia] = useState(null);
-  const [itemAbrangencia, setItem_aux_setor_abrangencia] = useState([
-    { label: '100', value: '100' },
-    { label: '200', value: '200' }
-  ]);
-
-  const [selectedLanguage, setSelectedLanguage] = useState('');
+  }
 
   //função que aciona quando o estado do componente muda e seta os valores correspondente
   function onPressTitle(tabela, campo, valor, codigo) {
@@ -128,7 +139,6 @@ const Step1 = (props) => {
         for (let i = 0; i < results.rows.length; ++i) {
           alert("INSERIDO COM SUCESSO");
         }
-
       });
 
     }, (tx, err) => {
@@ -141,7 +151,7 @@ const Step1 = (props) => {
 
     AsyncStorage.setItem('nome_tabela', tabela);
 
-    AsyncStorage.setItem('codigo', valor);
+    AsyncStorage.setItem('codigo', valor.toString());
   };
 
 
@@ -152,16 +162,15 @@ const Step1 = (props) => {
         <View style={styles.rect2}>
           <Text>ÁREA DE ABRANGÊNCIA</Text>
         </View>
+
         <View style={styles.municipio}>
-          <Text >MUNICIPIOS</Text>
-
+          <Text>MUNICIPIOS </Text>
         </View>
-
 
         <DropDownPicker
           style={styles.select}
           open={aberto}
-          value={valor}
+          value={parseInt(valor)}
           items={item}
           setOpen={setAberto}
           setValue={setValor}
@@ -169,15 +178,16 @@ const Step1 = (props) => {
           zIndex={9999}
           listMode="SCROLLVIEW"
           onChangeValue={() => onPressTitle("se_ruj", "se_ruj_municipio", valor, sync)}
-          placeholder={"dados_valor"} //aqui eu tentei colocar o retorno da funcao do select
+          placeholder={"Municipios"} //aqui eu tentei colocar o retorno da funcao do select
         />
+
         <View>
           <Text style={styles.acessoText}>ACESSO</Text>
         </View>
         <DropDownPicker
           style={styles.acesso}
           open={abertoAcesso}
-          value={valorAcesso}
+          value={parseInt(valorAcesso)}
           items={itemAcesso}
           setOpen={setAbertoAcesso}
           setValue={setValorAcesso}
@@ -204,13 +214,13 @@ const Step1 = (props) => {
 
       <View style={styles.form_step1}>
         <View style={styles.rect2}>
-          <Text style={styles.titulo} >SETOR DE ABRANGÊNCIA</Text>
+          <Text style={styles.titulo}>SETOR DE ABRANGÊNCIA</Text>
         </View>
         <View style={styles.dropAtividades}>
           <DropDownPicker
             style={styles.abrangencia}
             open={abertoAbrangencia}
-            value={valorAbrangencia}
+            value={parseInt(valorAbrangencia)}
             items={itemAbrangencia}
             setOpen={setAbertoAbrangencia}
             setValue={setValorAbrangencia}

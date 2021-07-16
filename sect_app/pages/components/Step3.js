@@ -4,40 +4,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import api from '../../services/api';
 
 const Step3 = (props) => {
-  useEffect(() => {
-    api.post('socio/cooperados.php', {})
-      .then(function (response) {
 
-        const { label } = response.data;
-        //console.log(response.data);
-        setItemSe_ruj_cooperados(response.data);
-      });
-
-      api.post('socio/associados.php', {})
-      .then(function (response) {
-
-        const { label } = response.data;
-        //console.log(response.data);
-        setItemSe_ruj_associados(response.data);
-      });
-
-      api.post('socio/mao_obra.php', {})
-      .then(function (response) {
-
-        const { label } = response.data;
-        //console.log(response.data);
-        setItemMao_de_obra(response.data);
-      });
-      api.post('socio/politica_beneficios.php', {})
-      .then(function (response) {
-
-        const { label } = response.data;
-        //console.log(response.data);
-        setItemSe_ruj_beneficios_concedidos(response.data);
-      });
-
-}, []);
-    const [outrosBeneficios, setOutrosBeneficios] = useState('');
+  const [outrosBeneficios, setOutrosBeneficios] = useState('');
     const [openMao_de_obra, setOpenMao_de_obra] = useState(false);
     const [valorMao_de_obra, setValorMao_de_obra] = useState(null);
     const [itemMao_de_obra, setItemMao_de_obra] = useState([
@@ -66,6 +34,86 @@ const Step3 = (props) => {
       { label: '900', value: '900' }
     ]);
 
+  useEffect(() => {
+
+
+        var cod_processo = '';
+        //carrega o valor do select na tela index.js
+        AsyncStorage.getItem('codigo_pr').then(value => {
+            //console.log(value);
+            setSync(value);
+            cod_processo = value;
+
+        });
+
+        AsyncStorage.getItem('codigo').then(codigo => {
+            setDados_valor(codigo);
+        })
+
+        loadStep3();
+
+
+}, []);
+
+async function loadStep3(){
+  await db.transaction((tx) => {
+    tx.executeSql(
+        "select * from aux_cooperados", [], (tx, results) => {
+            //var len = results.rows.length, i;
+            var temp = [];
+            //console.log(len);
+            for (let i = 0; i < results.rows.length; ++i) {
+                temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+            }
+            setItemSe_ruj_cooperados(temp);
+        }
+    );
+    tx.executeSql(
+        "select * from aux_associados", [], (tx, results) => {
+            //var len = results.rows.length, i;
+            var temp = [];
+            //console.log(len);
+            for (let i = 0; i < results.rows.length; ++i) {
+                temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+                //console.log( results.rows.item(i).nome);
+            }
+            setItemSe_ruj_associados(temp);
+        }
+    );
+    tx.executeSql(
+        "select * from aux_mao_de_obra", [], (tx, results) => {
+            //var len = results.rows.length, i;
+            var temp = [];
+            //console.log(len);
+            for (let i = 0; i < results.rows.length; ++i) {
+                temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+                //console.log( results.rows.item(i).nome);
+            }
+            setItemMao_de_obra(temp);
+        }
+    );
+    tx.executeSql(
+        "select * from aux_tipo_beneficios_sociais", [], (tx, results) => {
+            //var len = results.rows.length, i;
+            var temp = [];
+            //console.log(len);
+            for (let i = 0; i < results.rows.length; ++i) {
+                temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
+                //console.log( results.rows.item(i).nome);
+            }
+            setItemSe_ruj_beneficios_concedidos(temp);
+        }
+    );
+
+}, (err) => {
+    console.error("There was a problem with the tx", err);
+    return true;
+}, (success) => {
+    console.log("all done", success);
+});
+}
+
+
 
 
     return (
@@ -81,11 +129,12 @@ const Step3 = (props) => {
               <DropDownPicker
                 style={styles.Mao_de_obra}
                 open={openMao_de_obra}
-                value={valorMao_de_obra}
+                value={parseInt(valorMao_de_obra)}
                 items={itemMao_de_obra}
                 setOpen={setOpenMao_de_obra}
                 setValue={setValorMao_de_obra}
                 setItems={setItemMao_de_obra}
+                onChangeValue={() => onPressTitle("se_ruj", "se_ruj_mao_de_obra", valorAtividade, sync)}
                 listMode="SCROLLVIEW"
                 placeholder="Selecione::"
               />
