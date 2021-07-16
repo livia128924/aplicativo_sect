@@ -10,6 +10,7 @@ import Mybutton from './Mybutton';
 const Step1 = (props) => {
 
   const [sync, setSync] = useState(false);
+  const [dados_valor, setDados_valor] = useState('');
 
   useEffect(() => {
 
@@ -19,6 +20,11 @@ const Step1 = (props) => {
       setSync(value);
     });
 
+    AsyncStorage.getItem('codigo').then(codigo=>{
+      setDados_valor(codigo);
+    })
+
+
     AsyncStorage.getItem('nome_tabela').then(tabela => {
       if (tabela) {
 
@@ -27,18 +33,18 @@ const Step1 = (props) => {
             "select * from " + tabela + " where se_ruj_cod_processo = '" + sync + "'", [], (tx, results) => {
               //console.log(results.rows);
               var row = [];
-              if (results.rows.length > 0) {
-                //row.push({label: results.rows.item(0).se_ruj_acesso, value:results.item(0).codigo});
+              for (let i = 0; i < results.rows.length; ++i) {
+                row.push({label: results.rows.item(0).se_ruj_municipio, value:results.rows.item(0).codigo});
                 //console.log(results.rows.item(0).se_ruj_municipio);
                 setLocalizacao(results.rows.item(0).se_ruj_localizacao);
-                setValor(results.rows.item(0).se_ruj_municipio);
-
+                //valor(row);
               }
 
             });
         })
       }//
     });
+
 
     //////////////primeira coisa que faz quando entra na tela:  faz um select das tabelas aux para carregar nos components //////////////
     db.transaction((tx) => {
@@ -90,7 +96,6 @@ const Step1 = (props) => {
 
 
   const [localizacao, setLocalizacao] = useState('');
-  const [teste, get_valor_in] = useState('');
   const [aberto, setAberto] = useState(false);
   const [valor, setValor] = useState('null');
 
@@ -135,6 +140,8 @@ const Step1 = (props) => {
     });
 
     AsyncStorage.setItem('nome_tabela', tabela);
+
+    AsyncStorage.setItem('codigo', valor);
   };
 
 
@@ -162,7 +169,7 @@ const Step1 = (props) => {
           zIndex={9999}
           listMode="SCROLLVIEW"
           onChangeValue={() => onPressTitle("se_ruj", "se_ruj_municipio", valor, sync)}
-          placeholder={"get_valor_in "} //aqui eu tentei colocar o retorno da funcao do select
+          placeholder={"dados_valor"} //aqui eu tentei colocar o retorno da funcao do select
         />
         <View>
           <Text style={styles.acessoText}>ACESSO</Text>

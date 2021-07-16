@@ -167,7 +167,7 @@ async function sync_dados(){
 
 
     //faz o insert e select das tabelas auxiliares
-    axios.post('http://192.168.0.151:8082/api/dados2.php', {})
+    axios.post('http://192.168.0.151:8082/api/dados3.php', {})
       .then(function (response) {
         const dados2 = response.data;
         //console.log(dados2);
