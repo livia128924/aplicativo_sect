@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, StyleSheet, View, TextInput, AsyncStorage, Picker } from 'react-native';
+import { Text, StyleSheet, View, TextInput, AsyncStorage } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { DatabaseConnection } from '../database/database';
 import { Formik, useFormik } from 'formik';
+import Mybutton from './Mybutton';
+import Checkbox from 'expo-checkbox';
+import RadioButon from './RadioButton';
 
 const db = DatabaseConnection.getConnection();
-import Mybutton from './Mybutton';
-
 
 const Step1 = (props) => {
 
@@ -34,6 +35,39 @@ const Step1 = (props) => {
     { label: '200', value: '200' }
   ]);
 
+  const [ischecado, setChecado] = useState([
+
+    { id: 1, name: 'checkbox', label: 'Telha de amianto', value: '1', isChecked: false },
+    { id: 2, name: 'checkbox', label: 'Madeira aparelhado', value: '2', isChecked: false },
+    { id: 3, name: 'checkbox', label: 'Alumínio ou zinco', value: '3', isChecked: false },
+    { id: 4, name: 'checkbox', label: 'Laje de concreto', value: '4', isChecked: false },
+    { id: 5, name: 'checkbox', label: 'Telha de barro', value: '5', isChecked: false },
+    { id: 6, name: 'checkbox', label: 'Alumínio Galvanizado', value: '6', isChecked: false },
+  ]);
+
+  const PROP = [
+    {
+      key: 'samsung',
+      text: 'Samsung',
+      isChecked: false
+    },
+    {
+      key: 'apple',
+      text: 'Apple',
+      isChecked: false
+    },
+    {
+      key: 'motorola',
+      text: 'Motorola',
+      isChecked: false
+    },
+    {
+      key: 'lenovo',
+      text: 'Lenovo',
+      isChecked: false
+    },
+  ];
+
   useEffect(() => {
     var cod_processo = '';
     //carrega o valor do select na tela index.js
@@ -60,7 +94,7 @@ const Step1 = (props) => {
 
           tx.executeSql(
             "select * from " + tabela + " where se_ruj_cod_processo = '" + cod_processo + "'", [], (tx, results) => {
-
+              var x = "";
               var row = [];
               for (let i = 0; i < results.rows.length; ++i) {
                 //console.log(results.rows.item(0).se_ruj_acesso);
@@ -73,16 +107,20 @@ const Step1 = (props) => {
 
                 setValorAbrangencia(results.rows.item(i).se_ruj_setor_abrangencia);
 
-                //console.log(typeof (results.rows.item(i).se_ruj_municipio));
-                //valor(row);
+                //muda(results.rows.item(i).se_ruj_material_cobertura);
+                x = results.rows.item(i).se_ruj_material_cobertura;
+
+                valor_checked(x.split(','));
               }
 
             });
         })
+
       }//
     });
 
   }, []);
+
 
 
   async function loadDados() {
@@ -155,6 +193,60 @@ const Step1 = (props) => {
   };
 
 
+  const handleChange = async (index) => {
+
+    //console.log(index);
+    let value = index.value;
+    let checked = index.isChecked;
+
+    let _sintomas = [...ischecado];
+
+    _sintomas.forEach(sintoma => {
+      if (sintoma.value === value) {
+        sintoma.isChecked = !checked;
+      }
+    });
+
+    //console.log(ischecado);
+    return setChecado(_sintomas);
+
+  };
+
+  function muda() {
+    //await api
+    var str_sintomas = [];
+
+    ischecado.filter(value => value.isChecked === true).map((item) => {
+      str_sintomas.push(item.value);
+    });
+    //console.log(ischecado);
+    return str_sintomas.join(",");
+  }
+
+  function valor_checked(material_cobertura) {
+
+    let x = [...ischecado];
+
+    //console.log(ischecado.value);
+    material_cobertura.forEach(item => {
+      //console.log(item);
+      x.forEach(sintoma => {
+        if (sintoma.value === item) {
+          sintoma.isChecked = true;
+        }
+      });
+      //console.log(x);
+    });
+
+    return setChecado(x);
+  }
+
+function radio (){
+ console.log("ok");
+}
+
+
+
   return (
 
     <View>
@@ -216,20 +308,36 @@ const Step1 = (props) => {
         <View style={styles.rect2}>
           <Text style={styles.titulo}>SETOR DE ABRANGÊNCIA</Text>
         </View>
-        <View style={styles.dropAtividades}>
-          <DropDownPicker
-            style={styles.abrangencia}
-            open={abertoAbrangencia}
-            value={parseInt(valorAbrangencia)}
-            items={itemAbrangencia}
-            setOpen={setAbertoAbrangencia}
-            setValue={setValorAbrangencia}
-            onChangeValue={() => onPressTitle("se_ruj", "se_ruj_setor_abrangencia", valorAcesso, sync)}
-            setItems={setItem_aux_setor_abrangencia}//aux_setor_abrangencia
-            listMode="SCROLLVIEW"
-            placeholder="Selecione::"
+        <View style={styles.checkboxlabel}>
+
+          {[...ischecado].map((item, index) => (
+            <View style={styles.checkboxGroup}
+              key={item.id}
+            >
+              <Checkbox
+                style={styles.checkbox}
+                value={item.isChecked}
+                //color={item.isChecked ? '#4630EB' : undefined}
+                onValueChange={() => {
+                  handleChange(item); onPressTitle("se_ruj", "se_ruj_material_cobertura", muda(), sync)
+                }}
+              />
+              <Text >{item.label}</Text>
+            </View>
+          ))}
+
+        </View>
+
+        <View style={styles.container}>
+          <RadioButon
+          PROP={PROP}
+          value={radio()}
+
+          //value={()=> onPressTitle("se_ruj", "se_ruj_material_cobertura", PROP, sync )}
+
           />
         </View>
+
       </View>
       <View>
         <Mybutton
@@ -243,6 +351,20 @@ const Step1 = (props) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  checkboxGroup: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  checkboxlabel: {
+    marginTop: 5,
+    marginLeft: 30,
+  },
   form: {
     width: 340,
     height: 370,
@@ -254,7 +376,6 @@ const styles = StyleSheet.create({
   form_step1: {
     marginTop: 15,
     width: 340,
-    height: 150,
     marginLeft: 25,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
