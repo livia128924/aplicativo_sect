@@ -5,7 +5,7 @@ import { DatabaseConnection } from '../database/database';
 import { Formik, useFormik } from 'formik';
 import Mybutton from './Mybutton';
 import Checkbox from 'expo-checkbox';
-import RadioButon from './RadioButton';
+import { RadioButton } from 'react-native-paper';
 
 const db = DatabaseConnection.getConnection();
 
@@ -45,7 +45,8 @@ const Step1 = (props) => {
     { id: 6, name: 'checkbox', label: 'Alumínio Galvanizado', value: '6', isChecked: false },
   ]);
 
-  const PROP = [
+  const [checked, setChecked] = React.useState('');
+  const [prop, setProp] = useState ([
     {
       key: 'samsung',
       text: 'Samsung',
@@ -66,7 +67,7 @@ const Step1 = (props) => {
       text: 'Lenovo',
       isChecked: false
     },
-  ];
+  ]);
 
   useEffect(() => {
     var cod_processo = '';
@@ -111,6 +112,8 @@ const Step1 = (props) => {
                 x = results.rows.item(i).se_ruj_material_cobertura;
 
                 valor_checked(x.split(','));
+
+                setChecked(parseInt(results.rows.item(i).se_ruj_destino_dejetos));
               }
 
             });
@@ -178,14 +181,28 @@ const Step1 = (props) => {
           alert("INSERIDO COM SUCESSO");
         }
       });
-
     }, (tx, err) => {
-      console.error("error", err);
+      console.error("error em alguma coisa", err);
       return true;
     }, (tx, success) => {
       console.log("tudo certo por aqui", success);
       //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
     });
+
+    db.transaction((tx)=>{
+      const log_update = `INSERT INTO log (tabela, campo, valor, codigo, situacao) VALUES  ('${tabela}', '${campo}', '${valor}', '${codigo}', '1')`;
+      console.log(log_update);
+      tx.executeSql(log_update, [], (tx, results) =>{
+
+      });
+    }, (tx, err) => {
+      console.error("error log", err);
+      return true;
+    }, (tx, success) => {
+      console.log("tudo certo por aquiii", success);
+      //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
+    })
+
 
     AsyncStorage.setItem('nome_tabela', tabela);
 
@@ -241,11 +258,16 @@ const Step1 = (props) => {
     return setChecado(x);
   }
 
-function radio (){
- console.log("ok");
-}
+  // function radio (){
+  // var y = [...PROP];
 
-
+  //   y.forEach(text => {
+  //     if(text.value === item){
+  //       text.isChecked = true;
+  //       console.log(y);
+  //     }
+  //   });
+  // }
 
   return (
 
@@ -272,6 +294,7 @@ function radio (){
           onChangeValue={() => onPressTitle("se_ruj", "se_ruj_municipio", valor, sync)}
           placeholder={"Municipios"} //aqui eu tentei colocar o retorno da funcao do select
         />
+
 
         <View>
           <Text style={styles.acessoText}>ACESSO</Text>
@@ -328,23 +351,31 @@ function radio (){
 
         </View>
 
-        <View style={styles.container}>
-          <RadioButon
-          PROP={PROP}
-          value={radio()}
 
-          //value={()=> onPressTitle("se_ruj", "se_ruj_material_cobertura", PROP, sync )}
+        <View style={styles.checkboxlabel}>
 
-          />
+          {[...prop].map((res, index) => (
+            <View style={styles.checkboxGroup}
+              key={res.key}
+            >
+              <RadioButton
+                value={res.key}
+                status={ checked === index ? 'checked' : 'unchecked'}
+                onPress={() =>{ setChecked(index); onPressTitle("se_ruj", "se_ruj_destino_dejetos", index, sync) } }>
+              </RadioButton>
+              <Text>{res.text}</Text>
+            </View>
+          ))}
+          { <Text> Selected: {checked} </Text> }
         </View>
 
       </View>
-      <View>
+      {/* <View>
         <Mybutton
           title='Enviar'
           customClick={() => console.log(setValor)}
         />
-      </View>
+      </View> */}
 
     </View>
   )

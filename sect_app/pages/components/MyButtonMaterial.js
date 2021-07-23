@@ -1,24 +1,24 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
-
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 
-IconFontAwesome.loadFont();
+
+IconMaterial.loadFont();
 
 
-
-const Mybutton = (props) => {
+const MybuttonMaterial = (props) => {
     return (
         <TouchableOpacity
             style={styles.button}
             onPress={props.customClick}>
 
-            <IconFontAwesome
+            <IconMaterial
                 name={props.icon}
                 size={25}
                 color='#042'
                 style={styles.btnIcon} />
+
+
             <Text style={styles.text}>
                 {props.title}
             </Text>
@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
         textAlign:'center'
     },
     button: {
-
         height: 100,
         alignItems: 'center',
         justifyContent: 'center',
@@ -59,4 +58,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Mybutton;
+export default MybuttonMaterial;

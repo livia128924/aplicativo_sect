@@ -1,9 +1,11 @@
 import React, { Component, useEffect } from 'react';
 import axios from 'axios';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button ,StyleSheet} from 'react-native';
 import { DatabaseConnection } from '../database/database';
 import Mybutton from '../components/Mybutton';
+import MybuttonMaterial from '../components/MyButtonMaterial';
 const db = DatabaseConnection.getConnection();
+
 
 function Config({ navigation }) {
 
@@ -34,6 +36,15 @@ function Config({ navigation }) {
             return true;
           }, (success) => {
             console.log("metas", success);
+          });
+
+          db.transaction((tx) => {
+            tx.executeSql("CREATE TABLE IF NOT EXISTS `log` ( codigo INTEGER PRIMARY KEY , tabela TEXT, campo TEXT, valor TEXT, codTabela TEXT, data TEXT DEFAULT CURRENT_TIMESTAMP , situacao TEXT)", []);
+          }, (err) => {
+            console.error("There was a problem with the log ", err);
+            return true;
+          }, (success) => {
+            console.log("criou a tabela log", success);
           });
 
 
@@ -82,31 +93,31 @@ function Config({ navigation }) {
 
   }
 
-//////////////////fim ////////////
+  //////////////////fim ////////////
 
-async function sync_dados(){
+  async function sync_dados() {
 
-  db.transaction((tx) => {
-    tx.executeSql(
-      "select * from se_ruj ", [], (tx, results) => {
-        //var len = results.rows.length, i;
-        var temp = [];
-        //console.log(len);
-        for (let i = 0; i < results.rows.length; ++i) {
-          console.log(results.rows.item(i))
+    db.transaction((tx) => {
+      tx.executeSql(
+        "select * from se_ruj ", [], (tx, results) => {
+          //var len = results.rows.length, i;
+          var temp = [];
+          //console.log(len);
+          for (let i = 0; i < results.rows.length; ++i) {
+            console.log(results.rows.item(i))
+          }
         }
-      }
-    );
+      );
 
 
-  }, (err) => {
-    console.error("There was a problem with the tx", err);
-    return true;
-  }, (success) => {
-  });
+    }, (err) => {
+      console.error("There was a problem with the tx", err);
+      return true;
+    }, (success) => {
+    });
 
 
-}
+  }
 
 
 
@@ -210,28 +221,40 @@ async function sync_dados(){
   ///////////////////////////////fim tabelas auxiliares/////////////////////
 
   return (
-    <View>
-      <Text>Teste
-      </Text>
+    <View style={styles.container}>
 
-      <Mybutton
+
+      <MybuttonMaterial
         title='criar tabelas principais'
         customClick={load_dados}
+        icon='table-star'
       />
 
-      <Mybutton
+      <MybuttonMaterial
         title='sincronizar tabelas principais'
         customClick={sync_dados}
+        icon='table-sync'
       />
-
-      <Mybutton
+      <MybuttonMaterial
         title='criar tabelas auxiliares'
         customClick={aux_dados}
+        icon='table-plus'
       />
     </View>
   )
 
 }
+
+const styles = StyleSheet.create({
+  container:{
+      flex: 1,
+      padding: 30,
+      flexDirection: 'row',
+      justifyContent: 'center',
+
+  },
+
+});
 export default Config;
 
 
