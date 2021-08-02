@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
         textAlign:'center'
     },
     button: {
-
         height: 100,
         alignItems: 'center',
         justifyContent: 'center',

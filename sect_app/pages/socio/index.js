@@ -13,35 +13,24 @@ import { DatabaseConnection } from '../database/database';
 
 
 
-function ExampleOne({ navigation }) {
+function ExampleOne() {
 
   useEffect(()=>{
-    db.transaction((tx) => {
-      tx.executeSql(
-        "SELECT s.*,r.codigo as codigo_rq, p.codigo as codigo_pr FROM pr p INNER JOIN rq r ON r.codigo = p.pr_requerente inner join se_ruj s ON s.se_ruj_cod_processo = p.codigo  where p.pr_numero_processo = 'C1118' ", [], (tx, results) => {
 
-            var temp = [];
-            //console.log(len);
-            for(let i = 0; i < results.rows.length; i++){
-              temp.push({ label: results.rows.item(i)});
+    var  prss= '';
+    AsyncStorage.getItem('cod_prss').then(value_prss => {
 
-             setTitleText(results.rows.item(i).codigo_pr);
-             setTitleText2(results.rows.item(i).codigo_rq );
-             setTitleText3(results.rows.item(i).codigo );
+      setProcesso(value_prss);
+      prss=value_prss;
+      //console.log("variavel", prss);
 
 
-         AsyncStorage.setItem('codigo_pr', results.rows.item(i).codigo_pr.toString());
-           //console.log(AuthContext);
-             //codigo_se = results.rows.item(i).codigo;
-            }
-        }
-      );
-    },(err) => {
-      console.error("There was a problem with the tx", err);
-      return true;
-    },(success ) => {
-      console.log("all done with select",success );
-    });
+  });
+    AsyncStorage.getItem('rq_nome').then(value_nome => {
+      //console.log(value_nome);
+      setRequerente(value_nome);
+
+  });
 
   },[]);
 
@@ -71,23 +60,27 @@ function ExampleOne({ navigation }) {
     navigation.navigate('Relatorio');
   };
 
-  const [titleText, setTitleText] = useState('');
-  const [titleText2, setTitleText2] = useState('');
-  const [titleText3, setTitleText3] = useState('');
+  const [processo, setProcesso] = useState('');
+  const [requerente, setRequerente] = useState('');
+
   return (
     <View style={{ flex: 1, marginTop: 0 }}>
 
       <View style={styles.rect} >
-      <Text style={styles.processo}>Processo:  {titleText}</Text>
-      <Text style={styles.nome}>requerente:  {titleText2}</Text>
-        </View>
-      <ProgressSteps>
+      <Text style={styles.processo}>Processo:  {processo}</Text>
+      <Text style={styles.nome}>requerente:  {requerente}</Text>
+        </View >
+
+      <ProgressSteps
+
+      >
         <ProgressStep
           label="Area"
           onNext={onNextStep}
           onPrevious={onPrevStep}
         >
           <View>
+
             <Step1
 
             />

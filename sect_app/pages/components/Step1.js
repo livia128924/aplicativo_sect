@@ -46,7 +46,7 @@ const Step1 = (props) => {
   ]);
 
   const [checked, setChecked] = React.useState('');
-  const [prop, setProp] = useState ([
+  const [prop, setProp] = useState([
     {
       key: 'samsung',
       text: 'Samsung',
@@ -70,12 +70,14 @@ const Step1 = (props) => {
   ]);
 
   useEffect(() => {
+
+
     var cod_processo = '';
     //carrega o valor do select na tela index.js
-    AsyncStorage.getItem('codigo_pr').then(value => {
-      //console.log(value);
+    AsyncStorage.getItem('pr_codigo').then(value => {
       setSync(value);
       cod_processo = value;
+      console.log("cod altoIncremento", cod_processo);
 
     });
 
@@ -97,9 +99,9 @@ const Step1 = (props) => {
             "select * from " + tabela + " where se_ruj_cod_processo = '" + cod_processo + "'", [], (tx, results) => {
               var x = "";
               var row = [];
+              //console.log(cod_processo, tabela);
               for (let i = 0; i < results.rows.length; ++i) {
-                //console.log(results.rows.item(0).se_ruj_acesso);
-
+                console.log(results.rows.length);
                 setLocalizacao(results.rows.item(0).se_ruj_localizacao);
 
                 setValor(results.rows.item(i).se_ruj_municipio);
@@ -130,7 +132,7 @@ const Step1 = (props) => {
     //////////////primeira coisa que faz quando entra na tela:  faz um select das tabelas aux para carregar nos components //////////////
     await db.transaction((tx) => {
       tx.executeSql(
-        "select * from aux_acesso", [], (tx, results) => {
+        "select * from aux_acesso ", [], (tx, results) => {
           //var len = results.rows.length, i;
           var temp = [];
           //console.log(len);
@@ -141,7 +143,7 @@ const Step1 = (props) => {
         }
       );
       tx.executeSql(
-        "select * from cidades", [], (tx, results) => {
+        "select * from cidades ", [], (tx, results) => {
           //var len = results.rows.length, i;
           var temp = [];
           //console.log(len);
@@ -174,8 +176,9 @@ const Step1 = (props) => {
   //função que aciona quando o estado do componente muda e seta os valores correspondente
   function onPressTitle(tabela, campo, valor, codigo) {
     db.transaction((tx) => {
+
       const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_ruj_cod_processo = '${codigo}'`;
-      console.log(query);
+      //console.log(query);
       tx.executeSql(query, [], (tx, results) => {
         for (let i = 0; i < results.rows.length; ++i) {
           alert("INSERIDO COM SUCESSO");
@@ -189,20 +192,35 @@ const Step1 = (props) => {
       //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
     });
 
-    db.transaction((tx)=>{
-      const log_update = `INSERT INTO log (tabela, campo, valor, codigo, situacao) VALUES  ('${tabela}', '${campo}', '${valor}', '${codigo}', '1')`;
+    var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
+
+    db.transaction((tx) => {
+      //tx.executeSql("DROP TABLE log", []);
+      const log_delete = "INSERT INTO log (chave , tabela, campo, valor, codTabela, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+      console.log("INSERT INTO log (chave , tabela, campo, valor, codTabela, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
+      tx.executeSql(log_delete, []);
+    }, (tx, err) => {
+      console.error("error delete", err);
+      return true;
+    }, (tx, success) => {
+      console.log("deelte log", success);
+      //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
+    });
+
+    db.transaction((tx) => {
+
+      const log_update = "REPLACE INTO log (chave, tabela, campo, valor, codTabela, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
       console.log(log_update);
-      tx.executeSql(log_update, [], (tx, results) =>{
+      tx.executeSql(log_update, [], (tx, results) => {
 
       });
     }, (tx, err) => {
-      console.error("error log", err);
+      console.error("error log replace", err);
       return true;
     }, (tx, success) => {
-      console.log("tudo certo por aquiii", success);
+      console.log("replace log", success);
       //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
     })
-
 
     AsyncStorage.setItem('nome_tabela', tabela);
 
@@ -257,17 +275,6 @@ const Step1 = (props) => {
 
     return setChecado(x);
   }
-
-  // function radio (){
-  // var y = [...PROP];
-
-  //   y.forEach(text => {
-  //     if(text.value === item){
-  //       text.isChecked = true;
-  //       console.log(y);
-  //     }
-  //   });
-  // }
 
   return (
 
@@ -360,13 +367,13 @@ const Step1 = (props) => {
             >
               <RadioButton
                 value={res.key}
-                status={ checked === index ? 'checked' : 'unchecked'}
-                onPress={() =>{ setChecked(index); onPressTitle("se_ruj", "se_ruj_destino_dejetos", index, sync) } }>
+                status={checked === index ? 'checked' : 'unchecked'}
+                onPress={() => { setChecked(index); onPressTitle("se_ruj", "se_ruj_destino_dejetos", index, sync) }}>
               </RadioButton>
               <Text>{res.text}</Text>
             </View>
           ))}
-          { <Text> Selected: {checked} </Text> }
+          {<Text> Selected: {checked} </Text>}
         </View>
 
       </View>

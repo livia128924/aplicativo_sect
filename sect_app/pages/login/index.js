@@ -21,7 +21,7 @@ const Login = ({navigation}) => {
 
         AsyncStorage.getItem('codigo').then(codigo => {
             if (codigo) {
-                navigation.navigate('HomeScreen');
+                navigation.navigate('Menu');
                 return false;
             }
         });
@@ -40,7 +40,7 @@ const Login = ({navigation}) => {
 
                     if (status === 'OK') {
                         AsyncStorage.setItem('codigo', codigo);
-                        navigation.navigate('HomeScreen');
+                        navigation.navigate('Menu');
                     } else {
                         setError(msg);
                     }

@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {AsyncStorage, Button, Text, Pressable, StyleSheet} from "react-native";
+import React, {useEffect} from 'react';
+import {AsyncStorage, StyleSheet} from "react-native";
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from './pages/HomeScreen';
+import Menu from './pages/menu/Menu';
+import Sincronizacao from './pages/menu/Sincronizacao';
 import camera from './pages/camera';
 import relatorio_camera from './pages/socio/relatorio_camera';
 import leitor from './pages/leitor';
@@ -11,9 +13,7 @@ import Login from "./pages/login";
 import ExampleOne from './pages/socio/index'
 import Relatorio from "./pages/socio/Relatorio";
 import Config from './pages/socio/config';
-import { IconButton, Colors } from 'react-native-paper';
-//import { mdiDotsVerticalCircle } from '@mdi/js';
-import Icon from 'react-native-vector-icons/Ionicons';
+
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -28,12 +28,12 @@ const App = () => {
 
             <NavigationContainer>
 
-                <Stack.Navigator initialRouteName={'Login'}>
-                    <Stack.Screen
-                        name='HomeScreen'
-                        component={HomeScreen}
+                <Stack.Navigator initialRouteName={'Login'} >
+                <Stack.Screen
+                        name='Menu'
+                        component={Menu}
                         options={{
-                            title: 'SGRF - SECT',
+                            title: 'Menu',
                             headerStyle: {
                                 backgroundColor: '#FFF',
                             },
@@ -42,6 +42,28 @@ const App = () => {
                             headerTitleStyle: {
                                 fontWeight: 'bold',
                             }
+                        }}
+                    />
+                <Stack.Screen
+                        name='Sincronizacao'
+                        component={Sincronizacao}
+                        options={{
+                            title: 'Sincronizacao',
+                            headerStyle: {
+                                backgroundColor: '#FFF',
+                            },
+
+                            headerTintColor: 'black',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                            }
+                        }}
+                    />
+                    <Stack.Screen
+                        name='HomeScreen'
+                        component={HomeScreen}
+                        options={{
+                            headerShown: false,
                         }}
                     />
                     <Stack.Screen
@@ -56,15 +78,6 @@ const App = () => {
                         component={ExampleOne}
                         options={{
                             title: 'Stepper',
-                            // headerRight: () => (
-                            //     <IconButton
-                            //     style={styles.button}
-                            //     icon="camera"
-                            //     color={Colors.red500}
-                            //     size={20}
-                            //     onPress={() => console.log('Pressed')}
-                            //   />
-                            //   ),
                             headerStyle: {
                                 backgroundColor: '#FFF',
                             },
@@ -170,20 +183,5 @@ const App = () => {
     }
 ;
 
-
-const styles = StyleSheet.create({
-    button: {
-    left:350,
-
-      elevation: 3,
-    },
-    text: {
-      fontSize: 16,
-      lineHeight: 21,
-      fontWeight: 'bold',
-      letterSpacing: 0.25,
-      color: 'white',
-    },
-  });
 
 export default App;

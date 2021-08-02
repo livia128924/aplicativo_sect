@@ -39,7 +39,8 @@ function Config({ navigation }) {
           });
 
           db.transaction((tx) => {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS `log` ( codigo INTEGER PRIMARY KEY , tabela TEXT, campo TEXT, valor TEXT, codTabela TEXT, data TEXT DEFAULT CURRENT_TIMESTAMP , situacao TEXT)", []);
+            //tx.executeSql("DELETE FROM log", []);
+            tx.executeSql("CREATE TABLE IF NOT EXISTS log ( chave TEXT UNIQUE , codigo INTEGER, tabela TEXT, campo TEXT, valor TEXT, codTabela TEXT, data TEXT DEFAULT CURRENT_TIMESTAMP, situacao TEXT, PRIMARY KEY(codigo))", []);
           }, (err) => {
             console.error("There was a problem with the log ", err);
             return true;
@@ -69,6 +70,7 @@ function Config({ navigation }) {
           novo_array[item] = Object.keys(metas_dados[item]);
           //console.log(metas_dados[item]);
           db.transaction((tx) => {
+
             tx.executeSql(metas_dados[item], []);
             tx.executeSql(
               "select * from vu", [], (tx, results) => {
