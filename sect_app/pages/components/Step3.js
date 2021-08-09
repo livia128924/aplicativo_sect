@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View, TextInput } from 'react-native';
+import { Text, StyleSheet, View, TextInput, AsyncStorage } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import api from '../../services/api';
+import { DatabaseConnection } from '../database/database';
+const db = DatabaseConnection.getConnection();
 
 const Step3 = (props) => {
+
+  const [sync, setSync] = useState('');
+  const [dados_valor, setDados_valor] = useState('');
 
   const [outrosBeneficios, setOutrosBeneficios] = useState('');
     const [openMao_de_obra, setOpenMao_de_obra] = useState(false);
@@ -35,11 +40,9 @@ const Step3 = (props) => {
     ]);
 
   useEffect(() => {
-
-
         var cod_processo = '';
         //carrega o valor do select na tela index.js
-        AsyncStorage.getItem('codigo_pr').then(value => {
+        AsyncStorage.getItem('pr_codigo').then(value => {
             //console.log(value);
             setSync(value);
             cod_processo = value;
@@ -52,8 +55,42 @@ const Step3 = (props) => {
 
         loadStep3();
 
+        AsyncStorage.getItem('nome_tabela').then(tabela => {
+          //console.log(cod_processo);
+          if (tabela) {
+
+              db.transaction((tx) => {
+
+                  tx.executeSql(
+                      "select * from " + tabela + " where se_ruj_cod_processo = '" + cod_processo + "'", [], (tx, results) => {
+
+                          var row = [];
+                          for (let i = 0; i < results.rows.length; ++i) {
+                              console.log(results.rows.item(0).se_ruj_acesso);
+
+                              setValorMao_de_obra(results.rows.item(i).se_ruj_mao_de_obra);
+
+                              setValorSe_ruj_associados(results.rows.item(i).se_ruj_associados);
+
+                              setValorSe_ruj_cooperados(results.rows.item(i).se_ruj_cooperados);
+
+                              setValorSe_ruj_beneficios_concedidos(results.rows.item(i).se_ruj_beneficios_concedidos);
+                              setOutrosBeneficios(results.rows.item(i).se_ruj_beneficios_concedidos_outros);
+
+
+                              //console.log(typeof (results.rows.item(i).se_ruj_municipio));
+                              //valor(row);
+                          }
+
+                      });
+              })
+          }//
+      });
+
 
 }, []);
+
+
 
 async function loadStep3(){
   await db.transaction((tx) => {
@@ -113,7 +150,46 @@ async function loadStep3(){
 });
 }
 
+    //função que aciona quando o estado do componente muda e seta os valores correspondente
+    function onPressTitle(tabela, campo, valor, codigo) {
+      db.transaction((tx) => {
+          const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_ruj_cod_processo = '${codigo}'`;
+          console.log(query);
+          tx.executeSql(query, [], (tx, results) => {
+              for (let i = 0; i < results.rows.length; ++i) {
+                  alert("INSERIDO COM SUCESSO");
+              }
+          });
 
+      }, (tx, err) => {
+          console.error("error", err);
+          return true;
+      }, (tx, success) => {
+          console.log("tudo certo por aqui", success);
+          //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
+      });
+
+      var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
+
+      db.transaction((tx) => {
+        //tx.executeSql("DROP TABLE log", []);
+        const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+        console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
+        tx.executeSql(log_delete, []);
+      });
+
+      db.transaction((tx) => {
+        const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+        console.log(log_update);
+        tx.executeSql(log_update, [], (tx, results) => {
+
+        });
+      })
+
+      AsyncStorage.setItem('nome_tabela', tabela);
+
+      AsyncStorage.setItem('codigo', valor.toString());
+  };
 
 
     return (
@@ -127,14 +203,14 @@ async function loadStep3(){
                 <Text >Mão de Obra Empregada</Text>
               </View>
               <DropDownPicker
-                style={styles.Mao_de_obra}
+                style={styles.dropdown_style}
                 open={openMao_de_obra}
                 value={parseInt(valorMao_de_obra)}
                 items={itemMao_de_obra}
                 setOpen={setOpenMao_de_obra}
                 setValue={setValorMao_de_obra}
                 setItems={setItemMao_de_obra}
-                onChangeValue={() => onPressTitle("se_ruj", "se_ruj_mao_de_obra", valorAtividade, sync)}
+                onChangeValue={() => onPressTitle("se_ruj", "se_ruj_mao_de_obra", valorMao_de_obra, sync)}
                 listMode="SCROLLVIEW"
                 placeholder="Selecione::"
               />
@@ -143,13 +219,14 @@ async function loadStep3(){
                 <Text >Número de Associados</Text>
               </View>
               <DropDownPicker
-                style={styles.Mao_de_obra}
+                style={styles.dropdown_style}
                 open={openSe_ruj_associados}
-                value={valorSe_ruj_associados}
+                value={parseInt(valorSe_ruj_associados)}
                 items={itemSe_ruj_associados}
                 setOpen={setOpenSe_ruj_associados}
                 setValue={setValorSe_ruj_associados}
                 setItems={setItemSe_ruj_associados}
+                onChangeValue={() => onPressTitle("se_ruj", "se_ruj_associados", valorSe_ruj_associados, sync)}
                 listMode="SCROLLVIEW"
                 placeholder="Selecione::"
               />
@@ -157,13 +234,14 @@ async function loadStep3(){
                 <Text >Número de Cooperados</Text>
               </View>
               <DropDownPicker
-                style={styles.Mao_de_obra}
+                style={styles.dropdown_style}
                 open={openSe_ruj_cooperados}
-                value={valorSe_ruj_cooperados}
+                value={parseInt(valorSe_ruj_cooperados)}
                 items={itemSe_ruj_cooperados}
-                setOpen={setOpenSe_ruj_cooperados}
+                setOpen={setOpenSe_ruj_cooperados}se_ruj_cooperados
                 setValue={setValorSe_ruj_cooperados}
                 setItems={setItemSe_ruj_cooperados}
+                onChangeValue={() => onPressTitle("se_ruj", "se_ruj_cooperados", valorSe_ruj_cooperados, sync)}
                 listMode="SCROLLVIEW"
                 placeholder="Selecione::"
               />
@@ -179,20 +257,22 @@ async function loadStep3(){
               <Text >Tipos de Benefícios Concedidos</Text>
             </View>
             <DropDownPicker
-              style={styles.Mao_de_obra}
+              style={styles.dropdown_style}
               open={openSe_ruj_beneficios_concedidos}
-              value={valorSe_ruj_beneficios_concedidos}
+              value={parseInt(valorSe_ruj_beneficios_concedidos)}
               items={itemSe_ruj_beneficios_concedidos}
               setOpen={setOpenSe_ruj_beneficios_concedidos}
               setValue={setValorSe_ruj_beneficios_concedidos}
               setItems={setItemSe_ruj_beneficios_concedidos}
+              onChangeValue={() => onPressTitle("se_ruj", "se_ruj_beneficios_concedidos", valorSe_ruj_beneficios_concedidos, sync)}
               listMode="SCROLLVIEW"
               placeholder="Selecione::"
             />
             <TextInput
               style={styles.inputOutrosBeneficios}
-              onChangeText={setOutrosBeneficios}
+              onChangeText={(outros)=>setOutrosBeneficios(outros)}
               value={outrosBeneficios}
+              onBlur={() => onPressTitle("se_ruj", "se_ruj_beneficios_concedidos_outros", outrosBeneficios, sync)}
               placeholder={"    Outros"}
             />
           </View>
@@ -228,7 +308,7 @@ const styles = StyleSheet.create({
         marginLeft: 30,
         marginTop: 15,
       },
-      Mao_de_obra: {
+      dropdown_style: {
         marginTop: 5,
         height: 40,
         width: '85%',

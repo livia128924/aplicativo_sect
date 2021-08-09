@@ -196,30 +196,17 @@ const Step1 = (props) => {
 
     db.transaction((tx) => {
       //tx.executeSql("DROP TABLE log", []);
-      const log_delete = "INSERT INTO log (chave , tabela, campo, valor, codTabela, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-      console.log("INSERT INTO log (chave , tabela, campo, valor, codTabela, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
+      const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+      console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
       tx.executeSql(log_delete, []);
-    }, (tx, err) => {
-      console.error("error delete", err);
-      return true;
-    }, (tx, success) => {
-      console.log("deelte log", success);
-      //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
     });
 
     db.transaction((tx) => {
-
-      const log_update = "REPLACE INTO log (chave, tabela, campo, valor, codTabela, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+      const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
       console.log(log_update);
       tx.executeSql(log_update, [], (tx, results) => {
 
       });
-    }, (tx, err) => {
-      console.error("error log replace", err);
-      return true;
-    }, (tx, success) => {
-      console.log("replace log", success);
-      //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
     })
 
     AsyncStorage.setItem('nome_tabela', tabela);

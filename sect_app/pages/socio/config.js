@@ -40,7 +40,7 @@ function Config({ navigation }) {
 
           db.transaction((tx) => {
             //tx.executeSql("DELETE FROM log", []);
-            tx.executeSql("CREATE TABLE IF NOT EXISTS log ( chave TEXT UNIQUE , codigo INTEGER, tabela TEXT, campo TEXT, valor TEXT, codTabela TEXT, data TEXT DEFAULT CURRENT_TIMESTAMP, situacao TEXT, PRIMARY KEY(codigo))", []);
+            tx.executeSql("CREATE TABLE IF NOT EXISTS log ( chave TEXT UNIQUE , codigo INTEGER, tabela TEXT, campo TEXT, valor TEXT, cod_tabela TEXT, cod_processo TEXT, data TEXT DEFAULT CURRENT_TIMESTAMP, situacao TEXT, PRIMARY KEY(codigo))", []);
           }, (err) => {
             console.error("There was a problem with the log ", err);
             return true;

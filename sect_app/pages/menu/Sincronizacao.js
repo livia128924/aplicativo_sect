@@ -14,6 +14,7 @@ import {
     DrawerItemList,
     DrawerItem
 } from '@react-navigation/drawer';
+import api from '../../services/api';
 
 ///////////////////////
 const Drawer = createDrawerNavigator();
@@ -23,51 +24,82 @@ const Sincronizacao = ({ navigation }) => {
 
     const [flatListItems, setFlatListLogs] = useState([]);
     const [enviados, setEnviados] = useState('');
+    const [valor, setValor] = useState('');
 
-    function onPress() {
+    useEffect(() => {
+        loadDados();
+    }, []);
+
+    function onPress(codigo) {
+        //alert(codigo);
         db.transaction((tx) => {
             tx.executeSql(
-                "SELECT * FROM log LEFT JOIN rq r where r.pr_codigo = codTabela and situacao = '1'", [], (tx, results) => {
+                `SELECT * FROM log where situacao = '2' and cod_processo= '${codigo}' `, [], (tx, results) => {
                     //var len = results.rows.length, i;
                     var temp = [];
-                    for (let i = 0; i < results.rows.length; ++i)
-                        temp.push(results.rows.item(i));
-                    //setEnviados(temp);
+                    console.log(results.rows.length);
+                    for (let i = 0; i < results.rows.length; ++i) {
 
-                    tx.executeSql("UPDATE log set situacao = '2' LEFT JOIN rq r where r.pr_codigo = codTabela", []);
+                        var processo = (results.rows.item(i).cod_processo);
+                        var valor = (results.rows.item(i).valor);
+                        var tabela = (results.rows.item(i).tabela);
+                        var campo = (results.rows.item(i).campo);
+                        //console.log(results.rows);
+                        api.post('update/index.php', { processo, valor, tabela, campo })
+                        .then(function (response) {
+                            //const { processo, dados } = response.data;
+                            //const codigo = response.data.dados.painel_usuario_logado;
+                        })
+                        .catch(function (error) {
+                            alert(error);
+                        });
+                        //setEnviados(temp);
+
+                    }
+                    loadDados();
                 }
-            );
+                );
+                tx.executeSql(`UPDATE log set situacao = '2' where cod_processo = '${codigo}' `, []);
+                console.log(`UPDATE log set situacao = '2' where cod_processo = '${codigo}' `);
         }, (err) => {
-            console.error("There was a problem with the onPress", err);
+            //console.error("There was a problem with the onPress", err);
             return true;
         }, (success) => {
-            console.log("onPress ", success);
+            //console.log("onPress ", success);
         });
 
     };
 
-    useEffect(() => {
 
+    function onPressProcesso(pr_codigo, cod_prss) {
+        alert(pr_codigo);
+        AsyncStorage.setItem('pr_codigo', pr_codigo.toString());
+        AsyncStorage.setItem('cod_prss', cod_prss);
+        navigation.navigate('Stepper');
 
+    }
+
+    async function loadDados() {
         db.transaction((tx) => {
+            //tx.executeSql("DROP TABLE log", []);
             tx.executeSql(
-                "SELECT *, COUNT(l.codigo) AS count, p.codigo AS pr_codigo (SELECT COUNT(*) FROM log l2 WHERE l2.codTabela = l.codTabela AND l2.situacao = '2') as enviado FROM log l LEFT JOIN rq r LEFT JOIN pr p where r.codigo = p.pr_requerente and pr_codigo = l.codTabela group by p.pr_numero_processo", [], (tx, results) => {
+                "SELECT *, COUNT(l.codigo) AS count, p.codigo AS pr_codigo, (SELECT COUNT(*) FROM log l2 WHERE l2.cod_processo = l.cod_processo AND l2.situacao = '2') as enviado FROM log l LEFT JOIN rq r LEFT JOIN pr p where r.codigo = p.pr_requerente and pr_codigo = l.cod_processo group by p.pr_numero_processo", [], (tx, results) => {
                     //var len = results.rows.length, i;
                     var temp = [];
                     for (let i = 0; i < results.rows.length; ++i)
-                        temp.push(results.rows.item(i));
+                    temp.push(results.rows.item(i));
                     //console.log(temp);
                     setFlatListLogs(temp);
-
+                   //console.log(temp)
                 }
             );
         }, (err) => {
-            console.error("There was a problem with the tx log", err);
+            //console.error("There was a problem with the tx log", err);
             return true;
         }, (success) => {
-            console.log("log select", success);
+            //console.log("log select", success);
         });
-    }, []);
+    }
 
     function CustomDrawerContent(props) {
         return (
@@ -96,20 +128,26 @@ const Sincronizacao = ({ navigation }) => {
         return (
             <View style={{ flex: 1 }}>
                 <View style={styles.listView}>
-                    <Text>    N Processo                 Registros     enviadas</Text>
+                    <Text>    N Processo          Registros     enviadas</Text>
                     <View style={styles.item}>
                         {[...flatListItems].map((item, index) => (
                             <View style={styles.map} key={item.pr_codigo}>
+                                <TouchableOpacity onPress={() => onPressProcesso(item.pr_codigo, item.pr_numero_processo,)}
+                                    style={styles.title}>
+                                    <Text>
+                                        {item.pr_numero_processo}
+                                    </Text>
+                                </TouchableOpacity>
                                 <Text
                                     style={styles.title}>
-                                    {item.pr_numero_processo}
+                                    {item.count}
                                 </Text>
                                 <Text
                                     style={styles.title}>
-                                     {item.count}
+                                    {item.enviado}
                                 </Text>
                                 <Button
-                                    onPress={onPress}
+                                    onPress={() => onPress(item.pr_codigo)}
                                     title=''
                                     //type="clear"
                                     icon={

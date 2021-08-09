@@ -35,7 +35,7 @@ const Step2 = (props) => {
 
         var cod_processo = '';
         //carrega o valor do select na tela index.js
-        AsyncStorage.getItem('codigo_pr').then(value => {
+        AsyncStorage.getItem('pr_codigo').then(value => {
             //console.log(value);
             setSync(value);
             cod_processo = value;
@@ -140,6 +140,23 @@ const Step2 = (props) => {
             console.log("tudo certo por aqui", success);
             //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
         });
+
+        var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
+
+        db.transaction((tx) => {
+          //tx.executeSql("DROP TABLE log", []);
+          const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+          console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
+          tx.executeSql(log_delete, []);
+        });
+
+        db.transaction((tx) => {
+          const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+          console.log(log_update);
+          tx.executeSql(log_update, [], (tx, results) => {
+
+          });
+        })
 
         AsyncStorage.setItem('nome_tabela', tabela);
 

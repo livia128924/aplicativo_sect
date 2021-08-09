@@ -31,7 +31,7 @@ const HomeScreen = ({ navigation }) => {
 
 
     function onPress (cod_prss, rq_nome, pr_codigo ) {
-    console.log(cod_prss);
+    //console.log(cod_prss);
    //navigation.navigate('Stepper');
 
 AsyncStorage.setItem('pr_codigo', pr_codigo.toString());
