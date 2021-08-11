@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Text, StyleSheet, View, TextInput, AsyncStorage } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { Checkbox } from 'react-native-paper';
+import Checkbox from 'expo-checkbox';
 import api from '../../services/api';
 import { DatabaseConnection } from '../database/database';
 const db = DatabaseConnection.getConnection();
@@ -10,27 +10,22 @@ const Step5 = (props) => {
     const [sync, setSync] = useState('');
     const [dados_valor, setDados_valor] = useState('');
 
-    const [se_ruj_sanitario, setSe_ruj_sanitario] = useState([
-        { id: 1, name: 'checkbox', label: '', value: '1', isChecked: false },
+    const [check_Se_ruj_sanitario, set_Check_Se_ruj_sanitario] = useState([
     ]);
 
     const [se_ruj_tratamento_agua_clorada, setSe_ruj_tratamento_agua_clorada] = React.useState([
-        { id: 1, name: 'checkbox', label: '', value: '1', isChecked: false },
     ]);
 
     const [se_ruj_rede_agua_publica, setSe_ruj_rede_agua_publica] = React.useState([
-        { id: 1, name: 'checkbox', label: '', value: '1', isChecked: false },
     ]);
 
     const [se_ruj_rede_energia_publica, setSe_ruj_rede_energia_publica] = React.useState([
-        { id: 1, name: 'checkbox', label: '', value: '1', isChecked: false },
     ]);
 
     const [se_ruj_coleta_lixo_outros, setOutrosSe_ruj_coleta_lixo_outros] = useState('');
     const [outrosSe_ruj_destino_dejetos, setOutrosSe_ruj_destino_dejetos] = useState('');
 
     const [se_ruj_coleta_lixo_publica, setSe_ruj_coleta_lixo_publica] = React.useState([
-        { id: 1, name: 'checkbox', label: '', value: '1', isChecked: false },
     ]);
 
     const [openSe_ruj_destino_dejetos, setOpenSe_ruj_destino_dejetos] = useState(false);
@@ -41,7 +36,8 @@ const Step5 = (props) => {
     ]);
 
     useEffect(() => {
-        var cod_processo = '';
+
+
         //carrega o valor do select na tela index.js
         AsyncStorage.getItem('pr_codigo').then(value => {
             //console.log(value);
@@ -56,63 +52,79 @@ const Step5 = (props) => {
 
         loadStep5();
 
-        AsyncStorage.getItem('nome_tabela').then(tabela => {
-            //console.log(cod_processo);
+        loadDados();
+
+
+
+    }, []);
+
+    async function loadDados(){
+        var cod_processo = '';
+
+      await AsyncStorage.getItem('nome_tabela').then(tabela => {
+           // console.log("loadDados");
             if (tabela) {
 
                 db.transaction((tx) => {
 
                     tx.executeSql(
                         "select * from " + tabela + " where se_ruj_cod_processo = '" + cod_processo + "'", [], (tx, results) => {
-                            var x = "";
-                            var lixo_coleta ="";
-                            var rede_energia ="";
-                            var rede_agua ="";
-                            var tratamento_agua ="";
+                            //var x = "";
+                            // var y = "";
+                            // var w = ""
+                            // var z = "";
+                            // var q = "";
+
                             var row = [];
                             for (let i = 0; i < results.rows.length; ++i) {
-                                console.log(results.rows.item(0).se_ruj_acesso);
+                              // console.log(results.rows);
 
                                 setOutrosSe_ruj_coleta_lixo_outros(results.rows.item(i).se_ruj_coleta_lixo_outros);
-                                setOutrosSe_ruj_destino_dejetos(results.rows.item(i).se_ruj_destino_dejetos_outros);
-                                setItemSe_ruj_destino_dejetos(results.rows.item(i).se_ruj_destino_dejetos);
+                                 setOutrosSe_ruj_destino_dejetos(results.rows.item(i).se_ruj_destino_dejetos_outros);
+                                setValorSe_ruj_destino_dejetos(results.rows.item(i).se_ruj_destino_dejetos);
 
-                                x = results.rows.item(i).se_ruj_sanitario;
-                                valor_checked(x.split(','));
+                                 var x = results.rows.item(i).se_ruj_sanitario;
+                                 console.log( results.rows.item(i).se_ruj_sanitario);
+                                 valor_checked(x.split(','));
 
-                                lixo_coleta = results.rows.item(i).Se_ruj_coleta_lixo;
-                                valor_checked_coleta_lixo(x.split(','));
+                                //  y = results.rows.item(i).se_ruj_coleta_lixo;
+                                //  valor_checked_coleta_lixo(x.split(','));
 
-                                rede_energia = results.rows.item(i).se_ruj_rede_energia;
-                                valor_checked_rede_energia(x.split(','));
+                                //  w = results.rows.item(i).se_ruj_rede_energia;
+                                //  valor_checked_rede_energia(x.split(','));
 
-                                rede_agua = results.rows.item(i).se_ruj_rede_agua;
-                                valor_checked_rede_agua(x.split(','));
+                                //  z = results.rows.item(i).se_ruj_rede_agua;
+                                //  valor_checked_rede_agua(x.split(','));
 
-                                tratamento_agua = results.rows.item(i).se_ruj_tratamento_agua;
-                                valor_checked_tratamento_agua(x.split(','));
+                                //  q = results.rows.item(i).se_ruj_tratamento_agua;
+                                //  valor_checked_tratamento_agua(x.split(','));
+
+                                //console.log(results.rows.item(i).se_ruj_sanitario);
                             }
 
                         });
-                })
-            }//
+                }, (err) => {
+                    console.error("There was a problem with the tx", err);
+                    return true;
+                  }, (success) => {
+                  })
+            }
         });
-
-
-    }, []);
-
+    }
 
     async function loadStep5() {
-        db.transaction((tx) => {
+     db.transaction((tx) => {
             tx.executeSql(
                 "select * from aux_sanitario", [], (tx, results) => {
                     //var len = results.rows.length, i;
                     var temp = [];
                     //console.log(len);
                     for (let i = 0; i < results.rows.length; ++i) {
-                        temp.push({ label: results.rows.item(i).descricao, id: results.rows.item(i).codigo });
+                        temp.push({ label: results.rows.item(i).descricao, id: results.rows.item(i).codigo,  isChecked: false });
                     }
-                    setSe_ruj_sanitario(temp);
+                    //console.log(temp);
+                    set_Check_Se_ruj_sanitario(temp);
+
                 }
             );
             tx.executeSql(
@@ -133,7 +145,7 @@ const Step5 = (props) => {
                     var temp = [];
                     //console.log(len);
                     for (let i = 0; i < results.rows.length; ++i) {
-                        temp.push({ label: results.rows.item(i).descricao, id: results.rows.item(i).codigo });
+                        temp.push({ label: results.rows.item(i).descricao, id: results.rows.item(i).codigo,  isChecked: false});
                         //console.log( results.rows.item(i).nome);
                     }
                     setSe_ruj_coleta_lixo_publica(temp);
@@ -145,7 +157,7 @@ const Step5 = (props) => {
                     var temp = [];
                     //console.log(len);
                     for (let i = 0; i < results.rows.length; ++i) {
-                        temp.push({ label: results.rows.item(i).descricao, id: results.rows.item(i).codigo });
+                        temp.push({ label: results.rows.item(i).descricao, id: results.rows.item(i).codigo,  isChecked: false });
                         //console.log( results.rows.item(i).nome);
                     }
                     setSe_ruj_rede_energia_publica(temp);
@@ -157,7 +169,7 @@ const Step5 = (props) => {
                     var temp = [];
                     //console.log(len);
                     for (let i = 0; i < results.rows.length; ++i) {
-                        temp.push({ label: results.rows.item(i).descricao, id: results.rows.item(i).codigo });
+                        temp.push({ label: results.rows.item(i).descricao, id: results.rows.item(i).codigo,  isChecked: false });
                         //console.log( results.rows.item(i).nome);
                     }
                     setSe_ruj_rede_agua_publica(temp);
@@ -169,7 +181,7 @@ const Step5 = (props) => {
                     var temp = [];
                     //console.log(len);
                     for (let i = 0; i < results.rows.length; ++i) {
-                        temp.push({ label: results.rows.item(i).descricao, id: results.rows.item(i).codigo });
+                        temp.push({ label: results.rows.item(i).descricao, id: results.rows.item(i).codigo,  isChecked: false });
                         //console.log( results.rows.item(i).nome);
                     }
                     setSe_ruj_tratamento_agua_clorada(temp);
@@ -177,10 +189,10 @@ const Step5 = (props) => {
             );
 
         }, (err) => {
-            console.error("There was a problem with the tx", err);
+           // console.error("There was a problem with the tx", err);
             return true;
         }, (success) => {
-            console.log("all done", success);
+           // console.log("all done", success);
         });
     }
 
@@ -197,10 +209,10 @@ const Step5 = (props) => {
                 }
             });
         }, (tx, err) => {
-            console.error("error em alguma coisa", err);
+            //console.error("error em alguma coisa", err);
             return true;
         }, (tx, success) => {
-            console.log("tudo certo por aqui", success);
+            //console.log("tudo certo por aqui", success);
             //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
         });
 
@@ -209,13 +221,13 @@ const Step5 = (props) => {
         db.transaction((tx) => {
             //tx.executeSql("DROP TABLE log", []);
             const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-            console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
+            //console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
             tx.executeSql(log_delete, []);
         });
 
         db.transaction((tx) => {
             const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-            console.log(log_update);
+            //console.log(log_update);
             tx.executeSql(log_update, [], (tx, results) => {
 
             });
@@ -230,31 +242,33 @@ const Step5 = (props) => {
     const handleChange = async (index) => {
 
         //console.log(index);
-        let value = index.value;
+        let value = index.id;
         let checked = index.isChecked;
 
-        let _valores = [...se_ruj_sanitario];
+        let _valores = [...check_Se_ruj_sanitario];
+        //console.log(se_ruj_sanitario);
 
+        //console.log(index);
         _valores.forEach(val => {
-            if (val === value) {
+            if (val.id === value) {
                 val.isChecked = !checked;
             }
         });
 
         //console.log(ischecado);
-        return setSe_ruj_sanitario(_valores);
+        return set_Check_Se_ruj_sanitario(_valores);
 
     };
     const handleChange_coleta_lixo = async (index) => {
 
         //console.log(index);
-        let value = index.value;
+        let value = index.id;
         let checked = index.isChecked;
 
         let _valores = [...se_ruj_coleta_lixo_publica];
 
         _valores.forEach(val => {
-            if (val === value) {
+            if (val.id === value) {
                 val.isChecked = !checked;
             }
         });
@@ -266,13 +280,13 @@ const Step5 = (props) => {
     const handleChange_rede_energia = async (index) => {
 
         //console.log(index);
-        let value = index.value;
+        let value = index.id;
         let checked = index.isChecked;
 
         let _valores = [...se_ruj_rede_energia_publica];
 
         _valores.forEach(val => {
-            if (val === value) {
+            if (val.id === value) {
                 val.isChecked = !checked;
             }
         });
@@ -284,13 +298,13 @@ const Step5 = (props) => {
     const handleChange_rede_agua = async (index) => {
 
         //console.log(index);
-        let value = index.value;
+        let value = index.id;
         let checked = index.isChecked;
 
         let _valores = [...se_ruj_rede_agua_publica];
 
         _valores.forEach(val => {
-            if (val === value) {
+            if (val.id === value) {
                 val.isChecked = !checked;
             }
         });
@@ -302,13 +316,13 @@ const Step5 = (props) => {
     const handleChange_tratamento_agua = async (index) => {
 
         //console.log(index);
-        let value = index.value;
+        let value = index.id;
         let checked = index.isChecked;
 
         let _valores = [...se_ruj_tratamento_agua_clorada];
 
         _valores.forEach(val => {
-            if (val === value) {
+            if (val.id === value) {
                 val.isChecked = !checked;
             }
         });
@@ -322,18 +336,20 @@ const Step5 = (props) => {
         //await api
         var str_valores = [];
 
-        se_ruj_sanitario.filter(value => value.isChecked === true).map((item) => {
-            str_valores.push(item.value);
+        check_Se_ruj_sanitario.filter(value => value.isChecked === true).map((item) => {
+           // console.log(item);
+            str_valores.push(item.id);
         });
         //console.log(ischecado);
         return str_valores.join(",");
     }
+
     function muda_coleta_lixo() {
         //await api
         var str_valores = [];
 
         se_ruj_coleta_lixo_publica.filter(value => value.isChecked === true).map((item) => {
-            str_valores.push(item.value);
+            str_valores.push(item.id);
         });
         //console.log(ischecado);
         return str_valores.join(",");
@@ -343,7 +359,7 @@ const Step5 = (props) => {
         var str_valores = [];
 
         se_ruj_rede_energia_publica.filter(value => value.isChecked === true).map((item) => {
-            str_valores.push(item.value);
+            str_valores.push(item.id);
         });
         //console.log(ischecado);
         return str_valores.join(",");
@@ -353,7 +369,7 @@ const Step5 = (props) => {
         var str_valores = [];
 
         se_ruj_rede_agua_publica.filter(value => value.isChecked === true).map((item) => {
-            str_valores.push(item.value);
+            str_valores.push(item.id);
         });
         //console.log(ischecado);
         return str_valores.join(",");
@@ -363,7 +379,7 @@ const Step5 = (props) => {
         var str_valores = [];
 
         se_ruj_tratamento_agua_clorada.filter(value => value.isChecked === true).map((item) => {
-            str_valores.push(item.value);
+            str_valores.push(item.id);
         });
         //console.log(ischecado);
         return str_valores.join(",");
@@ -371,20 +387,20 @@ const Step5 = (props) => {
 
     function valor_checked(ruj_sanitario) {
 
-        let x = [...se_ruj_sanitario];
+        let x = [...check_Se_ruj_sanitario];
 
         //console.log(ischecado.value);
         ruj_sanitario.forEach(item => {
-            //console.log(item);
+            //console.log(ruj_sanitario);
+            console.log(x);
             x.forEach(val => {
-                if (val.value === item) {
+                if (val.id == item) {
                     val.isChecked = true;
                 }
             });
-            //console.log(x);
         });
 
-        return setSe_ruj_sanitario(x);
+        return set_Check_Se_ruj_sanitario(x);
     }
 
     function valor_checked_coleta_lixo(ruj_lixo) {
@@ -395,7 +411,7 @@ const Step5 = (props) => {
         ruj_lixo.forEach(item => {
             //console.log(item);
             lixo_coleta.forEach(val => {
-                if (val.value === item) {
+                if (val.id == item) {
                     val.isChecked = true;
                 }
             });
@@ -412,7 +428,7 @@ const Step5 = (props) => {
         ruj_energia.forEach(item => {
             //console.log(item);
             rede_energia.forEach(val => {
-                if (val.value === item) {
+                if (val.id == item) {
                     val.isChecked = true;
                 }
             });
@@ -429,7 +445,7 @@ const Step5 = (props) => {
         ruj_agua.forEach(item => {
             //console.log(item);
             rede_agua.forEach(val => {
-                if (val.value === item) {
+                if (val.id == item) {
                     val.isChecked = true;
                 }
             });
@@ -446,7 +462,7 @@ const Step5 = (props) => {
         ruj_tratamento_agua.forEach(item => {
             //console.log(item);
             tratamento_agua.forEach(val => {
-                if (val.value === item) {
+                if (val.id == item) {
                     val.isChecked = true;
                 }
             });
@@ -468,7 +484,7 @@ const Step5 = (props) => {
 
 
                 <View style={styles.checkboxlabel}>
-                    {[...se_ruj_sanitario].map((item, index) => (
+                    {[...check_Se_ruj_sanitario].map((item, index) => (
                         <View style={styles.checkboxGroup}
                             key={item.id}
                         >
@@ -491,7 +507,7 @@ const Step5 = (props) => {
                 <DropDownPicker
                     style={styles.Dejetos}
                     open={openSe_ruj_destino_dejetos}
-                    value={valorSe_ruj_destino_dejetos}
+                    value={parseInt(valorSe_ruj_destino_dejetos)}
                     items={itemSe_ruj_destino_dejetos}
                     setOpen={setOpenSe_ruj_destino_dejetos}
                     setValue={setValorSe_ruj_destino_dejetos}
@@ -504,7 +520,7 @@ const Step5 = (props) => {
                 <View style={{ alignItems: 'center' }}>
                     <TextInput
                         style={styles.inputOutrosDejetos}
-                        onChangeText={value => setOutrosSe_ruj_destino_dejetos(value)}
+                        onChangeText={setOutrosSe_ruj_destino_dejetos}
                         value={outrosSe_ruj_destino_dejetos}
                         onBlur={() => onPressTitle("se_ruj", "Se_ruj_destino_dejetos_outros", outrosSe_ruj_destino_dejetos, sync)}
                         placeholder={" Outros"}
@@ -535,7 +551,7 @@ const Step5 = (props) => {
                 <View style={{ alignItems: 'center' }}>
                     <TextInput
                         style={styles.inputOutrosDejetos}
-                        onChangeText={value => setOutrosSe_ruj_coleta_lixo_outros(value)}
+                        onChangeText={setOutrosSe_ruj_coleta_lixo_outros}
                         value={se_ruj_coleta_lixo_outros}
                         onBlur={() => onPressTitle("se_ruj", "se_ruj_coleta_lixo_outros", se_ruj_coleta_lixo_outros, sync)}
                         placeholder={" Outros"}

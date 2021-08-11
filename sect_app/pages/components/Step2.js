@@ -211,7 +211,7 @@ const Step2 = (props) => {
                 <View style={{ alignItems: 'center' }}>
                     <TextInput
                         style={styles.inputOutros}
-                        onChangeText={outros => setOutros(outros)}
+                        onChangeText={setOutros}
                         value={outros}
                         onBlur={() => onPressTitle("se_ruj", "se_ruj_natureza_atividades_outros", outros, sync)}
                         placeholder={" Outros"}
@@ -223,28 +223,28 @@ const Step2 = (props) => {
                 <View style={{ alignItems: 'center' }}>
                     <TextInput
                         style={styles.inputOutros}
-                        onChangeText={comercio => setComercio(comercio)}
+                        onChangeText={setComercio}
                         value={comercio}
                         onBlur={() => onPressTitle("se_ruj", "se_ruj_ramo_atividade_comercio", comercio, sync)}
                         placeholder={"  Comércio"}
                     />
                     <TextInput
                         style={styles.inputOutros}
-                        onChangeText={industria=>setIndustria(industria)}
+                        onChangeText={setIndustria}
                         value={industria}
                         onBlur={() => onPressTitle("se_ruj", "se_ruj_ramo_atividade_industria", industria, sync)}
                         placeholder={"  Indústria"}
                     />
                     <TextInput
                         style={styles.inputOutros}
-                        onChangeText={recursosNaturais=> setRecursosNaturais(recursosNaturais)}
+                        onChangeText={setRecursosNaturais}
                         value={recursosNaturais}
                         onBlur={() => onPressTitle("se_ruj", "se_ruj_ramo_atividade_recursos_naturais", recursosNaturais, sync)}
                         placeholder={"  Recursos Naturais"}
                     />
                     <TextInput
                         style={styles.inputOutros}
-                        onChangeText={t_I=> setT_I(t_I)}
+                        onChangeText={setT_I}
                         value={t_I}
                         onBlur={() => onPressTitle("se_ruj", "se_ruj_ramo_atividade_tic", t_I, sync)}
                         placeholder={"   Tecnologia da Informação/Comunicação"}

@@ -270,7 +270,7 @@ async function loadStep3(){
             />
             <TextInput
               style={styles.inputOutrosBeneficios}
-              onChangeText={(outros)=>setOutrosBeneficios(outros)}
+              onChangeText={setOutrosBeneficios}
               value={outrosBeneficios}
               onBlur={() => onPressTitle("se_ruj", "se_ruj_beneficios_concedidos_outros", outrosBeneficios, sync)}
               placeholder={"    Outros"}

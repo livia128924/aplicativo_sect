@@ -197,13 +197,13 @@ const Step4 = (props) => {
         db.transaction((tx) => {
             //tx.executeSql("DROP TABLE log", []);
             const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-            console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
+            //console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
             tx.executeSql(log_delete, []);
         });
 
         db.transaction((tx) => {
             const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-            console.log(log_update);
+            //console.log(log_update);
             tx.executeSql(log_update, [], (tx, results) => {
 
             });
@@ -275,7 +275,7 @@ const Step4 = (props) => {
                 <DropDownPicker
                     style={styles.Mao_de_obra}
                     open={openSe_ruj_tipo_construcao}
-                    value={valorSe_ruj_tipo_construcao}
+                    value={parseInt(valorSe_ruj_tipo_construcao)}
                     items={itemSe_ruj_tipo_construcao}
                     setOpen={setOpenSe_ruj_tipo_construcao}
                     setValue={setValorSe_ruj_tipo_construcao}
@@ -298,7 +298,7 @@ const Step4 = (props) => {
                 <DropDownPicker
                     style={styles.Mao_de_obra}
                     open={openSe_ruj_numero_comodos}
-                    value={valorSe_ruj_numero_comodos}
+                    value={parseInt(valorSe_ruj_numero_comodos)}
                     items={itemSe_ruj_numero_comodos}
                     setOpen={setOpenSe_ruj_numero_comodos}
                     setValue={setValorSe_ruj_numero_comodos}
@@ -314,7 +314,7 @@ const Step4 = (props) => {
                 <DropDownPicker
                     style={styles.Mao_de_obra}
                     open={openSe_ruj_numero_pisos}
-                    value={valorSe_ruj_numero_pisos}
+                    value={parseInt(valorSe_ruj_numero_pisos)}
                     items={itemSe_ruj_numero_pisos}
                     setOpen={setOpenSe_ruj_numero_pisos}
                     setValue={setValorSe_ruj_numero_pisos}
@@ -348,7 +348,7 @@ const Step4 = (props) => {
                     <DropDownPicker
                         style={styles.Mao_de_obra}
                         open={openSe_ruj_estado_conservacao}
-                        value={valorSe_ruj_estado_conservacao}
+                        value={parseInt(valorSe_ruj_estado_conservacao)}
                         items={itemSe_ruj_estado_conservacao}
                         setOpen={setOpenSe_ruj_estado_conservacao}
                         setValue={setValorSe_ruj_estado_conservacao}

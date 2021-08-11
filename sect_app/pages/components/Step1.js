@@ -312,7 +312,7 @@ const Step1 = (props) => {
         <View style={{ alignItems: 'center' }}>
           <TextInput
             style={styles.input2}
-            onChangeText={localizacao => setLocalizacao(localizacao)}
+            onChangeText={ setLocalizacao}
             value={localizacao}
             onBlur={() => onPressTitle("se_ruj", "se_ruj_localizacao", localizacao, sync)}
             placeholder={"    Localização"}
