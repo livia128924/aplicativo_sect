@@ -1,19 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, StyleSheet, Text, Button, AsyncStorage } from 'react-native';
-import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
+import { View, StyleSheet, Text, Button, AsyncStorage, ScrollView } from 'react-native';
 import api from '../../services/api';
-import Step1 from '../components/Step1';
-import Step2 from '../components/Step2';
-import Step3 from '../components/Step3';
-import Step4 from '../components/Step4';
-import Step5 from '../components/Step5';
-import Step6 from '../components/Step6';
+import Step1 from '../components/ruf/Step1';
+import Step2 from '../components/ruf/Step2';
+import Step3 from '../components/ruf/Step3';
+import Step4 from '../components/ruf/Step4';
+import Step5 from '../components/ruf/Step5';
+import Step6 from '../components/ruf/Step6';
+import Swiper from 'react-native-swiper';
 const db = DatabaseConnection.getConnection();
 import { DatabaseConnection } from '../database/database';
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import StepIndicator from 'react-native-step-indicator';
+import { FlatList } from 'react-native-gesture-handler';
+import  ProgressSteps from './ProgressSteps/ProgressSteps'
+import ProgressStep  from './ProgressSteps/ProgressStep';
 
-
-
-function ExampleOne() {
+function IndexPF({ navigation }) {
 
   useEffect(()=>{
 
@@ -34,6 +37,8 @@ function ExampleOne() {
 
   },[]);
 
+  const [currentPage, setCurrentPage] = useState(0);
+
 
 
   const defaultScrollViewProps = {
@@ -43,6 +48,8 @@ function ExampleOne() {
       justifyContent: 'center'
     }
   };
+
+
 
   const onNextStep = () => {
     console.log('called next step');
@@ -72,85 +79,93 @@ function ExampleOne() {
         </View >
 
       <ProgressSteps
-
       >
         <ProgressStep
           label="Area"
           onNext={onNextStep}
           onPrevious={onPrevStep}
+          previousBtnText={ 'voltar'}
+          nextBtnText={'próximo'}
         >
           <View>
 
-            <Step1
-
-            />
+            <Step1/>
           </View>
         </ProgressStep>
 
         <ProgressStep
-          label="Atividades"
+          label="Ocupação"
           onNext={onNextStep}
           onPrevious={onPrevStep}
+          previousBtnText={ 'voltar'}
+          nextBtnText={'próximo'}
         >
-          <Step2 />
+          <Step2/>
 
         </ProgressStep>
         <ProgressStep
-          label="Empregados/Associados"
+          label="Dados/Ocupantes/Infraestrutura"
           onPrevious={onPrevStep}
           onNext={onNextStep}
+          previousBtnText={ 'voltar'}
+          nextBtnText={'próximo'}
         >
-          <Step3 />
-
-          <View style={{ alignItems: 'center' }}>
-
-            <Text>formulario4sdasd step content</Text>
-          </View>
+          <Step3/>
         </ProgressStep>
 
         <ProgressStep
-          label="Infra"
+          label="Saneamento Basico"
           onPrevious={onPrevStep}
           onNext={onNextStep}
+          previousBtnText={ 'voltar'}
+          nextBtnText={'próximo'}
           scrollable={true}
         >
-          <Step4 />
-          <View style={{ alignItems: 'center' }}>
+          <Step4/>
 
-            <Text>form 5 step conten0t</Text>
-          </View>
         </ProgressStep>
 
         <ProgressStep
-          label="Saneamento"
+          label=" Bens      Moveis"
           onPrevious={onPrevStep}
           onNext={onNextStep}
-          //scrollViewProps={defaultScrollViewProps}
+          previousBtnText={ 'voltar'}
+          nextBtnText={'próximo'}
           scrollable={true}
         >
           <Step5 />
         </ProgressStep>
         <ProgressStep
-          label="Patrimonio"
+          label="Relatorio     Fotografico   "
           onPrevious={onPrevStep}
           onSubmit={onSubmitSteps}
+          previousBtnText={ 'voltar'}
+          finishBtnText={'enviar'}
           scrollable={true}
         >
-          <Step6 />
+          <Step6
+          navigation= {navigation}
+          />
         </ProgressStep>
       </ProgressSteps>
+
+
+
 
     </View>
   );
 
 }
 
-export default ExampleOne;
+export default IndexPF;
 
 const styles = StyleSheet.create({
   rect: {
     width: '100%',
-    height: 75,
+    //height: 75,
+    //position: 'absolute',
+    flexDirection: 'row',
+    top:1,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3

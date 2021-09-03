@@ -10,9 +10,10 @@ import relatorio_camera from './pages/socio/relatorio_camera';
 import leitor from './pages/leitor';
 import ViewAllUser from './pages/listar';
 import Login from "./pages/login";
-import ExampleOne from './pages/socio/index'
+import Index from './pages/socio/pj_progressStep';
+import IndexPF from './pages/socio/pf_progressSep';
 import Relatorio from "./pages/socio/Relatorio";
-import Config from './pages/socio/config';
+import Config from './pages/menu/config';
 
 const Stack = createStackNavigator();
 
@@ -74,16 +75,32 @@ const App = () => {
                         }}
                     />
                     <Stack.Screen
-                        name='Stepper'
-                        component={ExampleOne}
+                        name='Stepper_PJ'
+                        component={Index}
                         options={{
-                            title: 'Stepper',
+                            title: 'SOCIOECONÔMICO (FUNDIÁRIA) URBANO - PJ',
                             headerStyle: {
                                 backgroundColor: '#FFF',
                             },
                             headerTintColor: 'black',
                             headerTitleStyle: {
                                 fontWeight: 'bold',
+                                fontSize:13
+                            },
+                        }}
+                    />
+                    <Stack.Screen
+                        name='Stepper_PF'
+                        component={IndexPF}
+                        options={{
+                            title: 'SOCIOECONÔMICO (FUNDIÁRIA) URBANO - PF',
+                            headerStyle: {
+                                backgroundColor: '#FFF',
+                            },
+                            headerTintColor: 'black',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                                fontSize:13
                             },
                         }}
                     />

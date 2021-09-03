@@ -23,74 +23,85 @@ const Drawer = createDrawerNavigator();
 const Sincronizacao = ({ navigation }) => {
 
     const [flatListItems, setFlatListLogs] = useState([]);
-    const [enviados, setEnviados] = useState('');
-    const [valor, setValor] = useState('');
 
     useEffect(() => {
         loadDados();
+
+
     }, []);
 
     function onPress(codigo) {
         //alert(codigo);
         db.transaction((tx) => {
+        // tx.executeSql(
+        //     `delete from log`,
+        //     [],
+        //     (tx, results) => {
+        //         alert("Deletado com successo!");
+        //     },
+        //     function (tx, error) {
+        //         console.log("SELECT error: " + error.message);
+        //     }
+        //     );
+
             tx.executeSql(
-                `SELECT * FROM log where situacao = '2' and cod_processo= '${codigo}' `, [], (tx, results) => {
+                `SELECT * FROM log where situacao = '1' and cod_processo= '${codigo}' `, [], (tx, results) => {
                     //var len = results.rows.length, i;
                     var temp = [];
-                    console.log(results.rows.length);
+                    //console.log(results.rows.length);
                     for (let i = 0; i < results.rows.length; ++i) {
-
+                        //console.log(results.rows);
                         var processo = (results.rows.item(i).cod_processo);
                         var valor = (results.rows.item(i).valor);
                         var tabela = (results.rows.item(i).tabela);
                         var campo = (results.rows.item(i).campo);
-                        //console.log(results.rows);
-                        api.post('update/index.php', { processo, valor, tabela, campo })
+                        var nome = (results.rows.item(i).nome);
+                        //console.log(nome);
+                        api.post('update/index.php', { processo, valor, tabela, campo, nome })
                         .then(function (response) {
-                            //const { processo, dados } = response.data;
-                            //const codigo = response.data.dados.painel_usuario_logado;
+                            console.log(response.data);
+                            const {status, msg} = response.data;
+                            if (status === 'OK') {
+                        db.transaction((tx) => {
+                            console.log("success");
+                           tx.executeSql(`UPDATE log set situacao = '2' where cod_processo = '${codigo}'`, []);
+                           console.log(`UPDATE log set situacao = '2' where cod_processo = '${codigo}' `);
+                                });
+                            } else {
+                                console.log("error", msg);
+                            }
                         })
                         .catch(function (error) {
                             alert(error);
                         });
-                        //setEnviados(temp);
-
+                        loadDados();
                     }
-                    loadDados();
-                }
-                );
-                tx.executeSql(`UPDATE log set situacao = '2' where cod_processo = '${codigo}' `, []);
-                console.log(`UPDATE log set situacao = '2' where cod_processo = '${codigo}' `);
-        }, (err) => {
-            //console.error("There was a problem with the onPress", err);
-            return true;
-        }, (success) => {
-            //console.log("onPress ", success);
+                }, (tx, error) => {
+                    console.error("There was a problem with the onPress", error.message);
+                    return true;
+                }, (tx, success) => {
+                    console.log("onPress ", success);
+                });
         });
 
     };
 
 
-    function onPressProcesso(pr_codigo, cod_prss) {
-        alert(pr_codigo);
-        AsyncStorage.setItem('pr_codigo', pr_codigo.toString());
-        AsyncStorage.setItem('cod_prss', cod_prss);
-        navigation.navigate('Stepper');
-
-    }
-
-    async function loadDados() {
+ function loadDados() {
+        //console.log("loadDados");
         db.transaction((tx) => {
             //tx.executeSql("DROP TABLE log", []);
             tx.executeSql(
-                "SELECT *, COUNT(l.codigo) AS count, p.codigo AS pr_codigo, (SELECT COUNT(*) FROM log l2 WHERE l2.cod_processo = l.cod_processo AND l2.situacao = '2') as enviado FROM log l LEFT JOIN rq r LEFT JOIN pr p where r.codigo = p.pr_requerente and pr_codigo = l.cod_processo group by p.pr_numero_processo", [], (tx, results) => {
+                "SELECT *, COUNT(l.codigo) AS count, p.codigo AS pr_codigo, (SELECT COUNT(*) FROM log l2 WHERE l2.cod_processo = l.cod_processo AND l2.situacao = '2' ) as enviado FROM log l  LEFT JOIN pr p ON pr_codigo = l.cod_processo group by l.cod_processo", [],
+                (tx, results) => {
                     //var len = results.rows.length, i;
                     var temp = [];
-                    for (let i = 0; i < results.rows.length; ++i)
-                    temp.push(results.rows.item(i));
-                    //console.log(temp);
-                    setFlatListLogs(temp);
-                   //console.log(temp)
+                    for (let i = 0; i < results.rows.length; ++i){
+                        temp.push(results.rows.item(i));
+                    }
+                        setFlatListLogs(temp);
+                }, function (tx, error) {
+                  alert("SELECT Log error: " + error.message);
                 }
             );
         }, (err) => {
@@ -100,6 +111,15 @@ const Sincronizacao = ({ navigation }) => {
             //console.log("log select", success);
         });
     }
+
+    function onPressProcesso(pr_codigo, cod_prss) {
+        alert(pr_codigo);
+        AsyncStorage.setItem('pr_codigo', pr_codigo.toString());
+        AsyncStorage.setItem('cod_prss', cod_prss);
+        navigation.navigate('Stepper');
+
+    }
+
 
     function CustomDrawerContent(props) {
         return (
@@ -128,14 +148,14 @@ const Sincronizacao = ({ navigation }) => {
         return (
             <View style={{ flex: 1 }}>
                 <View style={styles.listView}>
-                    <Text>    N Processo          Registros     enviadas</Text>
+                    <Text> N Processo            Regs            Regs.env </Text>
                     <View style={styles.item}>
                         {[...flatListItems].map((item, index) => (
                             <View style={styles.map} key={item.pr_codigo}>
                                 <TouchableOpacity onPress={() => onPressProcesso(item.pr_codigo, item.pr_numero_processo,)}
                                     style={styles.title}>
                                     <Text>
-                                        {item.pr_numero_processo}
+                                    {item.pr_numero_processo}
                                     </Text>
                                 </TouchableOpacity>
                                 <Text
@@ -228,7 +248,6 @@ const styles = StyleSheet.create({
     map: {
         flex: 1,
         flexDirection: 'row',
-        padding: 10,
         justifyContent: 'space-between'
     },
 

@@ -61,27 +61,27 @@ const Menu = ({ navigation }) => {
                     />
                     <MybuttonMaterial
                         title=''
-                        customClick={() => navigation.navigate('')}
+                        customClick={() => alert('ok')}
                         icon='image-off'
                     />
                     <MybuttonMaterial
                         title=''
-                        customClick={() => navigation.navigate('')}
+                        customClick={() => alert('ok')}
                         icon='image-off'
                     />
                     <MybuttonMaterial
                         title=''
-                        customClick={() => navigation.navigate('')}
+                        customClick={() => alert('ok')}
                         icon='image-off'
                     />
                     <MybuttonMaterial
                         title=''
-                        customClick={() => navigation.navigate('')}
+                        customClick={() => alert('ok')}
                         icon='image-off'
                     />
                     <MybuttonMaterial
                         title=''
-                        customClick={() => navigation.navigate('')}
+                        customClick={() => alert('ok')}
                         icon='image-off'
                     />
 
@@ -108,10 +108,6 @@ const styles = StyleSheet.create({
         //width: '100%',
         height: 400,
         top: 300,
-        //textAlign: 'center',
-
-        //alignContent: 'center',
-        //justifyContent: 'center'
     },
     item: {
         flex:1,

@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Text, StyleSheet, View, TextInput, AsyncStorage } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { DatabaseConnection } from '../database/database';
+import { DatabaseConnection } from '../../database/database';
 import { Formik, useFormik } from 'formik';
-import Mybutton from './Mybutton';
 import Checkbox from 'expo-checkbox';
 import { RadioButton } from 'react-native-paper';
 
@@ -17,57 +16,14 @@ const Step1 = (props) => {
   const [aberto, setAberto] = useState(false);
   const [valor, setValor] = useState('');
 
-  const [item, setItem_cidades] = useState([
-    { label: 'Apple', value: 'apple' },
-    { label: 'Banana', value: 'banana' }
-  ]);
+  const [item, setItem_cidades] = useState([]);
 
   const [abertoAcesso, setAbertoAcesso] = useState(false);
   const [valorAcesso, setValorAcesso] = useState(null);
-  const [itemAcesso, setItem_aux_acesso] = useState([
-    { label: 'samsung', value: 'samsung' },
-    { label: 'motorola', value: 'motorola' }
-  ]);
-  const [abertoAbrangencia, setAbertoAbrangencia] = useState(false);
-  const [valorAbrangencia, setValorAbrangencia] = useState(null);
-  const [itemAbrangencia, setItem_aux_setor_abrangencia] = useState([
-    { label: '100', value: '100' },
-    { label: '200', value: '200' }
-  ]);
-
-  const [ischecado, setChecado] = useState([
-
-    { id: 1, name: 'checkbox', label: 'Telha de amianto', value: '1', isChecked: false },
-    { id: 2, name: 'checkbox', label: 'Madeira aparelhado', value: '2', isChecked: false },
-    { id: 3, name: 'checkbox', label: 'Alumínio ou zinco', value: '3', isChecked: false },
-    { id: 4, name: 'checkbox', label: 'Laje de concreto', value: '4', isChecked: false },
-    { id: 5, name: 'checkbox', label: 'Telha de barro', value: '5', isChecked: false },
-    { id: 6, name: 'checkbox', label: 'Alumínio Galvanizado', value: '6', isChecked: false },
-  ]);
-
-  const [checked, setChecked] = React.useState('');
-  const [prop, setProp] = useState([
-    {
-      key: 'samsung',
-      text: 'Samsung',
-      isChecked: false
-    },
-    {
-      key: 'apple',
-      text: 'Apple',
-      isChecked: false
-    },
-    {
-      key: 'motorola',
-      text: 'Motorola',
-      isChecked: false
-    },
-    {
-      key: 'lenovo',
-      text: 'Lenovo',
-      isChecked: false
-    },
-  ]);
+  const [itemAcesso, setItem_aux_acesso] = useState([]);
+const [open_Se_ruj_setor_abrangencia, setOpen_Se_ruj_setor_abrangencia] = useState(false);
+const [valor_Se_ruj_setor_abrangencia, setValor_Se_ruj_setor_abrangencia]= useState(null);
+  const [item_Se_ruj_setor_abrangencia, setItem_Se_ruj_setor_abrangencia] = useState([]);
 
   useEffect(() => {
 
@@ -88,7 +44,6 @@ const Step1 = (props) => {
 
     loadDados();
 
-
     AsyncStorage.getItem('nome_tabela').then(tabela => {
       //console.log(cod_processo);
       if (tabela) {
@@ -108,14 +63,7 @@ const Step1 = (props) => {
 
                 setValorAcesso(results.rows.item(i).se_ruj_acesso);
 
-                setValorAbrangencia(results.rows.item(i).se_ruj_setor_abrangencia);
-
-                //muda(results.rows.item(i).se_ruj_material_cobertura);
-                x = results.rows.item(i).se_ruj_material_cobertura;
-
-                valor_checked(x.split(','));
-
-                setChecked(parseInt(results.rows.item(i).se_ruj_destino_dejetos));
+                setValor_Se_ruj_setor_abrangencia(results.rows.item(0).se_ruj_setor_abrangencia);
               }
 
             });
@@ -129,13 +77,12 @@ const Step1 = (props) => {
 
 
   async function loadDados() {
+
     //////////////primeira coisa que faz quando entra na tela:  faz um select das tabelas aux para carregar nos components //////////////
-    await db.transaction((tx) => {
+  db.transaction((tx) => {
       tx.executeSql(
         "select * from aux_acesso ", [], (tx, results) => {
-          //var len = results.rows.length, i;
           var temp = [];
-          //console.log(len);
           for (let i = 0; i < results.rows.length; ++i) {
             temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
           }
@@ -144,26 +91,20 @@ const Step1 = (props) => {
       );
       tx.executeSql(
         "select * from cidades ", [], (tx, results) => {
-          //var len = results.rows.length, i;
           var temp = [];
-          //console.log(len);
           for (let i = 0; i < results.rows.length; ++i) {
             temp.push({ label: results.rows.item(i).nome, value: results.rows.item(i).codigo });
-            //console.log( results.rows.item(i).nome);
           }
           setItem_cidades(temp);
         }
       );
       tx.executeSql(
         "select * from aux_setor_abrangencia", [], (tx, results) => {
-          //var len = results.rows.length, i;
           var temp = [];
-          //console.log(len);
           for (let i = 0; i < results.rows.length; ++i) {
             temp.push({ label: results.rows.item(i).descricao, value: results.rows.item(i).codigo });
-            //console.log( results.rows.item(i).nome);
           }
-          setItem_aux_setor_abrangencia(temp);
+          setItem_Se_ruj_setor_abrangencia(temp);
         }
       );
     }, (err) => {
@@ -171,7 +112,7 @@ const Step1 = (props) => {
       return true;
     }, (success) => {
     });
-  }
+  };
 
   //função que aciona quando o estado do componente muda e seta os valores correspondente
   function onPressTitle(tabela, campo, valor, codigo) {
@@ -195,7 +136,6 @@ const Step1 = (props) => {
     var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
 
     db.transaction((tx) => {
-      //tx.executeSql("DROP TABLE log", []);
       const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
       console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
       tx.executeSql(log_delete, []);
@@ -214,55 +154,6 @@ const Step1 = (props) => {
     AsyncStorage.setItem('codigo', valor.toString());
   };
 
-
-  const handleChange = async (index) => {
-
-    //console.log(index);
-    let value = index.value;
-    let checked = index.isChecked;
-
-    let _sintomas = [...ischecado];
-
-    _sintomas.forEach(sintoma => {
-      if (sintoma.value === value) {
-        sintoma.isChecked = !checked;
-      }
-    });
-
-    //console.log(ischecado);
-    return setChecado(_sintomas);
-
-  };
-
-  function muda() {
-    //await api
-    var str_sintomas = [];
-
-    ischecado.filter(value => value.isChecked === true).map((item) => {
-      str_sintomas.push(item.value);
-    });
-    //console.log(ischecado);
-    return str_sintomas.join(",");
-  }
-
-  function valor_checked(material_cobertura) {
-
-    let x = [...ischecado];
-
-    //console.log(ischecado.value);
-    material_cobertura.forEach(item => {
-      //console.log(item);
-      x.forEach(sintoma => {
-        if (sintoma.value === item) {
-          sintoma.isChecked = true;
-        }
-      });
-      //console.log(x);
-    });
-
-    return setChecado(x);
-  }
-
   return (
 
     <View>
@@ -274,16 +165,15 @@ const Step1 = (props) => {
         <View style={styles.municipio}>
           <Text>MUNICIPIOS </Text>
         </View>
-
         <DropDownPicker
           style={styles.select}
           open={aberto}
           value={parseInt(valor)}
           items={item}
+          zIndex={9999}
           setOpen={setAberto}
           setValue={setValor}
           setItems={setItem_cidades}//cidades
-          zIndex={9999}
           listMode="SCROLLVIEW"
           onChangeValue={() => onPressTitle("se_ruj", "se_ruj_municipio", valor, sync)}
           placeholder={"Municipios"} //aqui eu tentei colocar o retorno da funcao do select
@@ -317,59 +207,32 @@ const Step1 = (props) => {
             onBlur={() => onPressTitle("se_ruj", "se_ruj_localizacao", localizacao, sync)}
             placeholder={"    Localização"}
           />
-          <Text>formulario step content</Text>
         </View>
       </View>
+
+<View>
 
       <View style={styles.form_step1}>
         <View style={styles.rect2}>
           <Text style={styles.titulo}>SETOR DE ABRANGÊNCIA</Text>
         </View>
-        <View style={styles.checkboxlabel}>
 
-          {[...ischecado].map((item, index) => (
-            <View style={styles.checkboxGroup}
-              key={item.id}
-            >
-              <Checkbox
-                style={styles.checkbox}
-                value={item.isChecked}
-                //color={item.isChecked ? '#4630EB' : undefined}
-                onValueChange={() => {
-                  handleChange(item); onPressTitle("se_ruj", "se_ruj_material_cobertura", muda(), sync)
-                }}
-              />
-              <Text >{item.label}</Text>
-            </View>
-          ))}
+        <DropDownPicker
+          style={styles.abrangencia}
+          open={open_Se_ruj_setor_abrangencia}
+          value={parseInt(valor_Se_ruj_setor_abrangencia)}
+          items={item_Se_ruj_setor_abrangencia}
+          setOpen={setOpen_Se_ruj_setor_abrangencia}
+          setValue={setValor_Se_ruj_setor_abrangencia}
+          setItems={setItem_Se_ruj_setor_abrangencia}//aux_acesso
+          dropDownDirection='BOTTOM'
+          onChangeValue={() => onPressTitle("se_ruj", "se_ruj_setor_abrangencia", valor_Se_ruj_setor_abrangencia, sync)}
+          listMode="SCROLLVIEW"
+          placeholder="Setor Abrangência"
+          />
 
-        </View>
-
-
-        <View style={styles.checkboxlabel}>
-
-          {[...prop].map((res, index) => (
-            <View style={styles.checkboxGroup}
-              key={res.key}
-            >
-              <RadioButton
-                value={res.key}
-                status={checked === index ? 'checked' : 'unchecked'}
-                onPress={() => { setChecked(index); onPressTitle("se_ruj", "se_ruj_destino_dejetos", index, sync) }}>
-              </RadioButton>
-              <Text>{res.text}</Text>
-            </View>
-          ))}
-          {<Text> Selected: {checked} </Text>}
-        </View>
-
+          </View>
       </View>
-      {/* <View>
-        <Mybutton
-          title='Enviar'
-          customClick={() => console.log(setValor)}
-        />
-      </View> */}
 
     </View>
   )
@@ -391,20 +254,17 @@ const styles = StyleSheet.create({
     marginLeft: 30,
   },
   form: {
-    width: 340,
-    height: 370,
-    marginLeft: 25,
-    borderWidth: 1,
-    borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3
+
   },
   form_step1: {
     marginTop: 15,
     width: 340,
+    height:200,
     marginLeft: 25,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3
+    borderRadius: 3,
+    zIndex:1
   },
   localizacao: {
     color: "#121212",
@@ -421,7 +281,7 @@ const styles = StyleSheet.create({
   },
   form: {
     width: 340,
-    height: 370,
+    height: 320,
     marginLeft: 25,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
@@ -432,6 +292,7 @@ const styles = StyleSheet.create({
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,
+    zIndex:2
   },
   municipio: {
     color: "#121212",
@@ -466,9 +327,7 @@ const styles = StyleSheet.create({
     marginLeft: 9,
     marginTop: 1
   },
-  dropAtividades: {
-    zIndex: 9999,
-  },
+
   abrangencia: {
     height: 40,
     width: '85%',

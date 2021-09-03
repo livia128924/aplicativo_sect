@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "sectApp",
+    "name": "sgrf",
     "slug": "sect-App",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -17,14 +17,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "br.gov.am.sect.sgrf",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "br.gov.am.sect.sgrf"
+      "package": "br.gov.am.sect.sgrf",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

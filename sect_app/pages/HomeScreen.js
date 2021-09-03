@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, SafeAreaView, AsyncStorage, StyleSheet, Text, FlatList, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-elements';
-import Mybutton from './components/Mybutton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import { SearchBar } from 'react-native-elements';
@@ -14,6 +13,8 @@ import {
     DrawerItemList,
     DrawerItem
 } from '@react-navigation/drawer';
+import { ErrorMessage } from './login/styles';
+import { Card } from 'react-native-elements/dist/card/Card';
 
 ///////////////////////
 const Drawer = createDrawerNavigator();
@@ -24,35 +25,47 @@ const Drawer = createDrawerNavigator();
 const HomeScreen = ({ navigation }) => {
     const [selectedId, setSelectedId] = useState(null);
     const [flatListItems, setFlatListItems] = useState([]);
+    const [masterDataSource, setMasterDataSource] = useState([]);
+
     const [search, setSearch] = useState('');
     const [sync, setSync] = useState('');
-
+    const [error, setError] = useState('');
     const [count, setCount] = useState(0);
 
+    function onPress (cod_prss, rq_nome, pr_codigo, rq_tipo_pessoa ) {
 
-    function onPress (cod_prss, rq_nome, pr_codigo ) {
-    //console.log(cod_prss);
-   //navigation.navigate('Stepper');
+        AsyncStorage.setItem('pr_codigo', pr_codigo.toString());
+        AsyncStorage.setItem('cod_prss', cod_prss);
+        AsyncStorage.setItem('rq_nome', rq_nome);
 
-AsyncStorage.setItem('pr_codigo', pr_codigo.toString());
+if(rq_tipo_pessoa === 'j'){
 
-AsyncStorage.setItem('cod_prss', cod_prss);
-   AsyncStorage.setItem('rq_nome', rq_nome);
-   navigation.navigate('Stepper');
+    navigation.navigate('Stepper_PJ');
+
+}else if(rq_tipo_pessoa === 'f'){
+
+    navigation.navigate('Stepper_PF');
 
 }
 
+}
     useEffect(() => {
 
         db.transaction((tx) => {
             tx.executeSql(
-                "SELECT *, p.codigo AS pr_codigo FROM pr p LEFT JOIN rq r ON r.codigo = p.pr_requerente", [], (tx, results) => {
+                "SELECT *, p.codigo AS pr_codigo FROM pr p LEFT JOIN rq r ON r.codigo = p.pr_requerente ", [], (tx, results) => {
                     //var len = results.rows.length, i;
                     var temp = [];
                     for (let i = 0; i < results.rows.length; ++i)
-                        temp.push(results.rows.item(i));
                     //console.log( results.rows.item(i));
-                    setFlatListItems(temp);
+                    if(results.rows.length <=0){
+                        setError("Nada foi encontrado! Porfavor reinicie as configurações");
+                    }else{
+                        temp.push(results.rows.item(i));
+                        setFlatListItems(temp);
+
+                        setMasterDataSource(temp);
+                    }
 
                 }
             );
@@ -63,23 +76,78 @@ AsyncStorage.setItem('cod_prss', cod_prss);
             console.log("log select", success);
         });
     }, []);
+///////////////////////////////////////////////////
+    const searchFilterFunction = (text) => {
+        // Check if searched text is not blank
+        if (text) {
+          // Inserted text is not blank
+          // Filter the masterDataSource
+          // Update FilteredDataSource
+          const newData = masterDataSource.filter(function (item) {
+            const itemData = item.pr_numero_processo
+              ? item.pr_numero_processo.toUpperCase()
+              : ''.toUpperCase();
+            const textData = text.toUpperCase();
+            return itemData.indexOf(textData) > -1;
+          });
+          setFlatListItems(newData);
+          setSearch(text);
+        } else {
+          // Inserted text is blank
+          // Update FilteredDataSource with masterDataSource
+          setFlatListItems(masterDataSource);
+          setSearch(text);
+        }
+      };
 
     const listItemView = (item) => {
-        return (
-            <View style={styles.item}
+return (
+    <Card containerStyle={{padding: 0}} >
+            <TouchableOpacity style={styles.item}
                 key={item.codigo}
+                onPress={() =>
+                    onPress(item.pr_numero_processo,
+                    item.rq_nome,
+                    item.pr_codigo,
+                    item.rq_tipo_pessoa )}
             >
-                <TouchableOpacity  style={styles.item}  onPress={() => onPress(item.pr_numero_processo, item.rq_nome, item.pr_codigo)}>
+            <View style={styles.iconText}>
+            <View style={{top:15, padding:6, backgroundColor:"white", borderRadius:17, width:35, height:35, }}>
+            <Icon
+            //solid
+            size={23}
+            color="#4d94ff"
+
+            //iconStyle={{alignItems:"center", paddingLeft:50}}
+            //backgroundColor="red"
+            name='file-document-outline' />
+            </View>
+
+            <Text
+            style={styles.title}
+            >
+                {item.pr_numero_processo.toUpperCase()}
+            </Text>
+                     </View>
+                <View
+                style={styles.dadosStyle}
+               >
+
+
                     <Text
-                    style={styles.title}>
-                        {item.pr_numero_processo}
-                    </Text>
-                    <Text style={styles.title}>
-                        {item.rq_nome}
+                    style={styles.titleRq}
+                    >
+                        {item.rq_cpf} |
 
                     </Text>
+
+                    <Text
+                   style={styles.titleRq}
+                    key={item.rq_tipo_pessoa}>
+                      {item.rq_tipo_pessoa == 'f'? <Text> Regularização Fundiária Urbano PF</Text>: <Text> Regularização Fundiária Urbano PJ</Text>}
+                    </Text>
+                    <View style={{bottom:9}}>
                     <Button
-                    title=''
                     type="clear"
                     icon={
                         <Icon
@@ -88,19 +156,14 @@ AsyncStorage.setItem('cod_prss', cod_prss);
                         color="#4d94ff"
                         />
                     }
-                />
-                </TouchableOpacity>
+                    />
+                    </View>
+                </View>
 
-            </View>
+            </TouchableOpacity>
+            </Card>
         );
     };
-
-    // <Item
-    //     item={item}
-
-    //     backgroundColor={{ backgroundColor }}
-    //     textColor={{ color }}
-    // />
 
     function CustomDrawerContent(props) {
         return (
@@ -134,14 +197,14 @@ AsyncStorage.setItem('cod_prss', cod_prss);
                             name={'arrow-left'}
                             size={25}
                             color='black'
-                        //style={styles.btnIcon}
                         />
                     </BorderlessButton>
                 </View>
-
+            <View >
                 <SearchBar
                     placeholder="Pesquise aqui..."
-                    onChangeText={setSearch}
+                    onChangeText={(text) => searchFilterFunction(text)}
+                    onClear={(text) => searchFilterFunction('')}
                     value={search}
                     lightTheme={true}
                     round={true}
@@ -151,16 +214,18 @@ AsyncStorage.setItem('cod_prss', cod_prss);
                     inputContainerStyle={{ backgroundColor: 'white' }}
                 //containerStyle={{backgroundColor:'false', }}
                 />
+                    <Text style={{ paddingLeft: 15, top:25 }}>Processos</Text>
 
-                <View style={styles.listView}>
-                    <Text style={{ paddingLeft: 10 }}>Processos</Text>
+                    {error.length !== 0 && <ErrorMessage>{error}</ErrorMessage>}
+
                     <FlatList
+                     style={styles.listView}
                         data={flatListItems}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => listItemView(item)}
                     />
-                </View>
 
+</View>
                 <View style={styles.footer}>
 
                     <TouchableOpacity
@@ -191,7 +256,7 @@ AsyncStorage.setItem('cod_prss', cod_prss);
 
                     <TouchableOpacity
                         style={styles.button3}
-                        onPress={() => navigation.navigate('Stepper')}
+                        onPress={() => alert("nao definido")}
                     >
                         <IconFont
                             name={'edit'}
@@ -316,21 +381,34 @@ const styles = StyleSheet.create({
     listView: {
         //flex:1,
         //width: '100%',
-        height: 400,
+        //height: 400,
         top: 25,
-        marginLeft: 25,
-        marginRight: 25,
+        //marginLeft: 12,
+        //marginRight: 12,
     },
     item: {
         flex: 1,
-        flexDirection: 'row',
+        //flexDirection: 'column',
         padding: 10,
-        justifyContent: 'space-between'
+        //justifyContent: 'space-between'
 
     },
-    title: {
-        fontSize: 18,
+    iconText:{
+    flexDirection: 'row',
+    //justifyContent:''
     },
+    title: {
+        top:5,
+        fontSize: 15,
+        marginLeft:15,
+    },
+    dadosStyle:{
+        flexDirection: 'row',
+        marginLeft:51
+    },
+    titleRq:{
+        fontSize:11
+    }
 });
 
 export default HomeScreen;
