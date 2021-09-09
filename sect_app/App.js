@@ -21,7 +21,7 @@ const App = () => {
 
         useEffect(() => {
             AsyncStorage.getItem('codigo').then(codigo => {
-                console.log(codigo);
+               // console.log(codigo);
             });
         }, []);
 

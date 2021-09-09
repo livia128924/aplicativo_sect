@@ -4,6 +4,7 @@ import { View, Text, Button ,StyleSheet} from 'react-native';
 import { DatabaseConnection } from '../database/database';
 import Mybutton from '../components/Mybutton';
 import MybuttonMaterial from '../components/MyButtonMaterial';
+import api_metas from '../../services/api_metas';
 const db = DatabaseConnection.getConnection();
 
 
@@ -17,7 +18,7 @@ function Config({ navigation }) {
 
   async function load_dados() {
 
-    axios.post('http://192.168.0.151:8082/api/metas.php', {})
+    api_metas.post('/metas.php', {})
       .then(function (response) {
         const metas = response.data;
         var arr = [];
@@ -59,7 +60,7 @@ function Config({ navigation }) {
       });
 
     //inseri os dados e select nas tabelas pri
-    axios.post('http://192.168.0.151:8082/api/metas_dados.php', {})
+    api_metas.post('/metas_dados.php', {})
       .then(function (response) {
         const metas_dados = response.data;
         var arr = [];
@@ -129,7 +130,7 @@ function Config({ navigation }) {
   //////////////////////////////////////////////tabelas auxiliares///////////////////////////////////
   async function aux_dados() {
     //cria as tabelas e faz o drop das tabelas auxiliares
-    axios.post('http://192.168.0.151:8082/api/estrutura2.php', {})
+    api_metas.post('/estrutura2.php', {})
       .then(function (response) {
         const dados = response.data;
         //console.log(dados);
@@ -183,7 +184,7 @@ function Config({ navigation }) {
 
 
     //faz o insert e select das tabelas auxiliares
-    axios.post('http://192.168.0.151:8082/api/dados3.php', {})
+    api_metas.post('/dados3.php', {})
       .then(function (response) {
         const dados2 = response.data;
         //console.log(dados2);
