@@ -38,5 +38,6 @@ ii) expo init my-project
 
 - Para conectar com a api - servidor
 
+
 i) yarn add axios
 
