@@ -189,7 +189,7 @@ return (
 
     function Inicio() {
         return (
-            <View style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1 }}>
                 <View style={styles.topBar}>
 
                     <BorderlessButton onPress={() => navigation.navigate('Menu')}>
@@ -242,7 +242,7 @@ return (
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={styles.button2}
+                        style={styles.button1}
                     onPress={() => navigation.navigate('Sincronizacao')}
                     >
                         <IconFont
@@ -255,7 +255,7 @@ return (
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={styles.button3}
+                        style={styles.button1}
                         onPress={() => alert("nao definido")}
                     >
                         <IconFont
@@ -268,7 +268,7 @@ return (
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={styles.button4}
+                        style={styles.button1}
                         onPress={() => navigation.navigate('Config')}
                     >
                         <IconFont
@@ -280,7 +280,7 @@ return (
                         <Text style={{ color: 'white', fontSize: 16 }}>config</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 };
@@ -297,69 +297,49 @@ const styles = StyleSheet.create({
     },
     button1: {
         height: 50,
-        width: 70,
+       // width: 70,
         alignItems: 'center',
-        //justifyContent: 'center',
-        top: 5,
+        top: 3,
+        margin:15,
         elevation: 5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
-        left: 20,
-        //padding: 10,
-        //margin: 20,
-        //borderRadius: 5,
     },
     button2: {
         height: 50,
         width: 70,
         alignItems: 'center',
-        //justifyContent: 'center',
         top: 5,
         elevation: 5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
-        left: 40,
-        //padding: 10,
-        //margin: 20,
-        //borderRadius: 5,
+
     },
     button3: {
         height: 50,
         width: 70,
         alignItems: 'center',
-        //justifyContent: 'center',
-        //backgroundColor:'red',
         top: 5,
         elevation: 5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
-        left: 80,
-        //padding: 10,
-        //margin: 20,
-        //borderRadius: 5,
     },
     button4: {
         height: 50,
         width: 70,
         alignItems: 'center',
-        //justifyContent: 'center',
-        //backgroundColor:'red',
         top: 5,
         elevation: 5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
-        left: 90,
-        //padding: 10,
-        //margin: 20,
-        //borderRadius: 5,
     },
     footer: {
         width: '100%',
@@ -367,7 +347,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         bottom: 0,
         height: 68,
-
+        alignItems: 'center',
+        display:'flex',
+        justifyContent:'space-between',
         backgroundColor: '#4d94ff'
     },
     container: {

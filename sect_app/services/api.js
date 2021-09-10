@@ -41,7 +41,7 @@ console.log("chgou");
 
                 });
 
-                console.log("'"+ global.api +"'");
+                //console.log("'"+ global.api +"'");
                 return axios.create({
                     baseUrl: "'"+ global.api +"'",
                     headers: {

@@ -7,9 +7,9 @@ import { useEffect, useState } from 'react';
 import { AsyncStorage } from 'react-native';
 
 
-export async function  getBaseUrl(){
+export default function getBaseUrl(){
 
-    var getUrl = "";
+    //var getUrl = "";
         var get_response="";
         axios.post('http://www.sect.am.gov.br/app/index.php', {})
         .then(function (response) {
@@ -31,23 +31,20 @@ export async function  getBaseUrl(){
                     alert(error);
                 });
 
-            AsyncStorage.getItem("address_url").then((value) => {
-                getUrl = value;
-            });
+                var getUrl = "";
+                AsyncStorage.getItem("address_url").then((value) => {
+                    getUrl = value;
+                    //console.log( getUrl);
+                    global.api =  "" + getUrl +"";
 
-            return "" + getUrl + "/api";
+
+                });
+
+                console.log("'"+ global.api +"'");
+                return global.api;
         }
 
 
 
-    const api_metas = axios.create({
-        baseURL: getBaseUrl(),
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Headers": "Authorization",
-            "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
-            "Content-Type": "application/json;charset=UTF-8"
-        },
-    });
 
-    export default api_metas;
+    //export default api_meta;

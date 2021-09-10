@@ -482,9 +482,10 @@ const styles = StyleSheet.create({
     marginLeft: 30,
   },
   form7: {
-    width: 340,
+    width: '95%',
+    left:11,
     height: 680,
-    marginLeft: 25,
+    //marginLeft: 25,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
@@ -503,7 +504,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   rect2: {
-    width: 340,
+    width: '100%',
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,

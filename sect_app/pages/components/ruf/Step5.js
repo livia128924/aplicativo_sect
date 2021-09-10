@@ -49,7 +49,7 @@ const Step5 = (props) => {
 
      AsyncStorage.getItem('nome_tabela').then(tabela => {
       //console.log("ok",cod_processo);
-       if (tabela != '') {
+       if (tabela ) {
 
            db.transaction((tx) => {
 
@@ -517,7 +517,7 @@ const Step5 = (props) => {
 
 const styles = StyleSheet.create({
   form: {
-    width: 340,
+    width: '92%',
     height: 560,
     marginLeft: 25,
     marginTop: 10,
@@ -551,7 +551,7 @@ const styles = StyleSheet.create({
     marginLeft: 30,
   },
   form8: {
-    width: 340,
+    width: '92%',
     height: 800,
     marginLeft: 25,
     marginTop: 10,
@@ -565,7 +565,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   rect2: {
-    width: 340,
+    width: '100%',
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,
