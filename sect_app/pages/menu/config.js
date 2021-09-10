@@ -8,17 +8,28 @@ import api_metas from '../../services/api_metas';
 const db = DatabaseConnection.getConnection();
 
 
-function Config({ navigation }) {
+const Config = ()=> {
 
+ // console.log(api_metas());
   //cria e faz o drop das tabelas principais
   // useEffect(() => {
 
 
   // },[]);
 
+  const api_meta = axios.create({
+    baseURL: api_metas(),
+    headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Authorization",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
+        "Content-Type": "application/json;charset=UTF-8"
+    },
+});
+
   async function load_dados() {
 
-    api_metas.post('/metas.php', {})
+    await api_meta.post('/api/metas.php', {})
       .then(function (response) {
         const metas = response.data;
         var arr = [];
@@ -38,7 +49,7 @@ function Config({ navigation }) {
           }, (success) => {
             console.log("metas", success);
           });
-
+          alert("Criado as tabelas!");
           db.transaction((tx) => {
             //tx.executeSql("delete from log", []);
 
@@ -60,7 +71,7 @@ function Config({ navigation }) {
       });
 
     //inseri os dados e select nas tabelas pri
-    api_metas.post('/metas_dados.php', {})
+    await api_meta.post('/api/metas_dados.php', {})
       .then(function (response) {
         const metas_dados = response.data;
         var arr = [];
@@ -130,7 +141,7 @@ function Config({ navigation }) {
   //////////////////////////////////////////////tabelas auxiliares///////////////////////////////////
   async function aux_dados() {
     //cria as tabelas e faz o drop das tabelas auxiliares
-    api_metas.post('/estrutura2.php', {})
+    await api_meta.post('/api/estrutura2.php', {})
       .then(function (response) {
         const dados = response.data;
         //console.log(dados);
@@ -184,7 +195,7 @@ function Config({ navigation }) {
 
 
     //faz o insert e select das tabelas auxiliares
-    api_metas.post('/dados3.php', {})
+    await api_meta.post('/api/dados3.php', {})
       .then(function (response) {
         const dados2 = response.data;
         //console.log(dados2);

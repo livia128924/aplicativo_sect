@@ -144,9 +144,9 @@ const Step1 = (props) => {
 
   return (
     <View>
-      <View style={styles.form}>
+      <View style={styles.form_}>
         <View style={styles.rect2}>
-          <Text>ÁREA DE ABRANGÊNCIA</Text>
+          <Text style={{color:'white', marginLeft:15, marginTop:5}}>ÁREA DE ABRANGÊNCIA</Text>
         </View>
 
         <View style={styles.title_style}>
@@ -203,10 +203,12 @@ const Step1 = (props) => {
 };
 
 const styles = StyleSheet.create({
-  form: {
-    width: 340,
+  form_: {
+    width: '95%',
+    left:11,
     height: 370,
-    marginLeft: 25,
+    //marginLeft: 25,
+    marginRight:25,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3
@@ -214,8 +216,10 @@ const styles = StyleSheet.create({
   input_style: {
     height: 40,
     width: '85%',
+    marginRight:25,
     marginTop: 2,
     borderWidth: 1,
+
     backgroundColor: 'white'
   },
   form: {
@@ -227,10 +231,11 @@ const styles = StyleSheet.create({
     borderRadius: 3
   },
   rect2: {
-    width: 340,
+    width: '100%',
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,
+    //color:  'white',
   },
   title_style: {
     color: "#121212",

@@ -576,7 +576,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   form3: {
-    width: 340,
+    width: '92%',
     height: 1350,
     marginLeft: 25,
     borderWidth: 1,
@@ -591,7 +591,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   rect2: {
-    width: 340,
+    width: '100%',
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,

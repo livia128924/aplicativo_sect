@@ -207,7 +207,7 @@ console.log(valor);
             backgroundColor: "white",
             height: 50,
             paddingTop: 5,
-            paddingLeft: 80,
+            //paddingLeft: 80,
           }}
         >
           <Button
@@ -215,7 +215,7 @@ console.log(valor);
             mode="outlined"
             color="black"
             onPress={() => camera(sync, "se_ruj_relatorio_imagens", "se_ruj")} //passar por paramentro os campos que irao para o registro das foto
-            style={{ width: "70%", borderRadius: 3 }}
+            style={{ width: "70%", borderRadius: 3, alignContent:'center', alignSelf:'center', alignItems:'center' }}
           ></Button>
         </View>
 
@@ -290,15 +290,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   form9: {
-    width: 340,
-    marginLeft: 25,
+    width: '95%',
+    left:11,
+    //marginLeft: 25,
     marginTop: 10,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
   },
   rect2: {
-    width: 340,
+    width: '100%',
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,

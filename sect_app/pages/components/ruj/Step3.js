@@ -227,9 +227,10 @@ const Step3 = (props) => {
     <SafeAreaView style={{ flex: 1 }}>
         <View
           style={{
-            width: 340,
+            width: '95%',
+            left:11,
             height: 540,
-            marginLeft: 25,
+            //marginLeft: 25,
             marginTop: 10,
             borderWidth: 1,
             borderColor: "rgba(74,144,226,1)",
@@ -403,14 +404,14 @@ const styles = StyleSheet.create({
   },
 
   rect2: {
-    width: 340,
+    width: '100%',
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,
   },
   politica:{
     marginTop:30,
-    width: 340,
+    width: '100%',
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,

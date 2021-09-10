@@ -624,7 +624,7 @@ const Step5 = (props) => {
 
         <View style={{ alignItems: "center" }}>
           <TextInput
-            style={styles.inputOutrosDejetos}
+            style={styles.inputStyle}
             onChangeText={setOutrosSe_ruj_destino_dejetos}
             value={outrosSe_ruj_destino_dejetos}
             onBlur={() =>
@@ -665,7 +665,7 @@ const Step5 = (props) => {
 
         <View style={{ alignItems: "center" }}>
           <TextInput
-            style={styles.inputOutrosDejetos}
+            style={styles.inputStyle}
             onChangeText={setOutrosSe_ruj_coleta_lixo_outros}
             value={se_ruj_coleta_lixo_outros}
             onBlur={() =>
@@ -757,11 +757,12 @@ const Step5 = (props) => {
 };
 
 const styles = StyleSheet.create({
-  inputOutrosDejetos: {
+  inputStyle: {
     height: 40,
     width: "85%",
     marginTop: 10,
-    marginLeft: 10,
+    //marginLeft: 10,
+    marginRight:25,
     borderWidth: 1,
     backgroundColor: "white",
   },
@@ -783,9 +784,10 @@ const styles = StyleSheet.create({
     marginLeft: 30,
   },
   form8: {
-    width: 340,
+    width: '95%',
+    left:11,
     height: 1250,
-    marginLeft: 25,
+   // marginLeft: 25,
     marginTop: 10,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
@@ -797,7 +799,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   rect2: {
-    width: 340,
+    width: '100%',
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,

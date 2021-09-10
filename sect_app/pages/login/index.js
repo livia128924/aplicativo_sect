@@ -49,12 +49,12 @@ useEffect(() => {
         //     alert(error);
         // });
     });
-        // AsyncStorage.getItem('codigo').then(codigo => {
-        //     if (codigo) {
-        //         navigation.navigate('Menu');
-        //         return false;
-        //     }
-        // });
+        AsyncStorage.getItem('codigo').then(codigo => {
+            if (codigo) {
+                navigation.navigate('Menu');
+                return false;
+            }
+        });
 var get_response="";
     axios.post('http://www.sect.am.gov.br/app/index.php', {})
     .then(function (response) {

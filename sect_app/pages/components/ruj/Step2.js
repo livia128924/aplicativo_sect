@@ -227,9 +227,10 @@ const Step2 = (props) => {
       > */}
       <View
         style={{
-          width: 340,
+          width: '95%',
+          left:11,
           height: 120,
-          marginLeft: 25,
+         // marginLeft: 25,
           borderWidth: 1,
           borderColor: "rgba(74,144,226,1)",
           borderRadius: 3,
@@ -264,9 +265,10 @@ const Step2 = (props) => {
 <View style={{flex:1, zIndex:1}}>
       <View
         style={{
-          width: 340,
+          width: '95%',
+          left:11,
           height: 450,
-          marginLeft: 25,
+         // marginLeft: 25,
           marginTop: 10,
           borderWidth: 1,
           borderColor: "rgba(74,144,226,1)",
@@ -278,9 +280,12 @@ const Step2 = (props) => {
             NATUREZA E RAMO DA ATIVIDADE ECONÔMICA
           </Text>
         </View>
-        <View style={styles.municipio}>
+        <View style={styles.NaturezaAtvTitle}>
           <Text>Natureza da Atividade</Text>
         </View>
+
+
+<View style={{ left:35}}>
         <DropDownPicker
           zIndex={openNaturezaAtv ? 9999 : 0}
           style={styles.NaturezaAtv}
@@ -296,11 +301,12 @@ const Step2 = (props) => {
               "se_ruj_natureza_atividades",
               valorNaturezaAtv,
               sync
-            )
-          }
-          listMode="SCROLLVIEW"
-          placeholder="Selecione::"
-        />
+              )
+            }
+            listMode="SCROLLVIEW"
+            placeholder="Selecione::"
+            />
+</View>
         <View style={{ alignItems: "center" }}>
           <TextInput
             style={styles.inputOutros}
@@ -372,7 +378,7 @@ const Step2 = (props) => {
             }
             placeholder={"   Tecnologia da Informação/Comunicação"}
           />
-        </View>
+           </View>
       </View>
       </View>
       {/* </ScrollView> */}
@@ -383,14 +389,16 @@ const Step2 = (props) => {
 const styles = StyleSheet.create({
   NaturezaAtvTitle: {
     color: "#121212",
-    marginLeft: 30,
+    //marginLeft: 30,
     marginTop: 10,
   },
+
   inputOutros: {
     height: 40,
     width: "85%",
     marginTop: 10,
-    marginLeft: 10,
+    //marginLeft: 10,
+    //marginRight:25,
     borderWidth: 1,
     backgroundColor: "white",
   },
@@ -412,14 +420,6 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     borderWidth: 1,
   },
-  form3: {
-    //width: 340, height: 150,
-    //  marginLeft: 25,
-    //  borderWidth: 1,
-    //  borderColor: "rgba(74,144,226,1)",
-    // borderRadius: 3,
-    // flex:1
-  },
   input2: {
     height: 40,
     width: "85%",
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   rect2: {
-    width: 340,
+    width: '100%',
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,

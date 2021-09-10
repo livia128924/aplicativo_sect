@@ -668,7 +668,7 @@ checkboxlabel: {
     marginLeft: 30,
 },
 form6: {
-    width: 340,
+    width: '92%',
     height: 650,
     marginLeft: 25,
     marginTop: 10,
@@ -677,7 +677,7 @@ form6: {
     borderRadius: 3,
   },
   form5: {
-    width: 340,
+    width: '92%',
     height: 840,
     marginLeft: 25,
     marginTop: 10,
@@ -701,7 +701,7 @@ form6: {
 
   },
   rect2: {
-    width: 340,
+    width: '100%',
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,

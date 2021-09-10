@@ -14,7 +14,8 @@ import {
     DrawerItemList,
     DrawerItem
 } from '@react-navigation/drawer';
-import api from '../../services/api';
+import api_metas from '../../services/api_metas';
+import axios from 'axios';
 
 ///////////////////////
 const Drawer = createDrawerNavigator();
@@ -24,26 +25,27 @@ const Sincronizacao = ({ navigation }) => {
 
     const [flatListItems, setFlatListLogs] = useState([]);
 
+
+
     useEffect(() => {
         loadDados();
 
-
     }, []);
 
-    function onPress(codigo) {
+
+    const api_meta = axios.create({
+        baseURL: api_metas(),
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Authorization",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE" ,
+            "Content-Type": "application/json;charset=UTF-8"
+        },
+    });
+
+   async function onPress(codigo) {
         //alert(codigo);
         db.transaction((tx) => {
-        // tx.executeSql(
-        //     `delete from log`,
-        //     [],
-        //     (tx, results) => {
-        //         alert("Deletado com successo!");
-        //     },
-        //     function (tx, error) {
-        //         console.log("SELECT error: " + error.message);
-        //     }
-        //     );
-
             tx.executeSql(
                 `SELECT * FROM log where situacao = '1' and cod_processo= '${codigo}' `, [], (tx, results) => {
                     //var len = results.rows.length, i;
@@ -57,7 +59,7 @@ const Sincronizacao = ({ navigation }) => {
                         var campo = (results.rows.item(i).campo);
                         var nome = (results.rows.item(i).nome);
                         //console.log(nome);
-                        api.post('update/index.php', { processo, valor, tabela, campo, nome })
+                          api_meta.post('/_apps/app_teste/update/index.php', { processo, valor, tabela, campo, nome })
                         .then(function (response) {
                             console.log(response.data);
                             const {status, msg} = response.data;
@@ -72,7 +74,7 @@ const Sincronizacao = ({ navigation }) => {
                             }
                         })
                         .catch(function (error) {
-                            alert(error);
+                            console.log(error);
                         });
                         loadDados();
                     }
@@ -200,7 +202,7 @@ const Sincronizacao = ({ navigation }) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={styles.button2}
+                        style={styles.button1}
                     //onPress={props.customClick}
                     >
                         <IconFont
@@ -213,7 +215,7 @@ const Sincronizacao = ({ navigation }) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={styles.button3}
+                        style={styles.button1}
                         onPress={() => navigation.navigate('Stepper')}
                     >
                         <IconFont
@@ -226,7 +228,7 @@ const Sincronizacao = ({ navigation }) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={styles.button4}
+                        style={styles.button1}
                         onPress={() => navigation.navigate('Config')}
                     >
                         <IconFont
@@ -260,15 +262,15 @@ const styles = StyleSheet.create({
     },
     button1: {
         height: 50,
-        width: 70,
-        alignItems: 'center',
-        top: 5,
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        left: 20,
+        // width: 70,
+         alignItems: 'center',
+         top: 3,
+         margin:15,
+         elevation: 5,
+         shadowColor: '#000',
+         shadowOffset: { width: 0, height: 2 },
+         shadowOpacity: 0.8,
+         shadowRadius: 2,
     },
     button2: {
         height: 50,
@@ -313,7 +315,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         bottom: 0,
         height: 68,
-
+        alignItems: 'center',
+        display:'flex',
+        justifyContent:'space-between',
         backgroundColor: '#4d94ff'
     },
     container: {
