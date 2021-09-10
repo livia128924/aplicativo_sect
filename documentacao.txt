@@ -1,4 +1,4 @@
-Instaladores usados antes da utilização do expo:
+﻿Instaladores usados antes da utilização do expo:
 
 - Editor de texto: A base utilizada foi o  VSCode
 i) Como instalar? - Segue o fio - https://code.visualstudio.com/
@@ -39,3 +39,4 @@ ii) expo init my-project
 - Para conectar com a api - servidor
 
 i) yarn add axios
+
