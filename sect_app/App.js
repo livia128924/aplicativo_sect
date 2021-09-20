@@ -12,8 +12,11 @@ import ViewAllUser from './pages/listar';
 import Login from "./pages/login";
 import Index from './pages/socio/pj_progressStep';
 import IndexPF from './pages/socio/pf_progressSep';
+import IndexPF_D from './pages/socio/pf_D_progressStep';
 import Relatorio from "./pages/socio/Relatorio";
 import Config from './pages/menu/config';
+import Index_rrj from './pages/socio/progressSteps_rrj';
+import Index_rrf from './pages/socio/progressSteps_rrf';
 
 const Stack = createStackNavigator();
 
@@ -33,16 +36,8 @@ const App = () => {
                 <Stack.Screen
                         name='Menu'
                         component={Menu}
-                        options={{
-                            title: 'Menu',
-                            headerStyle: {
-                                backgroundColor: '#FFF',
-                            },
-
-                            headerTintColor: 'black',
-                            headerTitleStyle: {
-                                fontWeight: 'bold',
-                            }
+                         options={{
+                            headerShown: false,
                         }}
                     />
                 <Stack.Screen
@@ -94,6 +89,51 @@ const App = () => {
                         component={IndexPF}
                         options={{
                             title: 'SOCIOECONÔMICO (FUNDIÁRIA) URBANO - PF',
+                            headerStyle: {
+                                backgroundColor: '#FFF',
+                            },
+                            headerTintColor: 'black',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                                fontSize:13
+                            },
+                        }}
+                    />
+                    <Stack.Screen
+                        name='Stepper_PF_D'
+                        component={IndexPF_D}
+                        options={{
+                            title: 'SOCIOECONÔMICO DESAPROPRIACAO URBANO - PF',
+                            headerStyle: {
+                                backgroundColor: '#FFF',
+                            },
+                            headerTintColor: 'black',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                                fontSize:13
+                            },
+                        }}
+                    />
+                    <Stack.Screen
+                        name='Stepper_rrj'
+                        component={Index_rrj}
+                        options={{
+                            title: 'SOCIOECONÔMICO (FUNDIÁRIA) RURAL - PJ',
+                            headerStyle: {
+                                backgroundColor: '#FFF',
+                            },
+                            headerTintColor: 'black',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                                fontSize:13
+                            },
+                        }}
+                    />
+                    <Stack.Screen
+                        name='Stepper_rrf'
+                        component={Index_rrf}
+                        options={{
+                            title: 'SOCIOECONÔMICO (FUNDIÁRIA) RURAL - Pf',
                             headerStyle: {
                                 backgroundColor: '#FFF',
                             },

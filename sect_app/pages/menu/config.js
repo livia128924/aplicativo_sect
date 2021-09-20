@@ -30,6 +30,7 @@ const Config = ()=> {
   async function load_dados() {
 
     await api_meta.post('/api/metas.php', {})
+
       .then(function (response) {
         const metas = response.data;
         var arr = [];
@@ -50,18 +51,18 @@ const Config = ()=> {
             console.log("metas", success);
           });
           alert("Criado as tabelas!");
-          db.transaction((tx) => {
-            //tx.executeSql("delete from log", []);
+          // db.transaction((tx) => {
+          //   //tx.executeSql("delete from log", []);
 
-           //tx.executeSql("drop table log", []);
+          //  //tx.executeSql("drop table log", []);
 
-            tx.executeSql("CREATE TABLE IF NOT EXISTS log ( chave TEXT UNIQUE , codigo INTEGER, tabela TEXT, campo TEXT, valor BLOB, cod_tabela TEXT, cod_processo TEXT, data TEXT DEFAULT CURRENT_TIMESTAMP, situacao TEXT, tipo TEXT, nome TEXT, PRIMARY KEY(codigo))", []);
-          }, (err) => {
-            console.error("There was a problem with the log ", err);
-            return true;
-          }, (success) => {
-            console.log("criou a tabela log", success);
-          });
+          //   tx.executeSql("CREATE TABLE IF NOT EXISTS log ( chave TEXT UNIQUE , codigo INTEGER, tabela TEXT, campo TEXT, valor BLOB, cod_tabela TEXT, cod_processo TEXT, data TEXT DEFAULT CURRENT_TIMESTAMP, situacao TEXT, tipo TEXT, nome TEXT, PRIMARY KEY(codigo))", []);
+          // }, (err) => {
+          //   console.error("There was a problem with the log ", err);
+          //   return true;
+          // }, (success) => {
+          //   console.log("criou a tabela log", success);
+          // });
 
 
         });
@@ -142,7 +143,8 @@ const Config = ()=> {
   async function aux_dados() {
     //cria as tabelas e faz o drop das tabelas auxiliares
     await api_meta.post('/api/estrutura2.php', {})
-      .then(function (response) {
+    .then(function (response) {
+        //console.log(api_meta);
         const dados = response.data;
         //console.log(dados);
         var arr = [];

@@ -44,33 +44,33 @@ const [valor_Se_ruj_setor_abrangencia, setValor_Se_ruj_setor_abrangencia]= useSt
 
     loadDados();
 
-    AsyncStorage.getItem('nome_tabela').then(tabela => {
-      //console.log(cod_processo);
-      if (tabela) {
+    // AsyncStorage.getItem('nome_tabela').then(tabela => {
+    //   //console.log(cod_processo);
+    //   if (tabela) {
 
-        db.transaction((tx) => {
+    //     db.transaction((tx) => {
 
-          tx.executeSql(
-            "select * from " + tabela + " where se_ruj_cod_processo = '" + cod_processo + "'", [], (tx, results) => {
-              var x = "";
-              var row = [];
-              //console.log(cod_processo, tabela);
-              for (let i = 0; i < results.rows.length; ++i) {
-                console.log(results.rows.length);
-                setLocalizacao(results.rows.item(0).se_ruj_localizacao);
+    //       tx.executeSql(
+    //         "select * from " + tabela + " where se_ruj_cod_processo = '" + cod_processo + "'", [], (tx, results) => {
+    //           var x = "";
+    //           var row = [];
+    //           //console.log(cod_processo, tabela);
+    //           for (let i = 0; i < results.rows.length; ++i) {
+    //             console.log(results.rows.length);
+    //             setLocalizacao(results.rows.item(0).se_ruj_localizacao);
 
-                setValor(results.rows.item(i).se_ruj_municipio);
+    //             setValor(results.rows.item(i).se_ruj_municipio);
 
-                setValorAcesso(results.rows.item(i).se_ruj_acesso);
+    //             setValorAcesso(results.rows.item(i).se_ruj_acesso);
 
-                setValor_Se_ruj_setor_abrangencia(results.rows.item(0).se_ruj_setor_abrangencia);
-              }
+    //             setValor_Se_ruj_setor_abrangencia(results.rows.item(0).se_ruj_setor_abrangencia);
+    //           }
 
-            });
-        })
+    //         });
+    //     })
 
-      }//
-    });
+    //   }//
+    // });
 
   }, []);
 
@@ -116,42 +116,42 @@ const [valor_Se_ruj_setor_abrangencia, setValor_Se_ruj_setor_abrangencia]= useSt
 
   //função que aciona quando o estado do componente muda e seta os valores correspondente
   function onPressTitle(tabela, campo, valor, codigo) {
-    db.transaction((tx) => {
+    // db.transaction((tx) => {
 
-      const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_ruj_cod_processo = '${codigo}'`;
-      //console.log(query);
-      tx.executeSql(query, [], (tx, results) => {
-        for (let i = 0; i < results.rows.length; ++i) {
-          alert("INSERIDO COM SUCESSO");
-        }
-      });
-    }, (tx, err) => {
-      console.error("error em alguma coisa", err);
-      return true;
-    }, (tx, success) => {
-      console.log("tudo certo por aqui", success);
-      //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
-    });
+    //   const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_ruj_cod_processo = '${codigo}'`;
+    //   //console.log(query);
+    //   tx.executeSql(query, [], (tx, results) => {
+    //     for (let i = 0; i < results.rows.length; ++i) {
+    //       alert("INSERIDO COM SUCESSO");
+    //     }
+    //   });
+    // }, (tx, err) => {
+    //   console.error("error em alguma coisa", err);
+    //   return true;
+    // }, (tx, success) => {
+    //   console.log("tudo certo por aqui", success);
+    //   //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
+    // });
 
-    var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
+    // var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
 
-    db.transaction((tx) => {
-      const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-      console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
-      tx.executeSql(log_delete, []);
-    });
+    // db.transaction((tx) => {
+    //   const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+    //   console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
+    //   tx.executeSql(log_delete, []);
+    // });
 
-    db.transaction((tx) => {
-      const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-      console.log(log_update);
-      tx.executeSql(log_update, [], (tx, results) => {
+    // db.transaction((tx) => {
+    //   const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+    //   console.log(log_update);
+    //   tx.executeSql(log_update, [], (tx, results) => {
 
-      });
-    })
+    //   });
+    // })
 
-    AsyncStorage.setItem('nome_tabela', tabela);
+    // AsyncStorage.setItem('nome_tabela', tabela);
 
-    AsyncStorage.setItem('codigo', valor.toString());
+    // AsyncStorage.setItem('codigo', valor.toString());
   };
 
   return (
