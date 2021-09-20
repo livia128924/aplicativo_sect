@@ -160,7 +160,7 @@ console.log(" UPDATE log set nome = '" + valor +"', situacao= '1' where tipo = '
             icon="camera"
             mode="outlined"
             color="black"
-            onPress={() => camera(sync, "se_duf_relatorio_imagens", "se_duf")} //passar por paramentro os campos que irao para o registro das foto
+            onPress={() => camera(sync, "se_rrj_relatorio_imagens", "se_rrj")} //passar por paramentro os campos que irao para o registro das foto
             style={{ width: "70%", borderRadius: 3, alignContent:'center', alignSelf:'center', alignItems:'center'  }}
           ></Button>
         </View>

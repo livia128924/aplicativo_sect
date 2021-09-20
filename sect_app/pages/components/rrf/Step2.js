@@ -26,20 +26,12 @@ const Step2 = (props) => {
   const [rq_profissao_fone, set_rq_profissao_fone] = useState("");
   const [rq_profissao_email, set_rq_profissao_email] = useState("");
 
-  const [aberto_rq_profissao_local, setAberto_rq_profissao_local] =
-    useState(false);
-  const [valor_rq_profissao_local, setValor_rq_profissao_local] =
-    useState(null);
-  const [item_rq_profissao_local, setItem_rq_profissao_local] = useState([
-    { label: "Empregado com vínculo empregatício", value: "1" },
-    { label: "Empregado sem vínculo empregatício", value: "2" },
-    { label: "Autônomo", value: "3" },
-    { label: "Empregador", value: "4" },
-    { label: "Trabalho Informal", value: "5" },
-    { label: "Desempregado", value: "6" },
-    { label: "Aposentado", value: "7" },
-    { label: "Outros", value: "8" },
-  ]);
+  const [aberto_rq_profissao_local, setAberto_rq_profissao_local] = useState(false);
+  const [valor_rq_profissao_local, setValor_rq_profissao_local] = useState(null);
+  const [item_rq_profissao_local, setItem_rq_profissao_local] = useState([]);
+
+  const [se_rrf_tipo_atividades, setItem_se_rrf_tipo_atividades] = useState([]);
+
 
   const [aberto_rq_profissao, setAberto_rq_profissao] = useState(false);
   const [valor_rq_profissao, setValor_rq_profissao] = useState(null);
@@ -124,17 +116,18 @@ const Step2 = (props) => {
   async function loadStep2() {
     db.transaction(
       (tx) => {
-        tx.executeSql("select * from aux_profissoes", [], (tx, results) => {
+        tx.executeSql("select * from aux_tipo_atividades", [], (tx, results) => {
           //var len = results.rows.length, i;
           var temp = [];
           //console.log(len);
           for (let i = 0; i < results.rows.length; ++i) {
             temp.push({
               label: results.rows.item(i).descricao,
-              value: results.rows.item(i).codigo,
+              id: results.rows.item(i).codigo,
+              isChecked:false
             });
           }
-          setItem_rq_profissao(temp);
+          setItem_se_rrf_tipo_atividades(temp);
         });
       },
       (err) => {
@@ -374,312 +367,45 @@ const Step2 = (props) => {
     <>
       <View style={styles.form3}>
         <View style={styles.rect2}>
-          <Text style={styles.titulo}>DOCUMENTACAO DO TITULAR</Text>
+          <Text style={styles.titulo}>OCUPAÇÃO ATUAL E BENEFÍCIOS SOCIAIS</Text>
         </View>
 
         <View style={{ marginTop: 10, marginLeft: 30 }}>
-          <Text>CPF</Text>
+          <Text>Tipos de Atividade</Text>
         </View>
-        <View style={{ alignItems: "center" }}>
-          <TextInputMask
+
+        <View style={styles.checkboxlabel}>
+            {[...se_rrf_tipo_atividades].map((item, index) => (
+              <View style={styles.checkboxGroup} key={item.id}>
+                <Checkbox
+                  style={styles.checkbox}
+                  value={item.isChecked}
+                  onValueChange={() => {
+                    handleChange(item.id);
+                    onPressTitle("se_rrj", "se_rrf_tipo_atividades", muda(), sync);
+                  }}
+                />
+                <Text>{item.label}</Text>
+              </View>
+            ))}
+          </View>
+
+          <View style={{ marginTop: 10, marginLeft: 30 }}>
+          <Text>Outro</Text>
+        </View>
+
+          <View style={{ alignItems: "center" }}>
+          <TextInput
             style={styles.input_style}
-            type={"cpf"}
-            options={{
-              format: "999.999.999-99",
-            }}
-            value={rq_cpf}
-            onChangeText={setRq_cpf}
-            ref={(ref) => setUnmasked(ref)}
-            placeholder={"   999.999.999-99"}
-            onBlur={() => {
-              // console.log(se_ruf_valor_beneficio);
-              // mask();
-              onPressTitle(
-                "rq",
-                "rq_cpf",
-                unmasked.getRawValue(), //retira o R$
-                sync
-              );
-            }}
+            onChangeText={set_rq_profissao_local}
+            value={rq_profissao_local}
+            onBlur={() =>
+              onPressTitle("rq", "rq_profissao_local", rq_profissao_local, sync)
+            }
+            placeholder={"     "}
           />
         </View>
-        <View style={{alignContent: "center",   alignItems: "center",}}>
 
-        <View style={styles.eleitorStyle}>
-
-        <View
-            style={{ alignItems: "center"}}
-          >
-            <View style={styles.title_style}>
-              <Text>Titulo do Eleitor</Text>
-            </View>
-            <TextInputMask
-              style={styles.input_style_zona}
-              type={"custom"}
-              options={{
-                format: "9999.9999.9999",
-              }}
-              value={rq_titulo_eleitor}
-              onChangeText={set_rq_titulo_eleitor}
-              ref={(ref) => setUnmasked(ref)}
-              placeholder={"   9999.9999.9999  "}
-              onBlur={() => {
-                // console.log(se_ruf_valor_beneficio);
-                // mask();
-                onPressTitle(
-                  "rq",
-                  "rq_titulo_eleitor",
-                  unmasked.getRawValue(), //retira o R$
-                  sync
-                );
-              }}
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-            }}
-          >
-            <View>
-              <Text style={styles.title_style}>Zona</Text>
-            </View>
-            <TextInput
-              style={styles.input_style_zona}
-              onChangeText={set_rq_titulo_eleitor_zona}
-              value={rq_titulo_eleitor_zona}
-              onBlur={() =>
-                onPressTitle(
-                  "rq",
-                  "rq_titulo_eleitor_zona",
-                  rq_titulo_eleitor_zona,
-                  sync
-                )
-              }
-              placeholder={"   001  "}
-            />
-          </View>
-
-          <View
-            style={{
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-            }}
-          >
-            <View>
-              <Text style={styles.title_style}>Seção</Text>
-            </View>
-            <TextInput
-              style={styles.input_style_zona}
-              onChangeText={set_rq_titulo_eleitor_sessao}
-              value={rq_titulo_eleitor_zona}
-              onBlur={() =>
-                onPressTitle(
-                  "rq",
-                  "rq_titulo_eleitor_sessao",
-                  rq_titulo_eleitor_sessao,
-                  sync
-                )
-              }
-              placeholder={"   0011   "}
-            />
-          </View>
-
-          <View
-            style={{
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-            }}
-          >
-            <View>
-              <Text style={styles.title_style}>UF</Text>
-            </View>
-            <TextInput
-              style={styles.input_style_zona}
-              onChangeText={set_rq_rg_uf}
-              value={rq_rg_uf}
-              onBlur={() => onPressTitle("rq", "rq_rg_uf", rq_rg_uf, sync)}
-              placeholder={"   AM   "}
-            />
-          </View>
-        </View>
-        </View>
-
-        <View style={{alignContent: "center",   alignItems: "center",}}>
-
-        <View style={styles.eleitorStyle}>
-          <View
-            style={{
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-            }}
-          >
-            <Text>CTPS</Text>
-            <View style={{ alignItems: "center" }}>
-              <TextInput
-                style={styles.input_style}
-                onChangeText={set_rq_cpts_numero}
-                value={rq_cpts_numero}
-                onBlur={() =>
-                  onPressTitle("rq", "rq_cpts_numero", rq_cpts_numero, sync)
-                }
-                placeholder={" 12345678"}
-              />
-            </View>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-            }}
-          >
-            <Text>Serie</Text>
-            <View style={{ alignItems: "center" }}>
-              <TextInput
-                style={styles.input_style}
-                onChangeText={set_rq_cpts_numero}
-                value={rq_cpts_numero}
-                onBlur={() =>
-                  onPressTitle("rq", "rq_cpts_numero", rq_cpts_numero, sync)
-                }
-                placeholder={" 12345678"}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-            }}
-          >
-            <Text>UF</Text>
-            <View style={{ alignItems: "center" }}>
-              <TextInput
-                style={styles.input_style}
-                onChangeText={set_rq_cpts_numero}
-                value={rq_cpts_numero}
-                onBlur={() =>
-                  onPressTitle("rq", "rq_cpts_numero", rq_cpts_numero, sync)
-                }
-                placeholder={" 12345678"}
-              />
-            </View>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-            }}
-          >
-            <Text>Data Exped.</Text>
-            <View style={{ marginLeft: 10, alignItems: "center" }}>
-              <TextInput
-                style={styles.input_style_zona}
-                onChangeText={set_rq_data_expedicao}
-                value={rq_data_expedicao}
-                onBlur={() =>
-                  onPressTitle(
-                    "rq",
-                    "rq_data_expedicao",
-                    rq_data_expedicao,
-                    sync
-                  )
-                }
-                placeholder={" 99-99-9999  "}
-              />
-            </View>
-          </View>
-        </View>
-        </View>
-
-        <View style={{alignContent: "center",   alignItems: "center",}}>
-        <View style={styles.eleitorStyle}>
-          <View
-            style={{
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-            }}
-          >
-            <Text>Banco</Text>
-            <View style={{ marginLeft: 10, alignItems: "center" }}>
-              <TextInput
-                style={styles.input_style_zona}
-                onChangeText={set_rq_data_expedicao}
-                value={rq_data_expedicao}
-                onBlur={() =>
-                  onPressTitle(
-                    "rq",
-                    "rq_data_expedicao",
-                    rq_data_expedicao,
-                    sync
-                  )
-                }
-                placeholder={" Ex: Bradesco  "}
-              />
-            </View>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-            }}
-          >
-            <Text>Agencia</Text>
-            <View style={{ marginLeft: 10, alignItems: "center" }}>
-              <TextInput
-                style={styles.input_style_zona}
-                onChangeText={set_rq_Agencia}
-                value={rq_Agencia}
-                onBlur={() =>
-                  onPressTitle("rq", "rq_Agencia", rq_Agencia, sync)
-                }
-                placeholder={"  9999  "}
-              />
-            </View>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "column",
-              alignContent: "center",
-              alignItems: "center",
-              alignSelf: "center",
-            }}
-          >
-            <Text>Nº da conta </Text>
-            <View style={{ marginLeft: 10, alignItems: "center" }}>
-              <TextInput
-                style={styles.input_style_zona}
-                onChangeText={set_rq_conta}
-                value={rq_conta}
-                onBlur={() => onPressTitle("rq", "rq_conta", rq_conta, sync)}
-                placeholder={"   99999-9  "}
-              />
-            </View>
-          </View>
-        </View>
-        </View>
       </View>
 
       <View style={styles.form4}>
@@ -905,7 +631,8 @@ const styles = StyleSheet.create({
   },
   form3: {
     width: "95%",
-    height: 420,
+    height: 'auto',
+    paddingBottom:10,
     //marginLeft: 20,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",

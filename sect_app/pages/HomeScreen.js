@@ -46,34 +46,53 @@ const HomeScreen = ({ navigation }) => {
     rq_tipo_pessoa,
     pr_tipo_formulario
   ) {
+      //alert(pr_tipo_formulario);
     AsyncStorage.setItem("pr_codigo", pr_codigo.toString());
     AsyncStorage.setItem("cod_prss", cod_prss);
     AsyncStorage.setItem("rq_nome", rq_nome);
 
     if (rq_tipo_pessoa === "j") {
-        if(pr_tipo_formulario === "1"){
-            navigation.navigate("Stepper_PJ");
-        }
-        else if(pr_tipo_formulario === "2"){
-        navigation.navigate("Stepper_rrj");
-        }
-        if(pr_tipo_formulario === "4"){
-        navigation.navigate("Stepper_PF_D");
+        switch (pr_tipo_formulario) {
+            case "1":
+              navigation.navigate("Stepper_PF");
+            break;
+            case  "2" :
+            navigation.navigate("Stepper_rrf");
+            break;
+            case "4":
+            navigation.navigate("Stepper_PF_D");
+            break;
+            default:
+                console.log("nao encontrado!");
+                break;
         }
 
-    } else if (rq_tipo_pessoa ==="f") {
-        if(pr_tipo_formulario = "1"){
-        navigation.navigate("Stepper_PF");
-        }
-        else if(pr_tipo_formulario === "2" ){
+    } else if (rq_tipo_pessoa === "f") {
+      switch (pr_tipo_formulario) {
+          case "1":
+            navigation.navigate("Stepper_PF");
+            break;
+            case "2" :
             navigation.navigate("Stepper_rrf");
-        }
-        if(pr_tipo_formulario === "4" ){
-            navigation.navigate("Stepper_PF_D");
-        }
+            break;
+            case "4":
+             navigation.navigate("Stepper_PF_D");
+             break;
+          default:
+              console.log("nao encontrado!");
+              break;
+      }
     }
   }
-
+//   if(pr_tipo_formulario = "1"){
+//     navigation.navigate("Stepper_PF");
+//     }
+//     else if(pr_tipo_formulario === "2" ){
+//         navigation.navigate("Stepper_rrf");
+//     }
+//     if(pr_tipo_formulario === "4" ){
+//         navigation.navigate("Stepper_PF_D");
+//     }
   useEffect(() => {
     db.transaction(
       (tx) => {

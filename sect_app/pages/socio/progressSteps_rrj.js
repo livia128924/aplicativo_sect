@@ -6,7 +6,7 @@ import Step2 from '../components/rrj/Step2';
 import Step3 from '../components/rrj/Step3';
 import Step4 from '../components/rrj/Step4';
 import Step5 from '../components/rrj/Step5';
-import Step6 from '../components/rrj/Step6';
+//import Step6 from '../components/rrj/Step6';
 import Step7 from '../components/rrj/Step7';
 import Swiper from 'react-native-swiper';
 const db = DatabaseConnection.getConnection();
@@ -97,7 +97,7 @@ function Index_rrj({ navigation }) {
           </View>
         </ProgressStep>
         <ProgressStep
-          label="saneamento basico e instalacoes sanitarias"
+          label="Saneamento basico e Inst. sanitarias"
           onPrevious={onPrevStep}
           onNext={onNextStep}
           previousBtnText={ 'voltar'}
@@ -133,20 +133,7 @@ function Index_rrj({ navigation }) {
           <Step5 />
           </View>
         </ProgressStep>
-        <ProgressStep
-          label="Relatorio     Fotografico   "
-          onPrevious={onPrevStep}
-          onSubmit={onSubmitSteps}
-          previousBtnText={ 'voltar'}
-          finishBtnText={'enviar'}
-          scrollable={true}
-        >
-           <View style={{display:'flex', alignItems:'center'}}>
-          <Step6
-          navigation= {navigation}
-          />
-          </View>
-        </ProgressStep>
+
         <ProgressStep
           label="Anexo     Fotografico   "
           onPrevious={onPrevStep}

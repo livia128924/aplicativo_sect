@@ -74,7 +74,7 @@ function Index_rrf({ navigation }) {
       <ProgressSteps
       >
         <ProgressStep
-          label="Dados Titular"
+          label="Abrangência e Atividades"
           onNext={onNextStep}
           onPrevious={onPrevStep}
           previousBtnText={ 'voltar'}
@@ -86,7 +86,7 @@ function Index_rrf({ navigation }) {
         </ProgressStep>
 
         <ProgressStep
-          label="Dados Profissionais"
+          label="Ocupacao Atual"
           onNext={onNextStep}
           onPrevious={onPrevStep}
           previousBtnText={ 'voltar'}

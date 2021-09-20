@@ -7,19 +7,7 @@ import { DatabaseConnection } from "../../database/database";
 const db = DatabaseConnection.getConnection();
 const Step5 = (props) => {
   const [sync, setSync] = useState("");
-  const [dados_valor, setDados_valor] = useState("");
-
-  const [se_duf_equipamentos_domesticos, setSe_duf_equipamentos_domesticos] =
-    useState([]);
-
-  const [se_duf_tipo_construcao, set_se_duf_tipo_construcao] = useState([]);
-
-  const [se_duf_numero_comodos, set_se_duf_numero_comodos] = useState([]);
-
-  const [se_duf_numero_pisos, set_se_duf_numero_pisos] = useState([]);
-
-  const [se_duf_estado_conservacao, set_se_duf_estado_conservacao] = useState([]);
-
+  const [value_se_rrj_informacaoes_adicionais, set_se_rrj_informacaoes_adicionais] = useState("");
 
   const [open_se_rrj_responsabilidade_social, setOpen_se_rrj_responsabilidade_social] = useState(false);
   const [valor_se_rrj_responsabilidade_social, setValor_se_rrj_responsabilidade_social] = useState(null);
@@ -28,9 +16,16 @@ const Step5 = (props) => {
     { label: "Nao", value: "n" },
   ]);
 
-  const [open_se_duf_tempo_ocupacao, setOpen_se_duf_tempo_ocupacao] = useState(false);
-  const [valor_se_duf_tempo_ocupacao, setValor_se_duf_tempo_ocupacao] = useState(null);
-  const [item_se_duf_tempo_ocupacao, setItem_se_duf_tempo_ocupacao] = useState([]);
+  const [open_se_rrj_formacao_atuacao, setOpen_se_rrj_formacao_atuacao] = useState(false);
+  const [valor_se_rrj_formacao_atuacao, setValor_se_rrj_formacao_atuacao] = useState(null);
+  const [item_se_rrj_formacao_atuacao, setItem_se_rrj_formacao_atuacao] = useState([
+    { label: "Sim", value: "s" },
+    { label: "Nao", value: "n" },
+  ]);
+
+  const [open_se_rrj_investimento_financeiro, setOpen_se_rrj_investimento_financeiro] = useState(false);
+  const [valor_se_rrj_investimento_financeiro, setValor_se_rrj_investimento_financeiro] = useState(null);
+  const [item_se_rrj_investimento_financeiro, setItem_se_rrj_investimento_financeiro] = useState([]);
 
   useEffect(() => {
     var cod_processo = "";
@@ -103,52 +98,20 @@ const Step5 = (props) => {
                 //isChecked: false,
               });
             }
-            setItem_se_duf_tempo_ocupacao(temp);
+            setItem_se_rrj_formacao_atuacao(temp);
           }
         );
-        tx.executeSql("select * from aux_tipo_construcao", [], (tx, results) => {
+
+        tx.executeSql("select * from aux_investimento_financeiro", [], (tx, results) => {
           var temp = [];
           for (let i = 0; i < results.rows.length; ++i) {
             temp.push({
               label: results.rows.item(i).descricao,
-              id: results.rows.item(i).codigo,
-              isChecked: false,
+              value: results.rows.item(i).codigo,
+              //isChecked: false,
             });
           }
-          set_se_duf_tipo_construcao(temp);
-        });
-        tx.executeSql("select * from aux_comodos", [], (tx, results) => {
-          var temp = [];
-          for (let i = 0; i < results.rows.length; ++i) {
-            temp.push({
-              label: results.rows.item(i).descricao,
-              id: results.rows.item(i).codigo,
-              isChecked: false,
-            });
-          }
-          set_se_duf_numero_comodos(temp);
-        });
-        tx.executeSql("select * from aux_pisos", [], (tx, results) => {
-          var temp = [];
-          for (let i = 0; i < results.rows.length; ++i) {
-            temp.push({
-              label: results.rows.item(i).descricao,
-              id: results.rows.item(i).codigo,
-              isChecked: false,
-            });
-          }
-          set_se_duf_numero_pisos(temp);
-        });
-        tx.executeSql("select * from aux_estado_conservacao", [], (tx, results) => {
-          var temp = [];
-          for (let i = 0; i < results.rows.length; ++i) {
-            temp.push({
-              label: results.rows.item(i).descricao,
-              id: results.rows.item(i).codigo,
-              isChecked: false,
-            });
-          }
-          set_se_duf_estado_conservacao(temp);
+          setItem_se_rrj_investimento_financeiro(temp);
         });
       },
       (err) => {
@@ -160,6 +123,7 @@ const Step5 = (props) => {
       }
     );
   }
+
 
   //função que aciona quando o estado do componente muda e seta os valores correspondente
   // function onPressTitle(tabela, campo, valor, codigo) {
@@ -205,283 +169,6 @@ const Step5 = (props) => {
   // };
 
 
-  const handleChange_se_duf_tipo_construcao = (id) => {
-    const newState = se_duf_tipo_construcao.map((el) => {
-      const label = el;
-
-      if (el.id === id) {
-        // verificamos se o nome do label foi passado na função
-        label.isChecked = !el.isChecked; // se sim, vamos alterar o estado do "checked"
-      }
-
-      return label;
-    });
-
-    set_se_duf_tipo_construcao(newState); // atualiza o estado
-  };
-
-  const handleChange_se_duf_numero_comodos = (id) => {
-    const newState = se_duf_numero_comodos.map((el) => {
-      const label = el;
-
-      if (el.id === id) {
-        // verificamos se o nome do label foi passado na função
-        label.isChecked = !el.isChecked; // se sim, vamos alterar o estado do "checked"
-      }
-
-      return label;
-    });
-
-    set_se_duf_numero_comodos(newState); // atualiza o estado
-  };
-
-
-  const handleChange_se_duf_numero_pisos = (id) => {
-    const newState = se_duf_numero_pisos.map((el) => {
-      const label = el;
-
-      if (el.id === id) {
-        // verificamos se o nome do label foi passado na função
-        label.isChecked = !el.isChecked; // se sim, vamos alterar o estado do "checked"
-      }
-
-      return label;
-    });
-
-    set_se_duf_numero_pisos(newState); // atualiza o estado
-  };
-
-  const handleChange_se_duf_estado_conservacao = (id) => {
-    const newState = se_duf_estado_conservacao.map((el) => {
-      const label = el;
-
-      if (el.id === id) {
-        // verificamos se o nome do label foi passado na função
-        label.isChecked = !el.isChecked; // se sim, vamos alterar o estado do "checked"
-      }
-
-      return label;
-    });
-
-    set_se_duf_estado_conservacao(newState); // atualiza o estado
-  };
-
-  function muda_se_duf_tipo_construcao() {
-    //await api
-    var str_valores = [];
-
-    se_duf_tipo_construcao
-    .filter((value) => value.isChecked === true)
-    .map((item) => {
-      // console.log(item);
-      str_valores.push(item.id);
-    });
-    //console.log(ischecado);
-    return str_valores.join(",");
-  }
-
-  function muda_se_duf_numero_comodos() {
-    //await api
-    var str_valores = [];
-
-    se_duf_numero_comodos
-    .filter((value) => value.isChecked === true)
-    .map((item) => {
-      // console.log(item);
-      str_valores.push(item.id);
-    });
-    //console.log(ischecado);
-    return str_valores.join(",");
-  }
-
-  function muda_se_duf_numero_pisos() {
-    //await api
-    var str_valores = [];
-
-    se_duf_numero_pisos
-    .filter((value) => value.isChecked === true)
-    .map((item) => {
-      // console.log(item);
-      str_valores.push(item.id);
-    });
-    //console.log(ischecado);
-    return str_valores.join(",");
-  }
-
-    function muda_se_duf_estado_conservacao() {
-      //await api
-      var str_valores = [];
-
-      se_duf_estado_conservacao
-        .filter((value) => value.isChecked === true)
-        .map((item) => {
-          // console.log(item);
-          str_valores.push(item.id);
-        });
-      //console.log(ischecado);
-      return str_valores.join(",");
-  }
-
-    function valor_checked(duf_numero_comodos) {
-      db.transaction((tx) => {
-        tx.executeSql("select * from aux_equipamento_domestico", [], (tx, results) => {
-          //var len = results.rows.length, i;
-        var temp = [];
-        //console.log(len);
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push({
-            label: results.rows.item(i).descricao,
-            id: results.rows.item(i).codigo,
-            isChecked: false,
-          });
-        }
-        //console.log(temp);
-        let x = temp;
-
-        //console.log(x);
-        duf_numero_comodos.forEach((item) => {
-          //console.log(duf_sanitario);
-          //console.log(x);
-          x.forEach((val) => {
-            if (val.id == item) {
-              val.isChecked = true;
-            }
-          });
-        });
-
-        return set_se_duf_numero_comodos(x);
-      });
-    });
-  }
-
-  function valor_checked_se_duf_tipo_construcao(tipo_construcao) {
-    db.transaction((tx) => {
-      tx.executeSql("select * from aux_tipo_construcao", [], (tx, results) => {
-        //var len = results.rows.length, i;
-        var temp = [];
-        //console.log(len);
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push({
-            label: results.rows.item(i).descricao,
-            id: results.rows.item(i).codigo,
-            isChecked: false,
-          });
-        }
-        //console.log(temp);
-        let x = temp;
-
-        //console.log(x);
-        tipo_construcao.forEach((item) => {
-          //console.log(duf_sanitario);
-          //console.log(x);
-          x.forEach((val) => {
-            if (val.id == item) {
-              val.isChecked = true;
-            }
-          });
-        });
-
-        return set_se_duf_tipo_construcao(x);
-      });
-    });
-  }
-
-  function valor_checked_organizacao_formal(organizacao_formal) {
-    db.transaction((tx) => {
-      tx.executeSql("select * from aux_organizacao_formal", [], (tx, results) => {
-        //var len = results.rows.length, i;
-        var temp = [];
-        //console.log(len);
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push({
-            label: results.rows.item(i).descricao,
-            id: results.rows.item(i).codigo,
-            isChecked: false,
-          });
-        }
-        //console.log(temp);
-        let x = temp;
-
-        //console.log(x);
-        organizacao_formal.forEach((item) => {
-          //console.log(duf_sanitario);
-          //console.log(x);
-          x.forEach((val) => {
-            if (val.id == item) {
-              val.isChecked = true;
-            }
-          });
-        });
-
-        return setSe_duf_organizacao_formal(x);
-      });
-    });
-  }
-
-  function valor_checked_se_duf_numero_pisos(numero_pisos) {
-    db.transaction((tx) => {
-      tx.executeSql("select * from aux_pisos", [], (tx, results) => {
-        //var len = results.rows.length, i;
-        var temp = [];
-        //console.log(len);
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push({
-            label: results.rows.item(i).descricao,
-            id: results.rows.item(i).codigo,
-            isChecked: false,
-          });
-        }
-        //console.log(temp);
-        let x = temp;
-
-        //console.log(x);
-        numero_pisos.forEach((item) => {
-          //console.log(duf_sanitario);
-          //console.log(x);
-          x.forEach((val) => {
-            if (val.id == item) {
-              val.isChecked = true;
-            }
-          });
-        });
-
-        return set_se_duf_numero_pisos(x);
-      });
-    });
-  }
-
-  function valor_checked_se_duf_estado_conservacao(estado_conservacao) {
-    db.transaction((tx) => {
-      tx.executeSql("select * from aux_estado_conservacao", [], (tx, results) => {
-        //var len = results.rows.length, i;
-        var temp = [];
-        //console.log(len);
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push({
-            label: results.rows.item(i).descricao,
-            id: results.rows.item(i).codigo,
-            isChecked: false,
-          });
-        }
-        //console.log(temp);
-        let x = temp;
-
-        //console.log(x);
-        estado_conservacao.forEach((item) => {
-          //console.log(duf_sanitario);
-          //console.log(x);
-          x.forEach((val) => {
-            if (val.id == item) {
-              val.isChecked = true;
-            }
-          });
-        });
-
-        return set_se_duf_estado_conservacao(x);
-      });
-    });
-  }
-
   return (
     <>
       <View style={styles.form8}>
@@ -516,133 +203,81 @@ const Step5 = (props) => {
         <View style={styles.municipio}>
           <Text>Formação de Atuação</Text>
         </View>
-        <View style={{ alignItems: "center" }}>
+
         <DropDownPicker
           style={styles.drop_down_Style}
           zIndex={open_se_rrj_formacao_atuacao ? 9999 : 0}
           open={open_se_rrj_formacao_atuacao}
           value={parseInt(valor_se_rrj_formacao_atuacao)}
           items={item_se_rrj_formacao_atuacao}
-          setOpen={setOpen_se_duf_tempo_ocupacao}
-          setValue={setValor_se_duf_tempo_ocupacao}
-          setItems={setItem_se_duf_tempo_ocupacao}
+          setOpen={setOpen_se_rrj_formacao_atuacao}
+          setValue={setValor_se_rrj_formacao_atuacao}
+          setItems={setItem_se_rrj_formacao_atuacao}
           onChangeValue={() =>
             onPressTitle(
-              "se_duf",
-              "se_duf_tempo_ocupacao",
-              valor_se_duf_tempo_ocupacao,
+              "se_rrj",
+              "se_rrj_formacao_atuacao",
+              valor_se_rrj_formacao_atuacao,
               sync
               )
             }
             listMode="SCROLLVIEW"
             placeholder="Selecione::"
             />
+
+        <View style={styles.municipio}>
+          <Text>Investimento Financeiro destinado</Text>
         </View>
+
+
+        <DropDownPicker
+          style={styles.drop_down_Style}
+          zIndex={open_se_rrj_investimento_financeiro ? 9999 : 0}
+          open={open_se_rrj_investimento_financeiro}
+          value={parseInt(valor_se_rrj_investimento_financeiro)}
+          items={item_se_rrj_investimento_financeiro}
+          setOpen={setOpen_se_rrj_investimento_financeiro}
+          setValue={setValor_se_rrj_investimento_financeiro}
+          setItems={setItem_se_rrj_investimento_financeiro}
+          onChangeValue={() =>
+            onPressTitle(
+              "se_rrj",
+              "se_rrj_investimento_financeiro",
+              valor_se_rrj_investimento_financeiro,
+              sync
+              )
+            }
+            listMode="SCROLLVIEW"
+            placeholder="Selecione::"
+            />
+
       </View>
       <View style={styles.form}>
         <View style={styles.rect2}>
-          <Text style={styles.titulo}>INFRAESTRUTURA DO IMOVEL</Text>
+          <Text style={styles.titulo}>INFORMAÇÕES ADICIONAIS</Text>
         </View>
 
         <View style={styles.municipio}>
-          <Text>Tipo de construcao</Text>
+          <Text>Informações adicionais</Text>
         </View>
 
-        <View style={styles.checkboxlabel}>
-          {[...se_duf_tipo_construcao].map((item, index) => (
-            <View style={styles.checkboxGroup} key={item.id}>
-              <Checkbox
-                style={styles.checkbox}
-                value={item.isChecked}
-                onValueChange={() => {
-                  handleChange_se_duf_tipo_construcao(item.id);
-                  onPressTitle(
-                    "se_duf",
-                    "se_duf_tipo_construcao",
-                    muda_se_duf_tipo_construcao(),
-                    sync
-                  );
-                }}
-              />
-              <Text>{item.label}</Text>
-            </View>
-          ))}
+        <View style={{ alignItems: "center" }}>
+          <TextInput
+            style={styles.input_style}
+            onChangeText={set_se_rrj_informacaoes_adicionais}
+            value={value_se_rrj_informacaoes_adicionais}
+            onBlur={() =>
+              onPressTitle(
+                "se_rrj",
+                "se_rrj_informacaoes_adicionais",
+                value_se_rrj_informacaoes_adicionais,
+                sync
+              )
+            }
+            placeholder={"    "}
+          />
         </View>
 
-        <View style={styles.municipio}>
-          <Text>N de cômodos </Text>
-        </View>
-
-        <View style={styles.checkboxlabel}>
-          {[...se_duf_numero_comodos].map((item, index) => (
-            <View style={styles.checkboxGroup} key={item.id}>
-              <Checkbox
-                style={styles.checkbox}
-                value={item.isChecked}
-                onValueChange={() => {
-                  handleChange_se_duf_numero_comodos(item.id);
-                  onPressTitle(
-                    "se_duf",
-                    "se_duf_numero_comodos",
-                    muda_se_duf_numero_comodos(),
-                    sync
-                  );
-                }}
-              />
-              <Text>{item.label}</Text>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.municipio}>
-          <Text>N de Pisos </Text>
-        </View>
-
-        <View style={styles.checkboxlabel}>
-          {[...se_duf_numero_pisos].map((item, index) => (
-            <View style={styles.checkboxGroup} key={item.id}>
-              <Checkbox
-                style={styles.checkbox}
-                value={item.isChecked}
-                onValueChange={() => {
-                  handleChange_se_duf_numero_pisos(item.id);
-                  onPressTitle(
-                    "se_duf",
-                    "se_duf_numero_pisos",
-                    muda_se_duf_numero_pisos(),
-                    sync
-                  );
-                }}
-              />
-              <Text>{item.label}</Text>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.municipio}>
-          <Text>Estado de Conservação </Text>
-        </View>
-
-        <View style={styles.checkboxlabel}>
-          {[...se_duf_estado_conservacao].map((item, index) => (
-            <View style={styles.checkboxGroup} key={item.id}>
-              <Checkbox
-                style={styles.checkbox}
-                value={item.isChecked}
-                onValueChange={() => {
-                  handleChange_se_duf_estado_conservacao(item.id);
-                  onPressTitle(
-                    "se_duf",
-                    "se_duf_estado_conservacao",
-                    muda_se_duf_estado_conservacao(),
-                    sync
-                  );
-                }}
-              />
-              <Text>{item.label}</Text>
-            </View>
-          ))}
-        </View>
 
       </View>
     </>
@@ -650,6 +285,15 @@ const Step5 = (props) => {
 };
 
 const styles = StyleSheet.create({
+  input_style: {
+    height: 40,
+    width: "85%",
+    //marginRight:25,
+    marginTop: 2,
+    borderWidth: 1,
+
+    backgroundColor: "white",
+  },
   drop_down_Style: {
     marginTop: 5,
     height: 40,

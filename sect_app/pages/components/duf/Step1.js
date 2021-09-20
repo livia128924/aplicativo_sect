@@ -242,7 +242,7 @@ const Step1 = () => {
         </View>
 
         <View style={styles.title_style}>
-          <Text>MUNICIPIOS </Text>
+          <Text>MUNICIPIOSss </Text>
         </View>
 
         <DropDownPicker
