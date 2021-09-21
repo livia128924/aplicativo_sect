@@ -1,17 +1,13 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-    SafeAreaView,
     View,
     Text,
-    Button,
     StyleSheet,
     TextInput,
     TouchableOpacity,
     AsyncStorage,
     ScrollView,
-    Modal,
-    Alert,
-    YellowBox
+    Modal
 } from 'react-native';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import axios from 'axios';
@@ -23,23 +19,21 @@ export default function cadastro({navigation}) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const [scannedPat, setScannedPat] = useState(false);
-    const [hasDepartamento, setHasDepartamento] = useState(null);
     const [openCameraDep, setOpenCameraDep] = useState(false);
     const [openCameraPat, setOpenCameraPat] = useState(false);
-    const [departamento, setDepartamento] = useState("");
     const [sala, setSala] = useState("");
     const [codPatrimonio, setCodPatrimonio] = useState(0);
     const [qr_code, setQr_code] = useState("");
     const [estado_conservacao, setEstado_conservacao] = useState([]);
     const [EstDropdownOpen, setEstDropdownOpen] = useState(false);
-    const [cod_estado_conservacao, setCod_estado_conservacao] = useState(false);
+    const [cod_estado_conservacao, setCod_estado_conservacao] = useState("");
 
     const [categorias, setCategorias] = useState([]);
     const [CatDropdownOpen, setCatDropdownOpen] = useState(false);
-    const [cod_categoria, setCod_categoria] = useState(false);
+    const [cod_categoria, setCod_categoria] = useState(null);
 
     const [modalVisible, setModalVisible] = useState(false);
-
+    const [departamentoDesc, setDepartamentoDesc] = useState();
     const [patrimonio, setPatrimonio] = useState({
         codigo: 0,
         categoria: "",
@@ -49,9 +43,11 @@ export default function cadastro({navigation}) {
         departamento: "",
         local: "",
         estado_conservacao: "",
+        acao: "Cadastrar",
     });
 
-    const [acao, setAcao] = useState("");
+    const [local, setLocal] = useState("");
+    const [departamento, setDepartamento] = useState("");
 
     useEffect(() => {
         onHandlePermission(); //Pede permissão da camera.
@@ -59,10 +55,11 @@ export default function cadastro({navigation}) {
         AsyncStorage.getItem("departamento").then(function (data) {
 
             if (data) {
-
                 let dados = JSON.parse(data);
-                setDepartamento(dados.aux_departamento.descricao);
+                setDepartamento(dados.pat_departamento.codigo);
+                setLocal(dados.pat_departamento.local)
                 setSala(dados.pat_local.nome_local);
+                setDepartamentoDesc(dados.aux_departamento.descricao);
             }
         });
 
@@ -79,18 +76,26 @@ export default function cadastro({navigation}) {
 
                 const {status, msg, dados} = response.data;
 
-                console.log(response.data);
                 if (status) {
-                    setDepartamento(dados.aux_departamento.descricao);
+
+                    setDepartamento(dados.pat_departamento.codigo);
+                    setLocal(dados.pat_departamento.local);
+
+                    setDepartamentoDesc(dados.aux_departamento.descricao);
                     setSala(dados.pat_local.nome_local);
-                    setPatrimonio({...patrimonio, ["local"]: dados.pat_departamento.local});
-                    setPatrimonio({...patrimonio, ["departamento"]: dados.pat_departamento.departamento});
 
                     AsyncStorage.setItem("departamento", JSON.stringify(dados));
+
+                    limparCampos();
+
+                    setPatrimonio(prev => ({...prev, cod_qrcode: ""}));
+                    setQr_code("");
+                    setCodPatrimonio(0);
+
+
                 } else {
                     alert(msg);
                 }
-
 
                 setTimeout(() => {
                     setOpenCameraDep(!openCameraDep);
@@ -98,48 +103,9 @@ export default function cadastro({navigation}) {
             });
     }
 
-    const handleScannedPatrimonio = async ({type, data}) => {
-        setScannedPat(true);
-        setModalVisible(!modalVisible);
-
-        await axios.post("http://192.168.0.151:8082/_apps/app_teste/patrimonio/patrimonio.php", {qr_code: data})
-            .then(function (response) {
-                const {status, msg, dados, acao} = response.data;
-
-                if (status) {
-                    setCodPatrimonio(dados.cod_patrimonio);
-
-                    console.log(dados.pat_patrimonio);
-
-                    setPatrimonio({...patrimonio, ["codigo"]: dados.codigo});
-                    setPatrimonio({...patrimonio, ["cod_qrcode"]: dados.pat_qr_code.codigo});
-                    setAcao(acao);
-
-                    var categorias_temp = [];
-
-                    dados.auxiliares.categorias.map((item, index) => {
-                        categorias_temp.push(item);
-                    });
-
-                    setCategorias(categorias_temp);
-
-                    var estado_conservacao_temp = [];
-
-                    dados.auxiliares.estado_conservacao.map((item, index) => {
-                        estado_conservacao_temp.push(item);
-                    });
-
-                    setEstado_conservacao(estado_conservacao_temp);
-
-                    setQr_code(data);
-                } else {
-                    alert(msg);
-                }
-
-                setOpenCameraPat(false);
-
-            });
-    };
+    const handleOpenCameraDep = () => {
+        setOpenCameraDep(true);
+    }
 
     const handleOpenCameraPat = () => {
         setCodPatrimonio(0);
@@ -149,21 +115,98 @@ export default function cadastro({navigation}) {
         console.log(scanned);
     }
 
-    const handleOpenCameraDep = () => {
-        setOpenCameraDep(true);
-    }
+    const handleScannedPatrimonio = async ({type, data}) => {
+
+        setScannedPat(true);
+        setModalVisible(!modalVisible);
+
+        await axios.post("http://192.168.0.151:8082/_apps/app_teste/patrimonio/patrimonio.php",
+            {qr_code: data, local, departamento}).then(function (response) {
+            const {status, msg, dados, acao} = response.data;
+
+            if (status) {
+                var categorias_temp = [];
+                dados.auxiliares.categorias.map((item, index) => {
+                    categorias_temp.push(item);
+                });
+                setCategorias(categorias_temp);
+
+                var estado_conservacao_temp = [];
+                dados.auxiliares.estado_conservacao.map((item, index) => {
+                    estado_conservacao_temp.push(item);
+                });
+                setEstado_conservacao(estado_conservacao_temp);
+
+                if (acao === "alterar") {
+
+                    setPatrimonio({
+                        ...patrimonio,
+                        ["codigo"]: dados.pat_patrimonio.codigo,
+                        ["titulo"]: dados.pat_patrimonio.titulo,
+                        ["descricao"]: dados.pat_patrimonio.descricao,
+                        ["estado_conservacao"]: dados.pat_patrimonio.estado_conservacao,
+                        ["categoria"]: dados.pat_patrimonio.categoria,
+                        ["acao"]: "alterar"
+                    });
+
+                    setCod_categoria(dados.pat_patrimonio.categoria);
+                    setCod_estado_conservacao(dados.pat_patrimonio.estado_conservacao);
+
+                    setCodPatrimonio(dados.pat_patrimonio.codigo);
+
+                } else {
+                    setPatrimonio(prev => ({...prev, acao: "Cadastrar"}));
+                    limparCampos();
+                }
+
+                setPatrimonio(prev => ({...prev, local: local}));
+                setPatrimonio(prev => ({...prev, departamento: departamento}));
+                setPatrimonio(prev => ({...prev, cod_qrcode: dados.pat_qr_code.codigo}));
+
+                setCodPatrimonio(dados.pat_qr_code.codigo);
+
+                setQr_code(data);
+            } else {
+                alert(msg);
+            }
+
+            setOpenCameraPat(false);
+        });
+    };
 
     const handleSubmitPatrimonio = async () => {
+
+        //setPatrimonio(prevState => ({...prevState, acao: acao}));
+
         axios.post("http://192.168.0.151:8082/_apps/app_teste/patrimonio/inserir_patrimonio.php", patrimonio)
             .then(function (response) {
-                const {status, msg} = response.data;
+                const {status, msg, novo, dados} = response.data;
+
 
                 if (status) {
-                    Alert.alert(msg);
+                    alert(msg);
+                    if (novo == true) {
+                        setPatrimonio(prev => ({...prev, acao: "alterar"}));
+                        setPatrimonio(prev => ({...prev, codigo: dados.codigo}));
+                    }
+
                 } else {
-                    Alert.alert(msg);
+                    alert(msg);
                 }
             });
+    }
+
+    const limparCampos = () => {
+        setPatrimonio(prev => ({
+            ...prev,
+            titulo: "",
+            descricao: "",
+            estado_conservacao: "",
+            categoria: ""
+        }));
+
+        setCod_categoria("");
+        setCod_estado_conservacao("");
     }
 
     if (hasPermission === null) {
@@ -173,6 +216,7 @@ export default function cadastro({navigation}) {
     if (hasPermission === false) {
         return <Text>No access to camera</Text>;
     }
+
 
     return (
         <ScrollView style={styles.container}>
@@ -218,7 +262,6 @@ export default function cadastro({navigation}) {
 
                 {
                     (() => {
-
                         if (departamento) {
                             return (
                                 <>
@@ -229,7 +272,7 @@ export default function cadastro({navigation}) {
                                         </View>
                                         <View>
                                             <Text style={styles.textBold}>Departamento</Text>
-                                            <Text>{departamento}</Text>
+                                            <Text>{departamentoDesc}</Text>
                                         </View>
                                     </View>
 
@@ -238,7 +281,9 @@ export default function cadastro({navigation}) {
                                         onPress={handleOpenCameraPat}
                                     >
                                         <Text style={styles.textSelecionaDep}>
-                                            <Icon style={{fontSize: 18}} name="camera-outline"></Icon> Escanear
+                                            <Icon
+                                                style={{fontSize: 18}}
+                                                name="camera-outline"></Icon> Escanear
                                             patrimônio
                                         </Text>
                                     </TouchableOpacity>
@@ -246,20 +291,19 @@ export default function cadastro({navigation}) {
                                 </>
                             )
                         }
-
                     })()
                 }
 
 
                 {
                     (() => {
-                        if (patrimonio.cod_qrcode) {
+                        if (codPatrimonio) {
                             return (
                                 <View style={{flex: 1, padding: 10, marginBottom: 10}}>
                                     <View style={{flex: 1, marginTop: 20}}>
                                         <View style={styles.inputContainer}>
                                             <Text>Ação</Text>
-                                            <Text style={styles.textBold}>{acao}</Text>
+                                            <Text style={styles.textBold}>{patrimonio.acao}</Text>
                                         </View>
 
                                         <View style={styles.inputContainer}>
@@ -306,7 +350,7 @@ export default function cadastro({navigation}) {
                                                 items={categorias}
                                                 setOpen={setCatDropdownOpen}
                                                 setItems={setCategorias}
-                                                zIndex={9999}
+                                                zIndex={1000}
                                                 itemKey="value"
                                                 listMode="SCROLLVIEW"
                                                 onChangeValue={(value) => {
@@ -315,8 +359,6 @@ export default function cadastro({navigation}) {
                                                         ...patrimonio,
                                                         ["categoria"]: value,
                                                     });
-
-                                                    console.log(patrimonio);
                                                 }}
                                                 placeholder={""}
                                             />
@@ -332,7 +374,7 @@ export default function cadastro({navigation}) {
                                                 items={estado_conservacao}
                                                 setOpen={setEstDropdownOpen}
                                                 setItems={setEstado_conservacao}
-                                                zIndex={9999}
+                                                zIndex={1002}
                                                 itemKey="value"
                                                 listMode="SCROLLVIEW"
                                                 onChangeValue={(value) => {
@@ -350,7 +392,10 @@ export default function cadastro({navigation}) {
                                             onPress={handleSubmitPatrimonio}
                                         >
                                             <Text style={styles.textSelecionaDep}>
-                                                <Icon style={{fontSize: 18}} name="save-outline"></Icon> Salvar
+                                                <Icon
+                                                    style={{fontSize: 18}}
+                                                    name="save-outline"
+                                                ></Icon> Salvar
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
