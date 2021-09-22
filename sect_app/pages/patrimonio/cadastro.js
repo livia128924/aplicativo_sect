@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     View,
     Text,
@@ -7,12 +7,16 @@ import {
     TouchableOpacity,
     AsyncStorage,
     ScrollView,
-    Modal
+    Modal,
+    LogBox,
+    Image
 } from 'react-native';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DropDownPicker from 'react-native-dropdown-picker';
+import Gallery from 'react-native-image-gallery';
+import {Camera} from 'expo-camera';
 
 export default function cadastro({navigation}) {
 
@@ -49,7 +53,17 @@ export default function cadastro({navigation}) {
     const [local, setLocal] = useState("");
     const [departamento, setDepartamento] = useState("");
 
+    const [modalFotoVisible, setModalFotoVisible] = useState(false);
+    const [cameraFotoOpen, setCameraFotoOpen] = useState(false);
+    const [capturePhoto, setCapturePhoto] = useState('');
+    const camRef = useRef(null);
+    const [imagemList, setImagemList] = useState([]);
+    const [previsualizacao, setPrevisualizacao] = useState(false);
+
     useEffect(() => {
+
+        LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
+
         onHandlePermission(); //Pede permissão da camera.
 
         AsyncStorage.getItem("departamento").then(function (data) {
@@ -209,6 +223,34 @@ export default function cadastro({navigation}) {
         setCod_estado_conservacao("");
     }
 
+    const capturaFoto = async () => {
+        if (camRef) {
+            try {
+                const data = await camRef.current.takePictureAsync({base64: true}); //enabled base64 - insert into ({base64: true})
+                setCapturePhoto(data.uri);
+                setPrevisualizacao(true);
+                console.log('previsualizacao...');
+            } catch (error) {
+                console.log("Error: " + error);
+            }
+        }
+    }
+
+    const salvarFoto = async () => {
+        setImagemList(prev => [...prev, {source: {uri: capturePhoto}}]);
+
+
+        //setImagemList(prevState => ({...prevState,  source: {url: capturePhoto}}));
+        /*setImagemList(prevState => [...prevState, {
+            source: {url: capturePhoto},
+            dimensions: {width: 360, height: 640},
+        }]);*/
+
+//        console.log(imagemList);
+
+        console.log(imagemList);
+    }
+
     if (hasPermission === null) {
         return <Text>Requesting for camera permission</Text>;
     }
@@ -217,10 +259,10 @@ export default function cadastro({navigation}) {
         return <Text>No access to camera</Text>;
     }
 
-
     return (
         <ScrollView style={styles.container}>
-
+            {console.log(imagemList)}
+            {/* Modal da Camera de selecionar departamento */}
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -237,6 +279,7 @@ export default function cadastro({navigation}) {
                 </View>
             </Modal>
 
+            {/* Modal da Camera de selecionar patrimônio */}
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -253,10 +296,74 @@ export default function cadastro({navigation}) {
                 </View>
             </Modal>
 
+            {/* Modal da Camera de tirar foto do patrimonio */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={cameraFotoOpen}
+                onRequestClose={() => {
+                    setCameraFotoOpen(!cameraFotoOpen);
+                }}>
+                <Camera
+                    style={{flex: 1}}
+                    type={Camera.Constants.Type.back}
+                    ref={camRef}
+                >
+                    <View style={{position: "absolute", bottom: 20, margin: 0, flex: 1, width: '100%'}}>
+                        <View
+                            style={{alignItems: "center", justifyContent: "center", flexDirection: "column", flex: 1}}>
+
+                            <TouchableOpacity
+                                style={{
+                                    paddingHorizontal: '20%',
+                                    paddingVertical: 15,
+                                    borderWidth: 1,
+                                    borderColor: "#FFFFFF",
+                                    borderRadius: 8
+                                }}
+                                onPress={capturaFoto}
+                            >
+                                <Text style={[styles.textWhite, styles.textCenter]}>
+                                    <Icon style={{fontSize: 18}} name="camera-outline"></Icon>
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Camera>
+
+            </Modal>
+
+            {/* Modal de previsualização do patrimonio */}
+            <Modal
+                animationType="slide"
+                transparent={false}
+                visible={previsualizacao}
+                onRequestClose={() => {
+                    setPrevisualizacao(!previsualizacao);
+                }}>
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20}}>
+                    <Image
+                        style={{width: '100%', height: 450}}
+                        source={{uri: capturePhoto}}
+                    />
+
+                    <View style={{margin: 10, flexDirection: 'row'}}>
+                        <TouchableOpacity style={{margin: 10}} onPress={() => setPrevisualizacao(!previsualizacao)}>
+                            <Icon style={{fontSize: 36, color: "red"}} name="close-outline"/>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={{margin: 10}} onPress={salvarFoto}>
+                            <Icon style={{fontSize: 36, color: "green"}} name="save-outline"/>
+                        </TouchableOpacity>
+
+                    </View>
+                </View>
+            </Modal>
+
             <View style={{flex: 1}}>
                 <TouchableOpacity style={styles.buttonSelecionaDep} onPress={handleOpenCameraDep}>
                     <Text style={styles.textSelecionaDep}>
-                        <Icon style={{fontSize: 18}} name="camera-outline"></Icon> Selecionar departamento
+                        <Icon style={{fontSize: 18}} name="camera-outline"/> Selecionar departamento
                     </Text>
                 </TouchableOpacity>
 
@@ -281,9 +388,7 @@ export default function cadastro({navigation}) {
                                         onPress={handleOpenCameraPat}
                                     >
                                         <Text style={styles.textSelecionaDep}>
-                                            <Icon
-                                                style={{fontSize: 18}}
-                                                name="camera-outline"></Icon> Escanear
+                                            <Icon style={{fontSize: 18}} name="camera-outline"/> Escanear
                                             patrimônio
                                         </Text>
                                     </TouchableOpacity>
@@ -301,6 +406,7 @@ export default function cadastro({navigation}) {
                             return (
                                 <View style={{flex: 1, padding: 10, marginBottom: 10}}>
                                     <View style={{flex: 1, marginTop: 20}}>
+
                                         <View style={styles.inputContainer}>
                                             <Text>Ação</Text>
                                             <Text style={styles.textBold}>{patrimonio.acao}</Text>
@@ -310,7 +416,6 @@ export default function cadastro({navigation}) {
                                             <Text>Identificador do qr code</Text>
                                             <Text style={styles.textBold}>{qr_code}</Text>
                                         </View>
-
 
                                         <View style={styles.inputContainer}>
                                             <Text>Título</Text>
@@ -354,7 +459,6 @@ export default function cadastro({navigation}) {
                                                 itemKey="value"
                                                 listMode="SCROLLVIEW"
                                                 onChangeValue={(value) => {
-
                                                     setPatrimonio({
                                                         ...patrimonio,
                                                         ["categoria"]: value,
@@ -387,15 +491,78 @@ export default function cadastro({navigation}) {
                                             />
                                         </View>
 
+                                        <View style={[styles.inputContainer, {
+                                            flexDirection: "row",
+                                            justifyContent: "space-between"
+                                        }]}>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    setCameraFotoOpen(!cameraFotoOpen);
+                                                }}
+                                                style={[styles.buttonSelecionaDep, {width: "48%"}]}>
+                                                <Text style={{color: "#FFFFFF", textAlign: "center"}}>
+                                                    <Icon style={{fontSize: 18}} name="camera-outline"/> Adicionar foto
+                                                </Text>
+                                            </TouchableOpacity>
+
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    setModalFotoVisible(!modalFotoVisible);
+                                                }}
+                                                style={[styles.buttonSelecionaDep, {
+                                                    width: "48%",
+                                                    backgroundColor: "#007bff"
+                                                }]}>
+                                                <Text style={{color: "#FFFFFF", textAlign: "center"}}>
+                                                    <Icon style={{fontSize: 18}} name="images-outline"/> Visualizar
+                                                    fotos
+                                                </Text>
+                                            </TouchableOpacity>
+
+                                            <Modal
+                                                animationType="slide"
+                                                transparent={false}
+                                                visible={modalFotoVisible}
+                                                onRequestClose={() => {
+                                                    setModalFotoVisible(!modalFotoVisible);
+                                                }}
+                                            >
+                                                <View style={{flex: 1, position: "relative"}}>
+                                                    <TouchableOpacity
+                                                        onPress={() => setModalFotoVisible(!modalFotoVisible)}
+                                                        style={{
+                                                            position: "absolute",
+                                                            top: 10,
+                                                            right: 10,
+                                                            color: "#FFFFFF",
+                                                            zIndex: 999
+                                                        }}>
+                                                        <Text style={{color: "#FFFFFF"}}>
+                                                            <Icon style={{fontSize: 36}} name="close-outline"/>
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                    <Gallery
+                                                        style={{flex: 1, backgroundColor: 'black'}}
+                                                        images={[imagemList]}
+                                                    />
+                                                    <View style={styles.modalFotosRemoverContent}>
+                                                        <TouchableOpacity>
+                                                            <Text>
+                                                                <Icon style={{fontSize: 18}}
+                                                                      name="trash-outline"/> Remover
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </View>
+                                            </Modal>
+                                        </View>
+
                                         <TouchableOpacity
                                             style={[styles.buttonSelecionaDep, {marginTop: 15}]}
                                             onPress={handleSubmitPatrimonio}
                                         >
                                             <Text style={styles.textSelecionaDep}>
-                                                <Icon
-                                                    style={{fontSize: 18}}
-                                                    name="save-outline"
-                                                ></Icon> Salvar
+                                                <Icon style={{fontSize: 18}} name="save-outline"/> Salvar
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
@@ -419,6 +586,7 @@ const styles = StyleSheet.create({
     inputContainer: {
         justifyContent: "center",
         width: "100%",
+        marginTop: 10,
     },
 
     input: {
@@ -458,6 +626,14 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
 
+    textWhite: {
+        color: "#FFFFFF",
+    },
+
+    textCenter: {
+        textAlign: "center",
+    },
+
     dropdown_style: {
         width: '100%',
         padding: 8,
@@ -465,4 +641,11 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderColor: "#ccc",
     },
+
+    modalFotosRemoverContent: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 15,
+    }
 });
