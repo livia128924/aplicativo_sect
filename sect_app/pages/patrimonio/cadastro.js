@@ -48,6 +48,7 @@ export default function cadastro({navigation}) {
         local: "",
         estado_conservacao: "",
         acao: "Cadastrar",
+        fotos: [],
     });
 
     const [local, setLocal] = useState("");
@@ -58,6 +59,7 @@ export default function cadastro({navigation}) {
     const [capturePhoto, setCapturePhoto] = useState('');
     const camRef = useRef(null);
     const [imagemList, setImagemList] = useState([]);
+    const [imagemDataList, setImagemDataList] = useState([]);
     const [previsualizacao, setPrevisualizacao] = useState(false);
 
     useEffect(() => {
@@ -126,7 +128,6 @@ export default function cadastro({navigation}) {
         setModalVisible(!modalVisible);
         setScannedPat(false);
 
-        console.log(scanned);
     }
 
     const handleScannedPatrimonio = async ({type, data}) => {
@@ -137,6 +138,7 @@ export default function cadastro({navigation}) {
         await axios.post("http://192.168.0.151:8082/_apps/app_teste/patrimonio/patrimonio.php",
             {qr_code: data, local, departamento}).then(function (response) {
             const {status, msg, dados, acao} = response.data;
+
 
             if (status) {
                 var categorias_temp = [];
@@ -151,7 +153,8 @@ export default function cadastro({navigation}) {
                 });
                 setEstado_conservacao(estado_conservacao_temp);
 
-                if (acao === "alterar") {
+
+                if (acao === "alterar") {// ALTERAR
 
                     setPatrimonio({
                         ...patrimonio,
@@ -162,13 +165,18 @@ export default function cadastro({navigation}) {
                         ["categoria"]: dados.pat_patrimonio.categoria,
                         ["acao"]: "alterar"
                     });
-
                     setCod_categoria(dados.pat_patrimonio.categoria);
                     setCod_estado_conservacao(dados.pat_patrimonio.estado_conservacao);
-
                     setCodPatrimonio(dados.pat_patrimonio.codigo);
 
-                } else {
+                    if (dados.pat_patrimonio.imagens) {
+                        dados.pat_patrimonio.imagens.map((image, index) => {
+                            setImagemList(prev => [...prev, {source: {uri: image}}]);
+                        });
+                    }
+
+
+                } else { // CADASTRAR
                     setPatrimonio(prev => ({...prev, acao: "Cadastrar"}));
                     limparCampos();
                 }
@@ -196,10 +204,9 @@ export default function cadastro({navigation}) {
             .then(function (response) {
                 const {status, msg, novo, dados} = response.data;
 
-
                 if (status) {
                     alert(msg);
-                    if (novo == true) {
+                    if (novo === true) {
                         setPatrimonio(prev => ({...prev, acao: "alterar"}));
                         setPatrimonio(prev => ({...prev, codigo: dados.codigo}));
                     }
@@ -226,10 +233,10 @@ export default function cadastro({navigation}) {
     const capturaFoto = async () => {
         if (camRef) {
             try {
-                const data = await camRef.current.takePictureAsync({base64: true}); //enabled base64 - insert into ({base64: true})
-                setCapturePhoto(data.uri);
+                const data = await camRef.current.takePictureAsync({base64: true, skipProcessing: true}); //enabled base64 - insert into ({base64: true})
+                setCapturePhoto(data.base64);
                 setPrevisualizacao(true);
-                console.log('previsualizacao...');
+
             } catch (error) {
                 console.log("Error: " + error);
             }
@@ -237,18 +244,11 @@ export default function cadastro({navigation}) {
     }
 
     const salvarFoto = async () => {
-        setImagemList(prev => [...prev, {source: {uri: capturePhoto}}]);
-
-
-        //setImagemList(prevState => ({...prevState,  source: {url: capturePhoto}}));
-        /*setImagemList(prevState => [...prevState, {
-            source: {url: capturePhoto},
-            dimensions: {width: 360, height: 640},
-        }]);*/
-
-//        console.log(imagemList);
-
-        console.log(imagemList);
+        setPrevisualizacao(!previsualizacao);
+        alert("Foto salva com sucesso");
+        await setImagemList(prev => [...prev, {source: {uri: `data:image/png;base64, ${capturePhoto}`}}]);
+        //await setImagemDataList(prev => [...prev, capturePhoto]);
+        await patrimonio.fotos.push(capturePhoto);
     }
 
     if (hasPermission === null) {
@@ -261,6 +261,7 @@ export default function cadastro({navigation}) {
 
     return (
         <ScrollView style={styles.container}>
+
             {console.log(imagemList)}
             {/* Modal da Camera de selecionar departamento */}
             <Modal
@@ -324,7 +325,7 @@ export default function cadastro({navigation}) {
                                 onPress={capturaFoto}
                             >
                                 <Text style={[styles.textWhite, styles.textCenter]}>
-                                    <Icon style={{fontSize: 18}} name="camera-outline"></Icon>
+                                    <Icon style={{fontSize: 18}} name="camera-outline"/>
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -344,7 +345,7 @@ export default function cadastro({navigation}) {
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20}}>
                     <Image
                         style={{width: '100%', height: 450}}
-                        source={{uri: capturePhoto}}
+                        source={{uri: `data:image/png;base64, ${capturePhoto}`}}
                     />
 
                     <View style={{margin: 10, flexDirection: 'row'}}>
@@ -543,7 +544,7 @@ export default function cadastro({navigation}) {
                                                     </TouchableOpacity>
                                                     <Gallery
                                                         style={{flex: 1, backgroundColor: 'black'}}
-                                                        images={[imagemList]}
+                                                        images={imagemList}
                                                     />
                                                     <View style={styles.modalFotosRemoverContent}>
                                                         <TouchableOpacity>
