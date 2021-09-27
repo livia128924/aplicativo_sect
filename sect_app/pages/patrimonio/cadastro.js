@@ -59,12 +59,11 @@ export default function cadastro({navigation}) {
     const [capturePhoto, setCapturePhoto] = useState('');
     const camRef = useRef(null);
     const [imagemList, setImagemList] = useState([]);
-    const [imagemDataList, setImagemDataList] = useState([]);
     const [previsualizacao, setPrevisualizacao] = useState(false);
 
     useEffect(() => {
 
-        LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
+        LogBox.ignoreLogs(['Animated: `useNativeDriver`', "Warning: Failed child context type: Invalid child context"]);
 
         onHandlePermission(); //Pede permissão da camera.
 
@@ -165,16 +164,20 @@ export default function cadastro({navigation}) {
                         ["categoria"]: dados.pat_patrimonio.categoria,
                         ["acao"]: "alterar"
                     });
+
                     setCod_categoria(dados.pat_patrimonio.categoria);
                     setCod_estado_conservacao(dados.pat_patrimonio.estado_conservacao);
                     setCodPatrimonio(dados.pat_patrimonio.codigo);
 
                     if (dados.pat_patrimonio.imagens) {
+                        setImagemList([]);
                         dados.pat_patrimonio.imagens.map((image, index) => {
-                            setImagemList(prev => [...prev, {source: {uri: image}}]);
+                            setImagemList(prev => [...prev, {
+                                source: {uri: image},
+                                dimensions: {width: 150, height: 150}
+                            }]);
                         });
                     }
-
 
                 } else { // CADASTRAR
                     setPatrimonio(prev => ({...prev, acao: "Cadastrar"}));
@@ -198,8 +201,6 @@ export default function cadastro({navigation}) {
 
     const handleSubmitPatrimonio = async () => {
 
-        //setPatrimonio(prevState => ({...prevState, acao: acao}));
-
         axios.post("http://192.168.0.151:8082/_apps/app_teste/patrimonio/inserir_patrimonio.php", patrimonio)
             .then(function (response) {
                 const {status, msg, novo, dados} = response.data;
@@ -211,6 +212,17 @@ export default function cadastro({navigation}) {
                         setPatrimonio(prev => ({...prev, codigo: dados.codigo}));
                     }
 
+                    setPatrimonio(prev => ({...prev, fotos: []}))
+
+                    if (dados.pat_patrimonio.imagens) {
+                        setImagemList([]);
+                        dados.pat_patrimonio.imagens.map((image, index) => {
+                            setImagemList(prev => [...prev, {
+                                source: {uri: image},
+                                dimensions: {width: 150, height: 150}
+                            }]);
+                        });
+                    }
                 } else {
                     alert(msg);
                 }
@@ -233,7 +245,7 @@ export default function cadastro({navigation}) {
     const capturaFoto = async () => {
         if (camRef) {
             try {
-                const data = await camRef.current.takePictureAsync({base64: true, skipProcessing: true}); //enabled base64 - insert into ({base64: true})
+                const data = await camRef.current.takePictureAsync({base64: true, skipProcessing: true, quality: 0});//enabled base64 - insert into ({base64: true})
                 setCapturePhoto(data.base64);
                 setPrevisualizacao(true);
 
@@ -261,7 +273,6 @@ export default function cadastro({navigation}) {
 
     return (
         <ScrollView style={styles.container}>
-
             {console.log(imagemList)}
             {/* Modal da Camera de selecionar departamento */}
             <Modal
@@ -506,6 +517,7 @@ export default function cadastro({navigation}) {
                                                 </Text>
                                             </TouchableOpacity>
 
+                                            {imagemList.length > 0 &&
                                             <TouchableOpacity
                                                 onPress={() => {
                                                     setModalFotoVisible(!modalFotoVisible);
@@ -519,6 +531,7 @@ export default function cadastro({navigation}) {
                                                     fotos
                                                 </Text>
                                             </TouchableOpacity>
+                                            }
 
                                             <Modal
                                                 animationType="slide"
@@ -542,10 +555,13 @@ export default function cadastro({navigation}) {
                                                             <Icon style={{fontSize: 36}} name="close-outline"/>
                                                         </Text>
                                                     </TouchableOpacity>
+
                                                     <Gallery
                                                         style={{flex: 1, backgroundColor: 'black'}}
                                                         images={imagemList}
                                                     />
+
+
                                                     <View style={styles.modalFotosRemoverContent}>
                                                         <TouchableOpacity>
                                                             <Text>
