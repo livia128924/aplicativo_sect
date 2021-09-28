@@ -9,7 +9,9 @@ import {
     ScrollView,
     Modal,
     LogBox,
-    Image
+    Image,
+    Alert,
+    Button, Dimensions
 } from 'react-native';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import axios from 'axios';
@@ -60,6 +62,7 @@ export default function cadastro({navigation}) {
     const camRef = useRef(null);
     const [imagemList, setImagemList] = useState([]);
     const [previsualizacao, setPrevisualizacao] = useState(false);
+    const [imageSelected, setImageSelected] = useState("");
 
     useEffect(() => {
 
@@ -130,28 +133,29 @@ export default function cadastro({navigation}) {
     }
 
     const handleScannedPatrimonio = async ({type, data}) => {
-
         setScannedPat(true);
         setModalVisible(!modalVisible);
 
         await axios.post("http://192.168.0.151:8082/_apps/app_teste/patrimonio/patrimonio.php",
-            {qr_code: data, local, departamento}).then(function (response) {
+            {qr_code: data, local, departamento, acao: "ler_patrimonio"}).then(function (response) {
             const {status, msg, dados, acao} = response.data;
 
 
             if (status) {
                 var categorias_temp = [];
+
                 dados.auxiliares.categorias.map((item, index) => {
                     categorias_temp.push(item);
                 });
                 setCategorias(categorias_temp);
 
                 var estado_conservacao_temp = [];
+
                 dados.auxiliares.estado_conservacao.map((item, index) => {
                     estado_conservacao_temp.push(item);
                 });
-                setEstado_conservacao(estado_conservacao_temp);
 
+                setEstado_conservacao(estado_conservacao_temp);
 
                 if (acao === "alterar") {// ALTERAR
 
@@ -173,7 +177,8 @@ export default function cadastro({navigation}) {
                         setImagemList([]);
                         dados.pat_patrimonio.imagens.map((image, index) => {
                             setImagemList(prev => [...prev, {
-                                source: {uri: image},
+                                nome: image.nome,
+                                source: {uri: image.url},
                                 dimensions: {width: 150, height: 150}
                             }]);
                         });
@@ -201,7 +206,13 @@ export default function cadastro({navigation}) {
 
     const handleSubmitPatrimonio = async () => {
 
-        axios.post("http://192.168.0.151:8082/_apps/app_teste/patrimonio/inserir_patrimonio.php", patrimonio)
+        var novas_imagens = imagemList.filter(image => image.novo == true);
+
+        novas_imagens.map((item, index) => {
+            patrimonio.fotos.push(item.source.uri);
+        });
+
+        await axios.post("http://192.168.0.151:8082/_apps/app_teste/patrimonio/inserir_patrimonio.php", patrimonio)
             .then(function (response) {
                 const {status, msg, novo, dados} = response.data;
 
@@ -214,11 +225,13 @@ export default function cadastro({navigation}) {
 
                     setPatrimonio(prev => ({...prev, fotos: []}))
 
-                    if (dados.pat_patrimonio.imagens) {
+                    if (dados.imagens) {
                         setImagemList([]);
-                        dados.pat_patrimonio.imagens.map((image, index) => {
+
+                        dados.imagens.map((image, index) => {
                             setImagemList(prev => [...prev, {
-                                source: {uri: image},
+                                nome: image.nome,
+                                source: {uri: image.url},
                                 dimensions: {width: 150, height: 150}
                             }]);
                         });
@@ -244,8 +257,9 @@ export default function cadastro({navigation}) {
 
     const capturaFoto = async () => {
         if (camRef) {
+
             try {
-                const data = await camRef.current.takePictureAsync({base64: true, skipProcessing: true, quality: 0});//enabled base64 - insert into ({base64: true})
+                const data = await camRef.current.takePictureAsync({base64: true, skipProcessing: true});//enabled base64 - insert into ({base64: true})
                 setCapturePhoto(data.base64);
                 setPrevisualizacao(true);
 
@@ -258,9 +272,82 @@ export default function cadastro({navigation}) {
     const salvarFoto = async () => {
         setPrevisualizacao(!previsualizacao);
         alert("Foto salva com sucesso");
-        await setImagemList(prev => [...prev, {source: {uri: `data:image/png;base64, ${capturePhoto}`}}]);
+
+        await setImagemList(prev => [...prev, {
+            source: {uri: `data:image/png;base64, ${capturePhoto}`},
+            novo: true,
+        }
+        ]);
         //await setImagemDataList(prev => [...prev, capturePhoto]);
-        await patrimonio.fotos.push(capturePhoto);
+        //patrimonio.fotos.push(capturePhoto);
+    }
+
+    const removeFoto = async () => {
+        var nome = imagemList[imageSelected].nome;
+        var codigo = patrimonio.codigo;
+
+        Alert.alert(
+            "Aviso!",
+            "Deseja remover está foto?", [
+                {
+                    text: "Sim",
+                    onPress: async () => {
+
+                        if (!imagemList[imageSelected].novo) {
+                            await axios.post("http://192.168.0.151:8082/_apps/app_teste/patrimonio/patrimonio.php", {
+                                acao: "remover_foto",
+                                nome: nome,
+                                codigo: codigo,
+                            }).then((response) => {
+                                const {status, msg} = response.data;
+
+                                if (status) {
+                                    alert(msg);
+                                } else {
+                                    alert(msg);
+                                }
+                            });
+                        }
+
+                        imagemList.splice(imageSelected, 1);
+                    },
+                },
+                {
+                    text: "Não",
+                },
+            ]);
+    }
+
+    const galleryCount = () => {
+        const images = imagemList;
+
+        return (
+            <View style={{
+                position: 'absolute',
+                left: (Dimensions.get('window').width / 2) - 50,
+                right: 0,
+                bottom: 80,
+                height: 50,
+                borderRadius: 8,
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: "center",
+                width: '20%',
+                backgroundColor: 'rgba(0, 0, 0, .5)',
+                zIndex: 999,
+            }}>
+                <Text
+                    style={{
+                        textAlign: 'right',
+                        color: 'white',
+                        fontSize: 15,
+                        fontStyle: 'italic',
+                        paddingRight: '10%'
+                    }}>
+                    {imageSelected + 1} / {images.length}
+                </Text>
+            </View>
+        );
     }
 
     if (hasPermission === null) {
@@ -273,7 +360,7 @@ export default function cadastro({navigation}) {
 
     return (
         <ScrollView style={styles.container}>
-            {console.log(imagemList)}
+
             {/* Modal da Camera de selecionar departamento */}
             <Modal
                 animationType="slide"
@@ -530,6 +617,7 @@ export default function cadastro({navigation}) {
                                                     <Icon style={{fontSize: 18}} name="images-outline"/> Visualizar
                                                     fotos
                                                 </Text>
+
                                             </TouchableOpacity>
                                             }
 
@@ -542,6 +630,7 @@ export default function cadastro({navigation}) {
                                                 }}
                                             >
                                                 <View style={{flex: 1, position: "relative"}}>
+                                                    {galleryCount()}
                                                     <TouchableOpacity
                                                         onPress={() => setModalFotoVisible(!modalFotoVisible)}
                                                         style={{
@@ -559,11 +648,14 @@ export default function cadastro({navigation}) {
                                                     <Gallery
                                                         style={{flex: 1, backgroundColor: 'black'}}
                                                         images={imagemList}
+                                                        initialPage={0}
+                                                        onPageSelected={(pos) => {
+                                                            setImageSelected(pos);
+                                                        }}
                                                     />
 
-
                                                     <View style={styles.modalFotosRemoverContent}>
-                                                        <TouchableOpacity>
+                                                        <TouchableOpacity onPress={removeFoto}>
                                                             <Text>
                                                                 <Icon style={{fontSize: 18}}
                                                                       name="trash-outline"/> Remover
@@ -573,6 +665,26 @@ export default function cadastro({navigation}) {
                                                 </View>
                                             </Modal>
                                         </View>
+
+                                        {
+                                            (() => {
+                                                var qtdFotosNovas = imagemList.filter(image => image.novo == true).length;
+                                                if (qtdFotosNovas) {
+                                                    return (<View
+                                                        style={{
+                                                            padding: 4,
+                                                            flexDirection: 'column',
+                                                            alignItems: "flex-end"
+                                                        }}
+                                                    >
+                                                        <Text style={{color: "#721c24"}}>
+                                                            {qtdFotosNovas} foto(s) Pendente
+                                                        </Text>
+                                                    </View>);
+                                                }
+                                                return null;
+                                            })()
+                                        }
 
                                         <TouchableOpacity
                                             style={[styles.buttonSelecionaDep, {marginTop: 15}]}
