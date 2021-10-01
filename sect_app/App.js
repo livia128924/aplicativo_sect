@@ -17,6 +17,12 @@ import Relatorio from "./pages/socio/Relatorio";
 import Config from './pages/menu/config';
 import Index_rrj from './pages/socio/progressSteps_rrj';
 import Index_rrf from './pages/socio/progressSteps_rrf';
+import VShome from './pages/vistoria/home/vs_HomeScreen';
+import Vu_PJ_progressSteps from './pages/vistoria/vistoria_urbana/vu_PJ_progressSteps';
+import Vu_PF_progressSteps from './pages/vistoria/vistoria_urbana/vu_PF_progressSteps';
+import Listagem from '././pages/listagem_pr';
+import Vr_PJ_progressSteps from './pages/vistoria/vistoria_rural/vr_PJ_progressSteps';
+import Vr_PF_progressSteps from './pages/vistoria/vistoria_rural/vr_PF_progressSteps';
 
 const Stack = createStackNavigator();
 
@@ -63,10 +69,92 @@ const App = () => {
                         }}
                     />
                     <Stack.Screen
+                        name='vs_HomeScreen'
+                        component={VShome}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+                    <Stack.Screen
+                        name='Listagem'
+                        component={Listagem}
+                        options={{
+                            title: 'Formularios',
+                            headerStyle: {
+                                backgroundColor: '#FFF',
+                            },
+
+                            headerTintColor: 'black',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                            }
+                        }}
+                    />
+                    <Stack.Screen
                         name='Login'
                         component={Login}
                         options={{
                             headerShown: false,
+                        }}
+                    />
+                    <Stack.Screen
+                        name='Vu_PJ'
+                        component={Vu_PJ_progressSteps}
+                        options={{
+                            title: 'VISTORIA URBANA - PJ',
+                            headerStyle: {
+                                backgroundColor: '#FFF',
+                            },
+                            headerTintColor: 'black',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                                fontSize:13
+                            },
+                        }}
+                    />
+                    <Stack.Screen
+                        name='VuPFprogressSteps'
+                        component={Vu_PF_progressSteps}
+                        options={{
+                            title: 'VISTORIA URBANA - PF',
+                            headerStyle: {
+                                backgroundColor: '#FFF',
+                            },
+                            headerTintColor: 'black',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                                fontSize:13
+                            },
+                        }}
+                    />
+                    <Stack.Screen
+                        name='Vr_PF'
+                        component={Vr_PF_progressSteps}
+                        options={{
+                            title: 'VISTORIA RURAL - PF',
+                            headerStyle: {
+                                backgroundColor: '#FFF',
+                            },
+                            headerTintColor: 'black',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                                fontSize:13
+                            },
+                        }}
+                    />
+                    <Stack.Screen
+                        name='Vr_PJ'
+                        component={Vr_PJ_progressSteps}
+                        options={{
+                            title: 'VISTORIA RURAL - PJ',
+                            headerStyle: {
+                                backgroundColor: '#FFF',
+                            },
+                            headerTintColor: 'black',
+                            headerTitleStyle: {
+                                fontWeight: 'bold',
+                                fontSize:13
+                            },
                         }}
                     />
                     <Stack.Screen

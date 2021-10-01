@@ -1,20 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Button, AsyncStorage } from 'react-native';
 //import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
-import  ProgressSteps from './ProgressSteps/ProgressSteps'
-import ProgressStep  from './ProgressSteps/ProgressStep';
-import api from '../../services/api';
-import Step1 from '../components/tipos_forms/ruj/Step1';
-import Step2 from '../components/tipos_forms/ruj/Step2';
-import Step3 from '../components/tipos_forms/ruj/Step3';
-import Step4 from '../components/tipos_forms/ruj/Step4';
-import Step5 from '../components/tipos_forms/ruj/Step5';
-import Step6 from '../components/tipos_forms/ruj/Step6';
-import Step7 from '../components/tipos_forms/ruj/Step7';
+import  ProgressSteps from '../../components/ProgressSteps/ProgressSteps'
+import ProgressStep  from '../../components/ProgressSteps/ProgressStep';
+import api from '../../../services/api';
+import Step1 from '../../components/tipos_forms/vu/Step1';
+
 const db = DatabaseConnection.getConnection();
 import { DatabaseConnection } from '../../database/database';
 
-function Index({ navigation }) {
+function Vu_PJ_progressSteps({ navigation }) {
 
   useEffect(()=>{
 
@@ -85,7 +80,7 @@ function Index({ navigation }) {
           </View>
         </ProgressStep>
 
-        <ProgressStep
+        {/* <ProgressStep
           label="Atividades"
           onNext={onNextStep}
           onPrevious={onPrevStep}
@@ -94,8 +89,8 @@ function Index({ navigation }) {
         >
           <Step2 />
 
-        </ProgressStep>
-        <ProgressStep
+        </ProgressStep> */}
+        {/* <ProgressStep
           label="Empregados/Associados"
           onPrevious={onPrevStep}
           onNext={onNextStep}
@@ -103,9 +98,9 @@ function Index({ navigation }) {
           nextBtnText={'próximo'}
         >
           <Step3 />
-        </ProgressStep>
+        </ProgressStep> */}
 
-        <ProgressStep
+        {/* <ProgressStep
           label="Infra"
           onPrevious={onPrevStep}
           onNext={onNextStep}
@@ -114,8 +109,8 @@ function Index({ navigation }) {
           nextBtnText={'próximo'}
         >
           <Step4 />
-        </ProgressStep>
-
+        </ProgressStep> */}
+{/*
         <ProgressStep
           label="Saneamento"
           onPrevious={onPrevStep}
@@ -125,8 +120,8 @@ function Index({ navigation }) {
           nextBtnText={'próximo'}
         >
           <Step5 />
-        </ProgressStep>
-        <ProgressStep
+        </ProgressStep> */}
+        {/* <ProgressStep
           label="Patrimonio"
           onPrevious={onPrevStep}
           onNext={onNextStep}
@@ -135,9 +130,9 @@ function Index({ navigation }) {
           nextBtnText={'próximo'}
         >
           <Step6 />
-        </ProgressStep>
+        </ProgressStep> */}
 
-        <ProgressStep
+        {/* <ProgressStep
           label="Relatorio     Fotografico   "
           onPrevious={onPrevStep}
           onNext={onNextStep}
@@ -148,7 +143,7 @@ function Index({ navigation }) {
           <Step7
           navigation= {navigation}
           />
-        </ProgressStep>
+        </ProgressStep> */}
       </ProgressSteps>
 
     </View>
@@ -156,7 +151,7 @@ function Index({ navigation }) {
 
 }
 
-export default Index;
+export default Vu_PJ_progressSteps;
 
 const styles = StyleSheet.create({
   rect: {

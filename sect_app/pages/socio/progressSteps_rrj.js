@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Button, AsyncStorage, ScrollView } from 'react-native';
 import api from '../../services/api';
-import Step1 from '../components/rrj/Step1';
-import Step2 from '../components/rrj/Step2';
-import Step3 from '../components/rrj/Step3';
-import Step4 from '../components/rrj/Step4';
-import Step5 from '../components/rrj/Step5';
+import Step1 from '../components/tipos_forms/rrj/Step1';
+import Step2 from '../components/tipos_forms/rrj/Step2';
+import Step3 from '../components/tipos_forms/rrj/Step3';
+import Step4 from '../components/tipos_forms/rrj/Step4';
+import Step5 from '../components/tipos_forms/rrj/Step5';
+import Step7 from '../components/tipos_forms/rrj/Step7';
 //import Step6 from '../components/rrj/Step6';
-import Step7 from '../components/rrj/Step7';
 import Swiper from 'react-native-swiper';
 const db = DatabaseConnection.getConnection();
-import { DatabaseConnection } from '../database/database';
+import { DatabaseConnection } from '../../database/database';
 import  ProgressSteps from './ProgressSteps/ProgressSteps'
 import ProgressStep  from './ProgressSteps/ProgressStep';
 

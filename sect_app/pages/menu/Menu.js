@@ -94,7 +94,7 @@ const Menu = ({ navigation }) => {
             <View style={styles.container}>
               <Mybutton
                 title="Processos"
-                customClick={() => navigation.navigate("HomeScreen")}
+               customClick={() => navigation.navigate("Listagem")}
                 icon="group"
               />
               <Mybutton

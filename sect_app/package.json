@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@mdi/font": "^5.9.55",
+    "@react-native-community/datetimepicker": "^3.5.2",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/netinfo": "6.0.0",
     "@react-native-picker/picker": "1.16.1",
@@ -31,6 +32,7 @@
     "react-dom": "16.13.1",
     "react-hook-form": "^7.6.2",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native-datepicker": "^1.7.2",
     "react-native-dropdown-picker": "^5.1.15",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "~1.10.2",

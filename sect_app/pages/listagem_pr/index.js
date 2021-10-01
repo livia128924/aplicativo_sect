@@ -7,6 +7,7 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { Button } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -15,21 +16,25 @@ import { SearchBar } from "react-native-elements";
 import { BorderlessButton } from "react-native-gesture-handler";
 const db = DatabaseConnection.getConnection();
 import { DatabaseConnection } from "../database/database";
+import IconFontAwesome from "react-native-vector-icons/FontAwesome";
+import IconAntDesign from "react-native-vector-icons/AntDesign";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { ErrorMessage } from "./login/styles";
+
+//import vistoriaIcon from "../../assets/management.svg";
+
+//import { ErrorMessage } from "./login/styles";
 import { Card } from "react-native-elements/dist/card/Card";
+import Mybutton from "../components/Mybutton";
 
 ///////////////////////
 const Drawer = createDrawerNavigator();
 
-//////////////////////////
-
-const HomeScreen = ({ navigation }) => {
+const Listagem = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
   const [flatListItems, setFlatListItems] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
@@ -46,53 +51,52 @@ const HomeScreen = ({ navigation }) => {
     rq_tipo_pessoa,
     pr_tipo_formulario
   ) {
-      //alert(pr_tipo_formulario);
+    //alert(pr_tipo_formulario);
     AsyncStorage.setItem("pr_codigo", pr_codigo.toString());
     AsyncStorage.setItem("cod_prss", cod_prss);
     AsyncStorage.setItem("rq_nome", rq_nome);
 
     if (rq_tipo_pessoa === "j") {
-        switch (pr_tipo_formulario) {
-            case "1":
-              navigation.navigate("Stepper_PJ");
-            break;
-            case  "2" :
-            navigation.navigate("Stepper_rrj");
-            break;
-            case "4":
-            navigation.navigate("Stepper_PF_D");
-            break;
-            default:
-                console.log("nao encontrado!");
-                break;
-        }
-
+      switch (pr_tipo_formulario) {
+        case "1":
+          navigation.navigate("Stepper_PJ");
+          break;
+        case "2":
+          navigation.navigate("Stepper_rrj");
+          break;
+        case "4":
+          navigation.navigate("Stepper_PF_D");
+          break;
+        default:
+          console.log("nao encontrado!");
+          break;
+      }
     } else if (rq_tipo_pessoa === "f") {
       switch (pr_tipo_formulario) {
-          case "1":
-            navigation.navigate("Stepper_PF");
-            break;
-            case "2" :
-            navigation.navigate("Stepper_rrf");
-            break;
-            case "4":
-             navigation.navigate("Stepper_PF_D");
-             break;
-          default:
-              console.log("nao encontrado!");
-              break;
+        case "1":
+          navigation.navigate("Stepper_PF");
+          break;
+        case "2":
+          navigation.navigate("Stepper_rrf");
+          break;
+        case "4":
+          navigation.navigate("Stepper_PF_D");
+          break;
+        default:
+          console.log("nao encontrado!");
+          break;
       }
     }
   }
-//   if(pr_tipo_formulario = "1"){
-//     navigation.navigate("Stepper_PF");
-//     }
-//     else if(pr_tipo_formulario === "2" ){
-//         navigation.navigate("Stepper_rrf");
-//     }
-//     if(pr_tipo_formulario === "4" ){
-//         navigation.navigate("Stepper_PF_D");
-//     }
+  //   if(pr_tipo_formulario = "1"){
+  //     navigation.navigate("Stepper_PF");
+  //     }
+  //     else if(pr_tipo_formulario === "2" ){
+  //         navigation.navigate("Stepper_rrf");
+  //     }
+  //     if(pr_tipo_formulario === "4" ){
+  //         navigation.navigate("Stepper_PF_D");
+  //     }
   useEffect(() => {
     db.transaction(
       (tx) => {
@@ -127,111 +131,6 @@ const HomeScreen = ({ navigation }) => {
     );
   }, []);
   ///////////////////////////////////////////////////
-  const searchFilterFunction = (text) => {
-    // Check if searched text is not blank
-    if (text) {
-      // Inserted text is not blank
-      // Filter the masterDataSource
-      // Update FilteredDataSource
-      const newData = masterDataSource.filter(function (item) {
-        const itemData = item.pr_numero_processo
-          ? item.pr_numero_processo.toUpperCase()
-          : "".toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setFlatListItems(newData);
-      setSearch(text);
-    } else {
-      // Inserted text is blank
-      // Update FilteredDataSource with masterDataSource
-      setFlatListItems(masterDataSource);
-      setSearch(text);
-    }
-  };
-
-  const listItemView = (item) => {
-    return (
-      <Card containerStyle={{ padding: 0 }}>
-        <TouchableOpacity
-          style={styles.item}
-          key={item.codigo}
-          onPress={() =>
-            onPress(
-              item.pr_numero_processo,
-              item.rq_nome,
-              item.pr_codigo,
-              item.rq_tipo_pessoa,
-              item.pr_tipo_formulario
-            )
-          }
-        >
-          <View style={styles.iconText}>
-            <View
-              style={{
-                top: 15,
-                padding: 6,
-                backgroundColor: "white",
-                borderRadius: 17,
-                width: 35,
-                height: 35,
-              }}
-            >
-              <Icon
-                //solid
-                size={23}
-                color="#4d94ff"
-                name="file-document-outline"
-              />
-            </View>
-
-            <Text style={styles.title}>
-              {item.pr_numero_processo.toUpperCase()}
-            </Text>
-          </View>
-          <View style={styles.dadosStyle}>
-            <Text style={styles.titleRq}>{item.rq_cpf} |</Text>
-
-            <Text style={styles.titleRq} key={item.rq_tipo_pessoa}>
-
-              {item.rq_tipo_pessoa == "f" ? (
-                <Text>
-
-            <Text>{item.pr_tipo_formulario == "1" ?<Text> Regularização Fundiária Urbano | PF</Text>: null }</Text>
-
-            <Text>{item.pr_tipo_formulario == "2" ?<Text> Regularização Fundiária Rural | PF </Text>: null }</Text>
-
-            <Text>{item.pr_tipo_formulario == "3" ?<Text> Administrativo | PF </Text>: null }</Text>
-
-            <Text> {item.pr_tipo_formulario == "4" ?<Text> Desapropriação URBANO | PF </Text>: null }</Text>
-
-            <Text>{item.pr_tipo_formulario == "5" ?<Text> Desapropriação RURAL| PF </Text>: null }</Text>
-                </Text>
-              ) : (
-                <Text>
-                    <Text>{item.pr_tipo_formulario == "1" ?<Text> Regularização Fundiária Urbano | PJ</Text>: null }</Text>
-
-                    <Text>{item.pr_tipo_formulario == "2" ?<Text> Regularização Fundiária Rural | PJ </Text>: null }</Text>
-
-                    <Text>{item.pr_tipo_formulario == "3" ?<Text> Administrativo | PJ </Text>: null }</Text>
-
-                    <Text> {item.pr_tipo_formulario == "4" ?<Text> Desapropriação URBANO | PJ </Text>: null }</Text>
-
-                    <Text>{item.pr_tipo_formulario == "5" ?<Text> Desapropriação RURAL| PJ </Text>: null }</Text>
-                </Text>
-              )}
-            </Text>
-            <View style={{ bottom: 9 }}>
-              <Button
-                type="clear"
-                icon={<Icon name="arrow-right" size={15} color="#4d94ff" />}
-              />
-            </View>
-          </View>
-        </TouchableOpacity>
-      </Card>
-    );
-  };
 
   function CustomDrawerContent(props) {
     return (
@@ -257,41 +156,33 @@ const HomeScreen = ({ navigation }) => {
   function Inicio() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.topBar}>
-          <BorderlessButton onPress={() => navigation.navigate("Menu")}>
-            <Icon name={"arrow-left"} size={25} color="black" />
-          </BorderlessButton>
-        </View>
         <View>
-          <SearchBar
-            placeholder="Pesquise aqui..."
-            onChangeText={(text) => searchFilterFunction(text)}
-            onClear={(text) => searchFilterFunction("")}
-            value={search}
-            lightTheme={true}
-            round={true}
-            inputStyle={{ backgroundColor: "white" }}
-            containerStyle={{
-              backgroundColor: "white",
-              top: 5,
-              marginLeft: 40,
-              marginRight: 40,
-              borderRadius: 15,
-            }}
-            //placeholderTextColor={'#g5g5g5'}
-            inputContainerStyle={{ backgroundColor: "white" }}
-            //containerStyle={{backgroundColor:'false', }}
-          />
-          <Text style={{ paddingLeft: 15, top: 25 }}>Processos</Text>
 
-          {error.length !== 0 && <ErrorMessage>{error}</ErrorMessage>}
 
-          <FlatList
-            style={styles.listView}
-            data={flatListItems}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => listItemView(item)}
-          />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("HomeScreen")}
+          >
+            <Image
+              style={styles.tinyLogo}
+              source={require("../../assets/management1.png")}
+            />
+
+            <Text style={styles.text}>SOCIOECONÔMICO</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("vs_HomeScreen")}
+          >
+            <IconAntDesign
+              name={"linechart"}
+              size={25}
+              color="#000000"
+              style={styles.btnIcon}
+            />
+            <Text style={styles.text}>VISTORIA</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.footer}>
           <TouchableOpacity
@@ -302,20 +193,20 @@ const HomeScreen = ({ navigation }) => {
               name={"camera"}
               size={35}
               color="white"
-              style={styles.btnIcon}
+              //   style={styles.btnIcon}
             />
             <Text style={{ color: "white", fontSize: 16 }}>Camera</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.button1}
-            onPress={() => navigation.navigate("Sincronizacao")}
+            //onPress={() => navigation.navigate("Sincronizacao")}
           >
             <IconFont
               name={"exchange"}
               size={35}
               color="white"
-              style={styles.btnIcon}
+              // style={styles.btnIcon}
             />
             <Text style={{ color: "white", fontSize: 16 }}>sincronização</Text>
           </TouchableOpacity>
@@ -328,7 +219,7 @@ const HomeScreen = ({ navigation }) => {
               name={"edit"}
               size={35}
               color="white"
-              style={styles.btnIcon}
+              //style={styles.btnIcon}
             />
             <Text style={{ color: "white", fontSize: 16 }}>produção</Text>
           </TouchableOpacity>
@@ -341,7 +232,7 @@ const HomeScreen = ({ navigation }) => {
               name={"wrench"}
               size={35}
               color="white"
-              style={styles.btnIcon}
+              // style={styles.btnIcon}
             />
             <Text style={{ color: "white", fontSize: 16 }}>config</Text>
           </TouchableOpacity>
@@ -352,6 +243,38 @@ const HomeScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  tinyLogo: {
+    width: 40,
+    height: 40,
+  },
+  text: {
+    marginTop: 5,
+    color: "black",
+    fontWeight: "bold",
+    fontSize: 10,
+  },
+  btnIcon: {
+    height: 25,
+    width: 30,
+
+    alignItems: "center",
+    textAlign: "center",
+  },
+  button: {
+    height: 100,
+    width: "auto",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "white",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    padding: 10,
+    margin: 20,
+    borderRadius: 5,
+  },
   topBar: {
     left: 3,
     top: 60,
@@ -454,4 +377,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default Listagem;

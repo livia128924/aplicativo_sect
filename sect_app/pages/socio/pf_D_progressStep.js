@@ -1,18 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, StyleSheet, Text, Button, AsyncStorage, ScrollView } from 'react-native';
 import api from '../../services/api';
-import Step1 from '../components/duf/Step1';
-import Step2 from '../components/duf/Step2';
-import Step3 from '../components/duf/Step3';
-import Step4 from '../components/duf/Step4';
-import Step5 from '../components/duf/Step5';
-import Step6 from '../components/duf/Step6';
-import Swiper from 'react-native-swiper';
+import Step1 from '../components/tipos_forms/duf/Step1';
+import Step2 from '../components/tipos_forms/duf/Step2';
+import Step3 from '../components/tipos_forms/duf/Step3';
+import Step4 from '../components/tipos_forms/duf/Step4';
+import Step5 from '../components/tipos_forms/duf/Step5';
+import Step6 from '../components/tipos_forms/duf/Step6';
+import Step7 from '../components/tipos_forms/ruj/Step7';
+
 const db = DatabaseConnection.getConnection();
-import { DatabaseConnection } from '../database/database';
+import { DatabaseConnection } from '../../database/database';
 import  ProgressSteps from './ProgressSteps/ProgressSteps'
 import ProgressStep  from './ProgressSteps/ProgressStep';
-import Step7 from '../components/ruj/Step7';
 
 function IndexPF_D({ navigation }) {
 
@@ -24,8 +24,6 @@ function IndexPF_D({ navigation }) {
       setProcesso(value_prss);
       prss=value_prss;
       //console.log("variavel", prss);
-
-
   });
     AsyncStorage.getItem('rq_nome').then(value_nome => {
       //console.log(value_nome);

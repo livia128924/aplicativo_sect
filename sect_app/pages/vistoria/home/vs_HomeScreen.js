@@ -14,14 +14,14 @@ import IconFont from "react-native-vector-icons/FontAwesome";
 import { SearchBar } from "react-native-elements";
 import { BorderlessButton } from "react-native-gesture-handler";
 const db = DatabaseConnection.getConnection();
-import { DatabaseConnection } from "../database/database";
+import { DatabaseConnection } from "../../database/database";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { ErrorMessage } from "./login/styles";
+//import { ErrorMessage } from "./login/styles";
 import { Card } from "react-native-elements/dist/card/Card";
 
 ///////////////////////
@@ -29,7 +29,7 @@ const Drawer = createDrawerNavigator();
 
 //////////////////////////
 
-const HomeScreen = ({ navigation }) => {
+const VShome = ({ navigation }) => {
   const [selectedId, setSelectedId] = useState(null);
   const [flatListItems, setFlatListItems] = useState([]);
   const [masterDataSource, setMasterDataSource] = useState([]);
@@ -52,36 +52,10 @@ const HomeScreen = ({ navigation }) => {
     AsyncStorage.setItem("rq_nome", rq_nome);
 
     if (rq_tipo_pessoa === "j") {
-        switch (pr_tipo_formulario) {
-            case "1":
-              navigation.navigate("Stepper_PJ");
-            break;
-            case  "2" :
-            navigation.navigate("Stepper_rrj");
-            break;
-            case "4":
-            navigation.navigate("Stepper_PF_D");
-            break;
-            default:
-                console.log("nao encontrado!");
-                break;
-        }
+     // navigation.navigate("Vu_PJ");
 
     } else if (rq_tipo_pessoa === "f") {
-      switch (pr_tipo_formulario) {
-          case "1":
-            navigation.navigate("Stepper_PF");
-            break;
-            case "2" :
-            navigation.navigate("Stepper_rrf");
-            break;
-            case "4":
-             navigation.navigate("Stepper_PF_D");
-             break;
-          default:
-              console.log("nao encontrado!");
-              break;
-      }
+      navigation.navigate("VuPFprogressSteps");
     }
   }
 //   if(pr_tipo_formulario = "1"){
@@ -97,7 +71,7 @@ const HomeScreen = ({ navigation }) => {
     db.transaction(
       (tx) => {
         tx.executeSql(
-          "SELECT *, p.codigo AS pr_codigo FROM pr p LEFT JOIN rq r ON r.codigo = p.pr_requerente ",
+          "SELECT *, p.codigo AS pr_codigo FROM pr p LEFT JOIN rq r ON r.codigo = p.pr_requerente",
           [],
           (tx, results) => {
             //var len = results.rows.length, i;
@@ -197,27 +171,17 @@ const HomeScreen = ({ navigation }) => {
               {item.rq_tipo_pessoa == "f" ? (
                 <Text>
 
-            <Text>{item.pr_tipo_formulario == "1" ?<Text> Regularização Fundiária Urbano | PF</Text>: null }</Text>
+            <Text>{item.pr_tipo_formulario == "1" ?<Text> Vistoria Urbano | PF</Text>: null }</Text>
 
-            <Text>{item.pr_tipo_formulario == "2" ?<Text> Regularização Fundiária Rural | PF </Text>: null }</Text>
+            <Text>{item.pr_tipo_formulario == "2" ?<Text> Vistoria Rural | PF </Text>: null }</Text>
 
-            <Text>{item.pr_tipo_formulario == "3" ?<Text> Administrativo | PF </Text>: null }</Text>
-
-            <Text> {item.pr_tipo_formulario == "4" ?<Text> Desapropriação URBANO | PF </Text>: null }</Text>
-
-            <Text>{item.pr_tipo_formulario == "5" ?<Text> Desapropriação RURAL| PF </Text>: null }</Text>
                 </Text>
               ) : (
                 <Text>
-                    <Text>{item.pr_tipo_formulario == "1" ?<Text> Regularização Fundiária Urbano | PJ</Text>: null }</Text>
+            <Text>{item.pr_tipo_formulario == "1" ?<Text> Vistoria Urbano | PJ</Text>: null }</Text>
 
-                    <Text>{item.pr_tipo_formulario == "2" ?<Text> Regularização Fundiária Rural | PJ </Text>: null }</Text>
+            <Text>{item.pr_tipo_formulario == "2" ?<Text> Vistoria Rural | PJ </Text>: null }</Text>
 
-                    <Text>{item.pr_tipo_formulario == "3" ?<Text> Administrativo | PJ </Text>: null }</Text>
-
-                    <Text> {item.pr_tipo_formulario == "4" ?<Text> Desapropriação URBANO | PJ </Text>: null }</Text>
-
-                    <Text>{item.pr_tipo_formulario == "5" ?<Text> Desapropriação RURAL| PJ </Text>: null }</Text>
                 </Text>
               )}
             </Text>
@@ -284,7 +248,7 @@ const HomeScreen = ({ navigation }) => {
           />
           <Text style={{ paddingLeft: 15, top: 25 }}>Processos</Text>
 
-          {error.length !== 0 && <ErrorMessage>{error}</ErrorMessage>}
+          {/* {error.length !== 0 && <ErrorMessage>{error}</ErrorMessage>} */}
 
           <FlatList
             style={styles.listView}
@@ -454,4 +418,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default VShome;
