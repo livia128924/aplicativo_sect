@@ -1,6 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import {RectButton} from "react-native-gesture-handler";
+import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function index({navigation}) {
@@ -9,18 +8,22 @@ export default function index({navigation}) {
         navigation.navigate("Patrimonio - cadastrar");
     }
 
+    const handleConsultarPatrimonio = () => {
+        navigation.navigate("Patrimonio - consultar");
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.buttonsContainer}>
-                <RectButton style={[styles.button]} onPress={handleCadastroCamera}>
-                    <Icon name="qr-code-outline" size={30} color="#042"/>
+                <TouchableOpacity style={[styles.button]} onPress={handleCadastroCamera}>
+                    <Icon name="qr-code-outline" size={35} style={styles.buttonIcon}/>
                     <Text style={styles.buttonText}>Cadastrar patrimonio </Text>
-                </RectButton>
+                </TouchableOpacity>
 
-                <RectButton style={[styles.button]}>
-                    <Icon name="search-outline" size={30} color="#042"/>
+                <TouchableOpacity style={[styles.button]} onPress={handleConsultarPatrimonio}>
+                    <Icon name="clipboard-outline" size={35} style={styles.buttonIcon}/>
                     <Text style={styles.buttonText}>Consultar patrimonio</Text>
-                </RectButton>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -29,19 +32,21 @@ export default function index({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 40,
+        padding: 20,
     },
 
     buttonsContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         marginTop: 40,
         justifyContent: 'space-between',
+        alignItems: "center",
     },
 
+
     button: {
-        height: 150,
-        width: '48%',
-        backgroundColor: 'white',
+        height: 170,
+        width: '80%',
+        backgroundColor: '#28a745',
         borderRadius: 8,
         padding: 10,
         justifyContent: 'center',
@@ -51,15 +56,20 @@ const styles = StyleSheet.create({
             width: 3,
             height: 3
         },
-        elevation: 5,
-        shadowOpacity: 0.8,
+        elevation: 3,
+        shadowOpacity: 0.6,
+        marginBottom: 20,
     },
 
     buttonText: {
         marginTop: 10,
-        fontSize: 16,
-        color: '#444',
+        fontSize: 19,
+        color: '#FFFFFF',
         fontWeight: "600"
+    },
+
+    buttonIcon: {
+        color: "#FFFFFF",
     }
 
 });

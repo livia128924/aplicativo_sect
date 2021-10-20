@@ -11,7 +11,7 @@ import {
     LogBox,
     Image,
     Alert,
-    Button, Dimensions
+    Dimensions
 } from 'react-native';
 import {BarCodeScanner} from 'expo-barcode-scanner';
 import axios from 'axios';
@@ -142,8 +142,9 @@ export default function cadastro({navigation}) {
 
 
             if (status) {
-                var categorias_temp = [];
 
+                var categorias_temp = [];
+                setImagemList([]);
                 dados.auxiliares.categorias.map((item, index) => {
                     categorias_temp.push(item);
                 });
@@ -174,7 +175,7 @@ export default function cadastro({navigation}) {
                     setCodPatrimonio(dados.pat_patrimonio.codigo);
 
                     if (dados.pat_patrimonio.imagens) {
-                        setImagemList([]);
+
                         dados.pat_patrimonio.imagens.map((image, index) => {
                             setImagemList(prev => [...prev, {
                                 nome: image.nome,
@@ -361,7 +362,6 @@ export default function cadastro({navigation}) {
     return (
         <ScrollView style={styles.container}>
 
-            {/* Modal da Camera de selecionar departamento */}
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -508,7 +508,15 @@ export default function cadastro({navigation}) {
 
                                         <View style={styles.inputContainer}>
                                             <Text>Ação</Text>
-                                            <Text style={styles.textBold}>{patrimonio.acao}</Text>
+                                            <Text style={styles.textBold}>{
+                                                (() => {
+                                                    if (patrimonio.acao === "alterar") {
+                                                        return "Atualizar";
+                                                    } else {
+                                                        return "Cadastrar";
+                                                    }
+                                                })()
+                                            }</Text>
                                         </View>
 
                                         <View style={styles.inputContainer}>
