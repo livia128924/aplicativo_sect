@@ -14,14 +14,13 @@ import {
     Dimensions
 } from 'react-native';
 import {BarCodeScanner} from 'expo-barcode-scanner';
-import axios from 'axios';
+import api from '../../services/api_sect';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Gallery from 'react-native-image-gallery';
 import {Camera} from 'expo-camera';
 
 export default function cadastro({navigation}) {
-
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const [scannedPat, setScannedPat] = useState(false);
@@ -89,7 +88,7 @@ export default function cadastro({navigation}) {
     };
 
     const handleScannedDep = async ({type, data}) => {
-        await axios.post("http://192.168.0.151:8082/_apps/app_teste/patrimonio/consultar_departamento.php", {qr_code: data})
+        await api.post("patrimonio/consultar_departamento.php", {qr_code: data})
             .then(function (response) {
 
                 const {status, msg, dados} = response.data;
@@ -136,7 +135,7 @@ export default function cadastro({navigation}) {
         setScannedPat(true);
         setModalVisible(!modalVisible);
 
-        await axios.post("http://192.168.0.151:8082/_apps/app_teste/patrimonio/patrimonio.php",
+        await api.post("patrimonio/patrimonio.php",
             {qr_code: data, local, departamento, acao: "ler_patrimonio"}).then(function (response) {
             const {status, msg, dados, acao} = response.data;
 
@@ -213,7 +212,7 @@ export default function cadastro({navigation}) {
             patrimonio.fotos.push(item.source.uri);
         });
 
-        await axios.post("http://192.168.0.151:8082/_apps/app_teste/patrimonio/inserir_patrimonio.php", patrimonio)
+        await api.post("patrimonio/inserir_patrimonio.php", patrimonio)
             .then(function (response) {
                 const {status, msg, novo, dados} = response.data;
 
@@ -295,7 +294,7 @@ export default function cadastro({navigation}) {
                     onPress: async () => {
 
                         if (!imagemList[imageSelected].novo) {
-                            await axios.post("http://192.168.0.151:8082/_apps/app_teste/patrimonio/patrimonio.php", {
+                            await api.post("patrimonio/patrimonio.php", {
                                 acao: "remover_foto",
                                 nome: nome,
                                 codigo: codigo,

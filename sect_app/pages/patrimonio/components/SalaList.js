@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View} from "react-native";
+import {View} from "react-native";
 import {DataTable, Paragraph} from "react-native-paper";
 import PatrimonioList from "./PatrimonioList";
 

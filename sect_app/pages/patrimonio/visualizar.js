@@ -9,7 +9,7 @@ import {
     Modal,
     TouchableOpacity
 } from 'react-native';
-import axios from 'axios';
+import api from '../../services/api_sect';
 import {Paragraph, Title} from "react-native-paper";
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -26,7 +26,7 @@ function Visualizar({navigation, route}) {
     }, []);
 
     async function loadPatrimonio() {
-        const response = await axios.get("http://192.168.0.151:8082/_apps/app_teste/patrimonio/consultar_patrimonio.php", {
+        const response = await api.get("patrimonio/consultar_patrimonio.php", {
             params: {codigo, acao: "visualizar"}
         });
 

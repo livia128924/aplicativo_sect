@@ -2,11 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from "react-native-vector-icons/Ionicons";
 import {BarCodeScanner} from "expo-barcode-scanner";
-import axios from 'axios';
+import api from '../../services/api_sect';
 import PisoList from "./components/PisoList";
 import SalaList from "./components/SalaList";
 import DepartamentoList from "./components/DepartamentoList";
-import {Title} from "react-native-paper";
+
 
 function Consultar({navigation}) {
     const [hasPermission, setHasPermission] = useState('');
@@ -30,7 +30,7 @@ function Consultar({navigation}) {
     const handleScanned = async ({type, data}) => {
         setOpenModalCamera(!openModalCamera);
 
-        await axios.get("http://192.168.0.151:8082/_apps/app_teste/patrimonio/consultar_patrimonio.php",
+        await api.get("patrimonio/consultar_patrimonio.php",
             {
                 params: {
                     qrcode: data,

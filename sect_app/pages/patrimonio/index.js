@@ -14,6 +14,7 @@ export default function index({navigation}) {
 
     return (
         <View style={styles.container}>
+
             <View style={styles.buttonsContainer}>
                 <TouchableOpacity style={[styles.button]} onPress={handleCadastroCamera}>
                     <Icon name="qr-code-outline" size={35} style={styles.buttonIcon}/>
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
         height: 170,
         width: '80%',
         backgroundColor: '#28a745',
-        borderRadius: 8,
+        borderRadius: 15,
         padding: 10,
         justifyContent: 'center',
         alignItems: "center",
@@ -56,8 +57,8 @@ const styles = StyleSheet.create({
             width: 3,
             height: 3
         },
-        elevation: 3,
-        shadowOpacity: 0.6,
+        elevation: 1,
+        shadowOpacity: 0.4,
         marginBottom: 20,
     },
 
