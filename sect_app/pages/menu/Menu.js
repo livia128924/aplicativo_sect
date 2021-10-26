@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Button } from "react-native-elements";
 import Mybutton from "../components/Mybutton";
-
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -20,7 +20,7 @@ import {
   DrawerItem,
 } from "@react-navigation/drawer";
 import MybuttonMaterial from "../components/MyButtonMaterial";
-import Icon from "react-native-vector-icons/Ionicons";
+//import Icon from "react-native-vector-icons/Ionicons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Avatar } from "react-native-elements/dist/avatar/Avatar";
 import { Badge } from "react-native-elements/dist/badge/Badge";
@@ -53,16 +53,52 @@ const Menu = ({ navigation }) => {
             >
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                  <Text style={styles.modalText}>Hello World!</Text>
+                  <View style={{width:140, alignItems:"flex-end"}}>
                   <Pressable
-                    style={[styles.buttonModal, styles.buttonClose]}
+                    style={{ }}
                     onPress={() => setModalVisible(!modalVisible)}
-                  >
-                    <Text style={styles.textStyle}>Hide Modal</Text>
+                    >
+                    <Icon name="close" size={40} color="#4d94ff" />
+                    {/* <Text style={styles.textStyle}>Hide Modal</Text> */}
                   </Pressable>
+                    </View>
+
+                  {/* <Icon name="close" size={30} color="#4d94ff" /> */}
+                  <View>
+                    <View
+                      style={{ flexDirection: "row"}}
+                    >
+                      <Icon name="account-edit" size={25} color="#4d94ff" />
+
+                      <Pressable onPress={() => alert("ola")}>
+                        <View></View>
+                        <Text style={styles.modalText}>Editar Cadastro</Text>
+                      </Pressable>
+                    </View>
+
+                    <View
+                      style={{ flexDirection: "row"}}
+                    >
+                      <Icon name="key-variant" size={25} color="#4d94ff" />
+                      <Pressable onPress={() => alert("alterar senha")}>
+                        <Text style={styles.modalText}>Alterar Senha</Text>
+                      </Pressable>
+                    </View>
+
+                    <View
+                      style={{ flexDirection: "row" }}
+                    >
+                      <Icon name="account-off" size={25} color="#4d94ff" />
+
+                      <Pressable onPress={() => alert("sair")}>
+                        <Text style={styles.modalText}>Sair</Text>
+                      </Pressable>
+                    </View>
+                  </View>
                 </View>
               </View>
             </Modal>
+
             <View style={styles.buttonModalShow}>
               <TouchableOpacity onPress={() => setModalVisible(true)}>
                 {/* <Text style={styles.textStyle}>Showww Modal</Text> */}
@@ -94,24 +130,12 @@ const Menu = ({ navigation }) => {
             <View style={styles.container}>
               <Mybutton
                 title="Processos"
-               customClick={() => navigation.navigate("Listagem")}
+                customClick={() => navigation.navigate("Listagem")}
                 icon="group"
               />
-              <Mybutton
-                title=""
-                customClick={() => alert("ok")}
-                icon="image"
-              />
-              <Mybutton
-                title=""
-                customClick={() => alert("ok")}
-                icon="image"
-              />
-              <Mybutton
-                title=""
-                customClick={() => alert("ok")}
-                icon="image"
-              />
+              <Mybutton title="" customClick={() => alert("ok")} icon="image" />
+              <Mybutton title="" customClick={() => alert("ok")} icon="image" />
+              <Mybutton title="" customClick={() => alert("ok")} icon="image" />
             </View>
           </View>
         </View>
@@ -134,10 +158,13 @@ const styles = StyleSheet.create({
     top: 22,
   },
   modalView: {
-    margin: 20,
+    //margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    //padding: 20,
+    paddingLeft:20,
+    paddingRight:20,
+    paddingBottom:20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -156,11 +183,10 @@ const styles = StyleSheet.create({
   buttonModalShow: {
     width: 80,
     height: 60,
-
     //padding: 10,
     //elevation: 2,
     left: 150,
-    top: 20,
+    top: 50,
     //backgroundColor: "red",
   },
   buttonOpen: {
@@ -175,8 +201,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   modalText: {
+    alignItems: "flex-start",
+    fontSize: 15,
     marginBottom: 15,
-    textAlign: "center",
+    //textAlign:" left",
   },
   icon3Row: {
     height: 65,

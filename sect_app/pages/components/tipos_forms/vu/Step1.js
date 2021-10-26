@@ -17,6 +17,8 @@ const Step1 = (props) => {
   const [dados_valor, setDados_valor] = useState("");
   const [vu_ocupacao_data, set_vu_ocupacao_data] = useState("");
   const [unmasked, setUnmasked] = useState("");
+
+  const [vu_ocupacao_benfeitoria_outros, set_vu_ocupacao_benfeitoria_outros] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
 
   const [open_vu_superficie, setOpen_vu_superficie] = useState(false);
@@ -45,28 +47,6 @@ const Step1 = (props) => {
   const [item_vu_terreno_depressao, setItem_vu_terreno_depressao] = useState(
     []
   );
-
-  const [open_vu_ocupacao_reside, setOpen_vu_ocupacao_reside] = useState(false);
-  const [valor_vu_ocupacao_reside, setValor_vu_ocupacao_reside] =
-    useState(null);
-  const [item_vu_ocupacao_reside, setItem_vu_ocupacao_reside] = useState([
-    { label: "Sim", value: "s" },
-    { label: "Nao", value: "n" },
-  ]);
-
-  const [date, setDate] = useState("");
-  const [dateInfo, updateDateInfo] = React.useState({
-    date: new Date(),
-    show: false,
-    mode: "date",
-  });
-  const changeShowMode = () => {
-    updateInfo({ show: true, mode: "date" });
-  };
-  const updateInfo = (info) => {
-    updateDateInfo({ ...dateInfo, ...info });
-  };
-  const handleReservation = () => {};
 
   useEffect(() => {
     var cod_processo = "";
@@ -166,6 +146,7 @@ const Step1 = (props) => {
           }
           setItem_vu_terreno_depressao(temp);
         });
+
       },
       (err) => {
         console.error("There was a problem with the tx", err);
@@ -343,100 +324,7 @@ const Step1 = (props) => {
         </View>
       </View>
       {/* /////////////////////////////////////modal */}
-      {dateInfo.show && (
-      <DateTimePicker
-        value={dateInfo.date}
-        display="default"
-        mode={dateInfo.mode}
-        maximumDate={new Date()}
-        minuteInterval={30}
-        onChange={(event, dateTime) => {
-          if (dateTime === undefined) {
-            updateInfo({ show: false });
-          } else if (dateInfo.mode === "time") {
-            let timeDate = moment(dateTime);
-            updateInfo({
-              show: false,
-              mode: "date",
-              date: moment(dateInfo.date)
-                .set("hour", timeDate.get("hour"))
-                .set("minute", timeDate.get("minute"))
-                .set("minute", timeDate.get("second"))
-                .toDate()
-            });
-          } else {
-            updateInfo({ mode: "time", date: dateTime });
-          }
-        }}
-      />
-      )}
-      {/* ///////////////////////////////////// */}
 
-      <View style={styles.form_step1}>
-        <View style={styles.rect2}>
-          <Text style={styles.titulo}>DADOS RELATIVOS A OCUPAÇÃO</Text>
-        </View>
-
-        <View style={styles.municipio}>
-          <Text>Reside no Imóvel?</Text>
-        </View>
-        <View style={{ alignSelf: "center", alignContent: "center" }}>
-          <DropDownPicker
-            style={styles.abrangencia}
-            open={open_vu_ocupacao_reside}
-            value={parseInt(valor_vu_ocupacao_reside)}
-            items={item_vu_ocupacao_reside}
-            setOpen={setOpen_vu_ocupacao_reside}
-            setValue={setValor_vu_ocupacao_reside}
-            setItems={setItem_vu_ocupacao_reside} //aux_acesso
-            //dropDownDirection='BOTTOM'
-            onChangeValue={() =>
-              onPressTitle(
-                "vu",
-                "vu_ocupacao_reside",
-                valor_vu_ocupacao_reside,
-                sync
-              )
-            }
-            listMode="SCROLLVIEW"
-            placeholder="Selecione:"
-          />
-        </View>
-
-        <View style={styles.municipio}>
-          <Text>Data da ocupação</Text>
-        </View>
-
-        <TouchableOpacity
-          style={{ alignItems: "center" }}
-          onPress={() => changeShowMode()}
-        >
-          <TextInputMask
-            style={styles.input_style}
-            type={"datetime"}
-            options={{
-              format: "YYYY/MM/DD",
-            }}
-            //  onPressIn={() => {
-            //   alert("ok");}}
-            value={vu_ocupacao_data}
-            onChangeText={set_vu_ocupacao_data}
-            ref={(ref) => setUnmasked(ref)}
-            placeholder="   00/00/0000"
-            onBlur={() => {
-              alert(unmasked.getRawValue());
-              // console.log(se_ruf_valor_beneficio);
-              // mask();
-              // onPressTitle(
-              //   "vu",
-              //   "vu_ocupacao_data",
-              //   unmasked.getRawValue(), //retira o R$
-              //   sync
-              // );
-            }}
-          />
-        </TouchableOpacity>
-      </View>
     </>
   );
 };

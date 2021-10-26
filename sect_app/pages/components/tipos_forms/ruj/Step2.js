@@ -220,29 +220,16 @@ const Step2 = (props) => {
    }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {/* <ScrollView
-        style={{ flex: 1, flexGrow: 1 }}
-        contentContainerStyle={{ flexGrow: 1 }}
-      > */}
+    <>
       <View
-        style={{
-          width: '95%',
-          left:11,
-          height: 120,
-         // marginLeft: 25,
-          borderWidth: 1,
-          borderColor: "rgba(74,144,226,1)",
-          borderRadius: 3,
-          flex: 1,
-        }}
-      >
+        style={styles.form}>
         <View style={styles.rect2}>
           <Text style={styles.titulo}>INÍCIO DAS ATIVIDADES</Text>
         </View>
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
           zIndex={openDescricao ? 9999 : 0}
-          style={styles.atividade}
+          style={styles.NaturezaAtv}
           open={openDescricao}
           value={parseInt(valorAtividade)}
           items={itemDescricao}
@@ -260,20 +247,12 @@ const Step2 = (props) => {
           listMode="MODAL"
           placeholder="Selecione::"
         />
+        </View>
       </View>
 
-<View style={{flex:1, zIndex:1}}>
+
       <View
-        style={{
-          width: '95%',
-          left:11,
-          height: 450,
-         // marginLeft: 25,
-          marginTop: 10,
-          borderWidth: 1,
-          borderColor: "rgba(74,144,226,1)",
-          borderRadius: 3,
-        }}
+        style={styles.form}
       >
         <View style={styles.rect2}>
           <Text style={styles.titulo}>
@@ -285,7 +264,7 @@ const Step2 = (props) => {
         </View>
 
 
-<View style={{ left:35}}>
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
           zIndex={openNaturezaAtv ? 9999 : 0}
           style={styles.NaturezaAtv}
@@ -380,9 +359,8 @@ const Step2 = (props) => {
           />
            </View>
       </View>
-      </View>
       {/* </ScrollView> */}
-    </SafeAreaView>
+    </>
   );
 };
 
@@ -402,21 +380,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "white",
   },
-  form4: {
-    // width: 340,
-    // height: 450,
-    // marginLeft: 25,
-    // marginTop: 10,
-    // borderWidth: 1,
-    // borderColor: "rgba(74,144,226,1)",
-    // borderRadius: 3,
-    // zIndex:1
+  form: {
+    width: "95%",
+    height: "auto",
+    paddingBottom: 10,
+    marginTop:10,
+    //marginLeft: 20,
+    borderWidth: 1,
+    borderColor: "rgba(74,144,226,1)",
+    borderRadius: 3,
   },
   NaturezaAtv: {
-    marginTop: 5,
     height: 40,
-    width: "85%",
-    marginLeft: 30,
+    //width: "85%",
+    //marginLeft: 30,
+    //height: 40,
+    marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,
   },

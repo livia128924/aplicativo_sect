@@ -9,8 +9,7 @@ import Step2 from '../../components/tipos_forms/vu/Step2';
 import Step3 from '../../components/tipos_forms/vu/Step3';
 import Step4 from '../../components/tipos_forms/vu/Step4';
 import Step5 from '../../components/tipos_forms/vu/Step5';
-import Step6 from '../../components/tipos_forms/vu/Step6';
-import Step7 from '../../components/tipos_forms/vu/Step7';
+
 
 const db = DatabaseConnection.getConnection();
 import { DatabaseConnection } from '../../database/database';
@@ -96,15 +95,6 @@ function Vu_PF_progressSteps({ navigation }) {
           <Step2 />
 
         </ProgressStep>
-        <ProgressStep
-          label="Discriminacao e croqui"
-          onPrevious={onPrevStep}
-          onNext={onNextStep}
-          previousBtnText={ 'voltar'}
-          nextBtnText={'próximo'}
-        >
-          <Step3 />
-        </ProgressStep>
 
         <ProgressStep
           label="Anexos ODS"
@@ -118,7 +108,7 @@ function Vu_PF_progressSteps({ navigation }) {
         </ProgressStep>
 
         <ProgressStep
-          label="Relatorio Imagens"
+          label="Relatorio fotografico"
           onPrevious={onPrevStep}
           onNext={onNextStep}
           scrollable={true}
@@ -126,19 +116,6 @@ function Vu_PF_progressSteps({ navigation }) {
           nextBtnText={'próximo'}
         >
           <Step5 />
-        </ProgressStep>
-
-          <ProgressStep
-          label="Relatorio     Fotografico   "
-          onPrevious={onPrevStep}
-          onNext={onNextStep}
-          scrollable={true}
-          previousBtnText={ 'voltar'}
-          nextBtnText={'próximo'}
-        >
-          <Step7
-          navigation= {navigation}
-          />
         </ProgressStep>
       </ProgressSteps>
 

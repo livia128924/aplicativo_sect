@@ -207,12 +207,12 @@ export default function App({navigation}) {
               <FontAwesome name='window-close' size={50} color='#FF0000'/>
             </TouchableOpacity>
 
-            <TouchableOpacity style={{margin: 10}} onPress={ console.log("ok") }>
+            {/* <TouchableOpacity style={{margin: 10}} onPress={ console.log("ok") }>
               <FontAwesome name='upload' size={50} color='#121212'/>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity style={{margin: 10}} onPress={ savePictureCloud }>
-              <FontAwesome name='cloud' size={50} color='#121212'/>
+              <FontAwesome name='upload' size={50} color='#121212'/>
 
             </TouchableOpacity>
             </View>

@@ -201,22 +201,22 @@ console.log(valor);
           <Text style={styles.titulo}>RELATÓRIO FOTOGRÁFICO</Text>
         </View>
 
-        <View
+        <TouchableOpacity
           style={{
-            backgroundColor: "white",
-            height: 50,
+            height: "auto",
             paddingTop: 5,
             //paddingLeft: 80,
           }}
+          onPress={() => camera(sync, "se_ruj_relatorio_imagens", "se_ruj")} //passar por paramentro os campos que irao para o registro das foto
         >
           <Button
             icon="camera"
             mode="outlined"
             color="black"
-            onPress={() => camera(sync, "se_ruj_relatorio_imagens", "se_ruj")} //passar por paramentro os campos que irao para o registro das foto
-            style={{ width: "70%", borderRadius: 3, alignContent:'center', alignSelf:'center', alignItems:'center' }}
+
+            style={{ width: "70%", borderRadius: 3, alignContent:'center', alignSelf:'center', alignItems:'center'  }}
           ></Button>
-        </View>
+        </TouchableOpacity>
 
         <View>
           {dados.map((item, index) => (
@@ -289,10 +289,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   form9: {
-    width: '95%',
-    left:11,
-    //marginLeft: 25,
-    marginTop: 10,
+    width: "95%",
+    height: "auto",
+    paddingBottom: 10,
+    marginTop:10,
+    //marginLeft: 20,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,

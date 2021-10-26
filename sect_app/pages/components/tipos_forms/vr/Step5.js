@@ -6,16 +6,15 @@ import {
   View,
   TextInput,
   AsyncStorage,
-  TouchableOpacity,
   Image,
-  SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { Card, Button, Title } from "react-native-paper";
 import { DatabaseConnection } from "../../../database/database";
 const db = DatabaseConnection.getConnection();
 
-const Step7 = ({ navigation }) => {
+const Step5 = ({ navigation }) => {
   const [sync, setSync] = useState("");
   const [nome, setNome] = useState("");
   const [dados_valor, setDados_valor] = useState([]);
@@ -28,52 +27,12 @@ const Step7 = ({ navigation }) => {
   AsyncStorage.getItem("pr_codigo").then((value) => {
     setSync(value);
     cod_processo = value;
+    //console.log("codigoooo",cod_processo);
   });
 
   AsyncStorage.getItem("codigo").then((codigo) => {
     setDados_valor(codigo);
   });
-
-  useEffect(() => {
-    // var cod_processo = "";
-    // //carrega o valor do select na tela index.js
-    // AsyncStorage.getItem("pr_codigo").then((value) => {
-    //   //console.log(value);
-    //   setSync(value);
-    //   cod_processo = value;
-    // });
-
-    AsyncStorage.getItem("valor").then((res) => {
-      setDados_valor(res);
-    });
-
-    //console.log(cod_processo);
-    AsyncStorage.getItem('codigo_nome').then(res => {
-        var codigo_nome = res;
-
-      console.log("Codigo nome", codigo_nome);
-    if (dados_valor) {
-      //console.log("cheguei");
-      db.transaction((tx) => {
-        tx.executeSql(
-          "select nome from log where cod_processo = '" + cod_processo +"' and codigo = '"+ codigo_nome+"'",
-          [],
-          (tx, results) => {
-            var row = [];
-            for (let i = 0; i < results.rows.length; ++i) {
-             // setDados(results.rows);
-
-            }
-          },  function (tx, error) {
-            console.log("SELECT Log error: " + error.message);
-          }
-        );
-        console.log("select * from log where se_ruj_cod_processo = '" + cod_processo +"' and codigo = '"+ codigo_nome+"'");
-      });
-    }
-  });
-
-  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -90,19 +49,16 @@ const Step7 = ({ navigation }) => {
         "SELECT * FROM log where tipo = 'i' and cod_processo = '" + cod_processo + "' ",
         [],
         (tx, results) => {
-         // console.log(results.rows);
           var temp = [];
           //console.log("ok");
-          for (var i = 0; i < results.rows.length; ++i)
-          //console.log("ok", results.rows.item(i).nome);
+          for (let i = 0; i < results.rows.length; ++i)
             temp.push({
               key: results.rows.item(i).codigo,
               tabela: results.rows.item(i).tabela,
               image: results.rows.item(i).valor,
-              nome: results.rows.item(i).nome,
-
+              nome: results.rows.item(i).nome
             });
-           // console.log(temp)
+          //console.log(results.rows);
           setDados(temp);
         },
         function (tx, error) {
@@ -114,7 +70,7 @@ const Step7 = ({ navigation }) => {
 
   function camera(codigo_tab_camera, campo_relatorio_img, tabela) {
     //  db.transaction((tx) => {
-    //  //// tx.executeSql("delete from log", []);
+    //  // tx.executeSql("delete from log", []);
     //   //tx.executeSql("drop table log", []);
 
     //   tx.executeSql("CREATE TABLE IF NOT EXISTS log ( chave TEXT UNIQUE , codigo INTEGER, tabela TEXT, campo TEXT, valor BLOB, cod_tabela TEXT, cod_processo TEXT, data TEXT DEFAULT CURRENT_TIMESTAMP, situacao TEXT, tipo TEXT, nome TEXT, PRIMARY KEY(codigo))", []);
@@ -124,11 +80,10 @@ const Step7 = ({ navigation }) => {
     // }, (success) => {
     //   console.log("criou a tabela log", success);
     // })
-   // alert(codigo_tab_camera);
+    //alert(codigo_tab_camera);
     //"DROP TABLE foto_relatorio",[], (tx, results) => {}
     //console.log(codigo_tab_camera);
 
-    //var items = [['codigo_tab_camera', 'campo_relatorio_img', 'tabela'], [codigo_tab_camera, campo_relatorio_img, tabela]]
     var item = [
       ["codigo_tab_camera", codigo_tab_camera],
       ["campo_relatorio_img", campo_relatorio_img],
@@ -136,7 +91,7 @@ const Step7 = ({ navigation }) => {
     ];
 
     AsyncStorage.multiSet(item);
-   // console.log(item);
+
     navigation.navigate("Relatorio_camera");
   }
 
@@ -150,7 +105,7 @@ const Step7 = ({ navigation }) => {
   //         loadFotos();
   //       },
   //       function (tx, error) {
-  //         console.log("SELECT error: " + error.message);
+  //         alert("SELECT error: " + error.message);
   //       }
   //     );
   //   });
@@ -162,9 +117,9 @@ const Step7 = ({ navigation }) => {
         `delete from log where tipo = 'i' and codigo = '${codigo}'`,
         [],
         (tx, results) => {
-          // console.log(
-          //   `delete from log where tipo = 'i' and codigo = '${codigo}'`
-          // );
+          console.log(
+            `delete from log where tipo = 'i' and codigo = '${codigo}'`
+          );
           alert("Deletado com successo!");
           loadFotos();
         },
@@ -177,21 +132,15 @@ const Step7 = ({ navigation }) => {
 
   //função que aciona quando o estado do componente muda e seta os valores correspondente
   function onPressTitle(valor, codigo, codigo_tab) {
-console.log(valor);
+  console.log(valor);
 
     db.transaction((tx) => {
-      const log_delete = "UPDATE log set nome = '" + valor + "', situacao= '1'  where tipo = 'i' and codigo =  '" + codigo + "'";
-      tx.executeSql(log_delete, []);
-      console.log(log_delete);
-      //tx.executeSql(log_delete, []);
-    },
-    function (tx, error) {
-      console.log("SELECT error: " + error.message);
+      //tx.executeSql("DROP TABLE log", []);
+      const log_delete =
+        "UPDATE log set nome = '" + valor +"', situacao= '1' where tipo = 'i' and codigo =  '" + codigo + "'";
+        tx.executeSql(log_delete, []);
+console.log(" UPDATE log set nome = '" + valor +"', situacao= '1' where tipo = 'i' and codigo =  '" + codigo + "'");
     });
-
-    AsyncStorage.setItem("codigo_nome", codigo.toString());
-
-    AsyncStorage.setItem("valor", valor);
   }
 
   return (
@@ -201,25 +150,30 @@ console.log(valor);
           <Text style={styles.titulo}>RELATÓRIO FOTOGRÁFICO</Text>
         </View>
 
+
+
         <View
           style={{
-            backgroundColor: "white",
+            //backgroundColor: "red",
             height: 50,
             paddingTop: 5,
             //paddingLeft: 80,
           }}
         >
+          <TouchableOpacity onPress={() => camera(sync, "vr_relatorio_imagens", "vr")}>
           <Button
             icon="camera"
             mode="outlined"
             color="black"
-            onPress={() => camera(sync, "se_ruj_relatorio_imagens", "se_ruj")} //passar por paramentro os campos que irao para o registro das foto
-            style={{ width: "70%", borderRadius: 3, alignContent:'center', alignSelf:'center', alignItems:'center' }}
+             //passar por paramentro os campos que irao para o registro das foto
+            style={{ width: "70%", borderRadius: 3, alignContent:'center', alignSelf:'center', alignItems:'center'  }}
           ></Button>
+          </TouchableOpacity>
         </View>
 
+        {/* //////////// */}
         <View>
-          {dados.map((item, index) => (
+          {[...dados].map((item, index) => (
             <View key={item.key}>
               <Card style={{ backgroundColor: "white" }}>
                 <Title>{item.key}</Title>
@@ -252,9 +206,11 @@ console.log(valor);
                   {/* <Button color={"#4a90e2"} onPress={() => salvar(sync, item.valor, item.key)}>Salvar</Button> */}
                 </Card.Actions>
               </Card>
+
               <View>
                 <Text></Text>
               </View>
+
               {/* <Button
           icon="camera"
           mode="outlined"
@@ -288,15 +244,16 @@ const styles = StyleSheet.create({
     marginRight: 5,
     borderWidth: 1,
   },
+
   form9: {
-    width: '95%',
-    left:11,
-    //marginLeft: 25,
+    width: '92%',
+    marginLeft: 25,
     marginTop: 10,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
   },
+
   rect2: {
     width: '100%',
     height: 36,
@@ -310,4 +267,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Step7;
+export default Step5;

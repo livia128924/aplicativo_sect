@@ -751,9 +751,10 @@ const styles = StyleSheet.create({
     marginLeft: 30,
   },
   form7: {
-    width: '92%',
-    height: 1220,
-    marginLeft: 25,
+    width: "95%",
+    height: "auto",
+    paddingBottom: 10,
+    //marginLeft: 20,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,

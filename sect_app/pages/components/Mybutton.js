@@ -16,7 +16,7 @@ const Mybutton = (props) => {
 
             <IconFontAwesome
                 name={props.icon}
-                size={25}
+                size={40}
                 color='#042'
                 style={styles.btnIcon} />
             <Text style={styles.text}>
@@ -30,14 +30,13 @@ const Mybutton = (props) => {
 const styles = StyleSheet.create({
 
     btnIcon: {
-        height: 25,
-        width: 30,
-
+        height:'auto',
+        width: 'auto',
         alignItems: 'center',
         textAlign:'center'
     },
     button: {
-        height: 100,
+        height: 170,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
@@ -46,9 +45,9 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
-        padding: 10,
-        margin: 20,
-        width: 100,
+        //padding: 5,
+        margin: 10,
+        width: 160,
         borderRadius: 5,
     },
     text: {

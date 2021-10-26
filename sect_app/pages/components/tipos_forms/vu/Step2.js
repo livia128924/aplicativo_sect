@@ -7,34 +7,64 @@ import {
   AsyncStorage,
   SafeAreaView,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { TextInputMask } from "react-native-masked-text";
 import { DatabaseConnection } from "../../../database/database";
-import { Formik, useFormik } from "formik";
-import Yup from "yup";
 const db = DatabaseConnection.getConnection();
 
 const Step2 = (props) => {
   const [sync, setSync] = useState("");
   const [dados_valor, setDados_valor] = useState("");
-  const [outros, setOutros] = useState("");
-  const [comercio, setComercio] = useState("");
-  const [industria, setIndustria] = useState("");
-  const [recursosNaturais, setRecursosNaturais] = useState("");
-  const [t_I, setT_I] = useState("");
-  const [openDescricao, setOpenDescricao] = useState(false);
-  const [valorAtividade, setValorAtividade] = useState(null);
-  const [itemDescricao, setItem_aux_inicio_atividades] = useState([
-    { label: "descricao", value: "descricao" },
-    { label: "valor", value: "valor" },
+  const [unmasked, setUnmasked] = useState("");
+  const [vu_ocupacao_data, set_vu_ocupacao_data] = useState("");
+
+  const [open_vu_ocupacao_reside, setOpen_vu_ocupacao_reside] = useState(false);
+  const [valor_vu_ocupacao_reside, setValor_vu_ocupacao_reside] =
+    useState(null);
+  const [item_vu_ocupacao_reside, setItem_vu_ocupacao_reside] = useState([
+    { label: "Sim", value: "s" },
+    { label: "Nao", value: "n" },
   ]);
 
-  const [openNaturezaAtv, setOpenNaturezaAtv] = useState(false);
-  const [valorNaturezaAtv, setValorNaturezaAtv] = useState(null);
-  const [itemNaturezaAtv, setItem_aux_natureza_atividades] = useState([
-    { label: "val", value: "val" },
-    { label: "lab", value: "lab" },
+  const [open_vu_ocupacao_pacifica, setOpen_vu_ocupacao_pacifica] = useState(false);
+  const [valor_vu_ocupacao_pacifica, setValor_vu_ocupacao_pacifica] =
+    useState(null);
+  const [item_vu_ocupacao_pacifica, setItem_vu_ocupacao_pacifica] = useState([
+    { label: "Sim", value: "s" },
+    { label: "Nao", value: "n" },
   ]);
+
+  const [open_vu_ocupacao_utilizacao, setOpen_vu_ocupacao_utilizacao] = useState(false);
+  const [valor_vu_ocupacao_utilizacao, setValor_vu_ocupacao_utilizacao] = useState(null);
+  const [item_vu_ocupacao_utilizacao, setItem_vu_ocupacao_utilizacao] = useState([
+    { label: "Sim", value: "s" },
+    { label: "Nao", value: "n" },
+  ]);
+
+  const [open_vu_ocupacao_benfeitoria, setOpen_vu_ocupacao_benfeitoria] = useState(false);
+  const [valor_vu_ocupacao_benfeitoria, setValor_vu_ocupacao_benfeitoria] = useState(null);
+  const [item_vu_ocupacao_benfeitoria, setItem_vu_ocupacao_benfeitoria] = useState([]);
+
+  const [vu_ocupacao_benfeitoria_outros, set_vu_ocupacao_benfeitoria_outros] = useState("");
+
+  const [date, setDate] = useState("");
+  const [dateInfo, updateDateInfo] = React.useState({
+    date: new Date(),
+    show: false,
+    mode: "date",
+  });
+  const changeShowMode = () => {
+    updateInfo({ show: true, mode: "date" });
+  };
+  const updateInfo = (info) => {
+    updateDateInfo({ ...dateInfo, ...info });
+  };
+  const handleReservation = () => {};
+
+
 
   useEffect(() => {
     var cod_processo = "";
@@ -104,39 +134,27 @@ const Step2 = (props) => {
   async function loadStep2() {
     db.transaction(
       (tx) => {
-        tx.executeSql(
-          "select * from aux_inicio_atividades",
-          [],
-          (tx, results) => {
-            //var len = results.rows.length, i;
-            var temp = [];
-            //console.log(len);
-            for (let i = 0; i < results.rows.length; ++i) {
-              temp.push({
-                label: results.rows.item(i).descricao,
-                value: results.rows.item(i).codigo,
-              });
-            }
-            setItem_aux_inicio_atividades(temp);
+        tx.executeSql("select * from aux_ocupacao_utilizacao", [], (tx, results) => {
+          var temp = [];
+          for (let i = 0; i < results.rows.length; ++i) {
+            temp.push({
+              label: results.rows.item(i).descricao,
+              value: results.rows.item(i).codigo,
+            });
           }
-        );
-        tx.executeSql(
-          "select * from aux_natureza_atividades",
-          [],
-          (tx, results) => {
-            //var len = results.rows.length, i;
-            var temp = [];
-            //console.log(len);
-            for (let i = 0; i < results.rows.length; ++i) {
-              temp.push({
-                label: results.rows.item(i).descricao,
-                value: results.rows.item(i).codigo,
-              });
-              //console.log( results.rows.item(i).nome);
-            }
-            setItem_aux_natureza_atividades(temp);
+          setItem_vu_ocupacao_utilizacao(temp);
+        });
+        tx.executeSql("select * from aux_ocupacao_benfeitoria", [], (tx, results) => {
+          var temp = [];
+          for (let i = 0; i < results.rows.length; ++i) {
+            temp.push({
+              label: results.rows.item(i).descricao,
+              value: results.rows.item(i).codigo,
+            });
           }
-        );
+          setItem_vu_ocupacao_benfeitoria(temp);
+        });
+
       },
       (err) => {
         console.error("There was a problem with the tx", err);
@@ -220,173 +238,241 @@ const Step2 = (props) => {
    }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {/* <ScrollView
-        style={{ flex: 1, flexGrow: 1 }}
-        contentContainerStyle={{ flexGrow: 1 }}
-      > */}
-      <View
-        style={{
-          width: '95%',
-          left:11,
-          height: 120,
-         // marginLeft: 25,
-          borderWidth: 1,
-          borderColor: "rgba(74,144,226,1)",
-          borderRadius: 3,
-          flex: 1,
-        }}
-      >
-        <View style={styles.rect2}>
-          <Text style={styles.titulo}>INÍCIO DAS ATIVIDADES</Text>
-        </View>
-        <DropDownPicker
-          zIndex={openDescricao ? 9999 : 0}
-          style={styles.atividade}
-          open={openDescricao}
-          value={parseInt(valorAtividade)}
-          items={itemDescricao}
-          setOpen={setOpenDescricao}
-          setValue={setValorAtividade}
-          setItems={setItem_aux_inicio_atividades}
-          onChangeValue={() =>
-            onPressTitle(
-              "se_ruj",
-              "se_ruj_inicio_atividades",
-              valorAtividade,
-              sync
+    <View>
+
+    {dateInfo.show && (
+      <DateTimePicker
+      value={dateInfo.date}
+      display="default"
+      mode={dateInfo.mode}
+      maximumDate={new Date()}
+      minuteInterval={30}
+      onChange={(event, dateTime) => {
+        if (dateTime === undefined) {
+          updateInfo({ show: false });
+        } else if (dateInfo.mode === "time") {
+          let timeDate = moment(dateTime);
+          updateInfo({
+            show: false,
+            mode: "date",
+            date: moment(dateInfo.date)
+            .set("hour", timeDate.get("hour"))
+            .set("minute", timeDate.get("minute"))
+            .set("minute", timeDate.get("second"))
+            .toDate()
+          });
+        } else {
+          updateInfo({ mode: "time", date: dateTime });
+        }
+      }}
+      />
+      )}
+    <View style={styles.form_step1}>
+    <View style={styles.rect2}>
+      <Text style={styles.titulo}>DADOS RELATIVOS A OCUPAÇÃO</Text>
+    </View>
+
+    <View style={styles.municipio}>
+      <Text>Reside no Imóvel?</Text>
+    </View>
+    <View style={{ alignSelf: "center", alignContent: "center" }}>
+      <DropDownPicker
+        style={styles.abrangencia}
+        open={open_vu_ocupacao_reside}
+        value={parseInt(valor_vu_ocupacao_reside)}
+        items={item_vu_ocupacao_reside}
+        setOpen={setOpen_vu_ocupacao_reside}
+        setValue={setValor_vu_ocupacao_reside}
+        setItems={setItem_vu_ocupacao_reside} //aux_acesso
+        //dropDownDirection='BOTTOM'
+        onChangeValue={() =>
+          onPressTitle(
+            "vu",
+            "vu_ocupacao_reside",
+            valor_vu_ocupacao_reside,
+            sync
             )
           }
-          listMode="MODAL"
-          placeholder="Selecione::"
-        />
-      </View>
+          listMode="SCROLLVIEW"
+          placeholder="Selecione:"
+          />
+    </View>
 
-<View style={{flex:1, zIndex:1}}>
-      <View
-        style={{
-          width: '95%',
-          left:11,
-          height: 450,
-         // marginLeft: 25,
-          marginTop: 10,
-          borderWidth: 1,
-          borderColor: "rgba(74,144,226,1)",
-          borderRadius: 3,
-        }}
+    <View style={styles.municipio}>
+      <Text>Data da ocupação</Text>
+    </View>
+
+    <TouchableOpacity
+      style={{ alignItems: "center" }}
+      onPress={() => changeShowMode()}
       >
-        <View style={styles.rect2}>
-          <Text style={styles.titulo}>
-            NATUREZA E RAMO DA ATIVIDADE ECONÔMICA
-          </Text>
-        </View>
-        <View style={styles.NaturezaAtvTitle}>
-          <Text>Natureza da Atividade</Text>
-        </View>
-
-
-<View style={{ left:35}}>
-        <DropDownPicker
-          zIndex={openNaturezaAtv ? 9999 : 0}
-          style={styles.NaturezaAtv}
-          open={openNaturezaAtv}
-          value={parseInt(valorNaturezaAtv)}
-          items={itemNaturezaAtv}
-          setOpen={setOpenNaturezaAtv}
-          setValue={setValorNaturezaAtv}
-          setItems={setItem_aux_natureza_atividades}
-          onChangeValue={() =>
-            onPressTitle(
-              "se_ruj",
-              "se_ruj_natureza_atividades",
-              valorNaturezaAtv,
-              sync
-              )
-            }
-            listMode="SCROLLVIEW"
-            placeholder="Selecione::"
+      <TextInputMask
+        style={styles.input_style}
+        type={"datetime"}
+        options={{
+          format: "YYYY/MM/DD",
+        }}
+        //  onPressIn={() => {
+          //   alert("ok");}}
+          value={vu_ocupacao_data}
+          onChangeText={set_vu_ocupacao_data}
+          ref={(ref) => setUnmasked(ref)}
+          placeholder="   00/00/0000"
+          onBlur={() => {
+            alert(unmasked.getRawValue());
+            // console.log(se_ruf_valor_beneficio);
+            // mask();
+            // onPressTitle(
+              //   "vu",
+              //   "vu_ocupacao_data",
+              //   unmasked.getRawValue(), //retira o R$
+              //   sync
+              // );
+            }}
             />
+    </TouchableOpacity>
+
+    <View style={styles.municipio}>
+      <Text>Utilizações do Imóvel</Text>
+    </View>
+
+    <View style={{ alignSelf: "center", alignContent: "center" }}>
+      <DropDownPicker
+        style={styles.abrangencia}
+        open={open_vu_ocupacao_utilizacao}
+        value={parseInt(valor_vu_ocupacao_utilizacao)}
+        items={item_vu_ocupacao_utilizacao}
+        setOpen={setOpen_vu_ocupacao_utilizacao}
+        setValue={setValor_vu_ocupacao_utilizacao}
+        setItems={setItem_vu_ocupacao_utilizacao} //aux_acesso
+        //dropDownDirection='BOTTOM'
+        onChangeValue={() =>
+          onPressTitle(
+            "vu",
+            "vu_ocupacao_utilizacao",
+            valor_vu_ocupacao_utilizacao,
+            sync
+            )
+          }
+          listMode="SCROLLVIEW"
+          placeholder="Selecione:"
+          />
+    </View>
+
+      <View style={styles.municipio}>
+        <Text>Exerce a posse pacificamente?</Text>
+      </View>
+
+
+      <View style={{ alignSelf: "center", alignContent: "center" }}>
+      <DropDownPicker
+        style={styles.abrangencia}
+        open={open_vu_ocupacao_pacifica}
+        value={parseInt(valor_vu_ocupacao_pacifica)}
+        items={item_vu_ocupacao_pacifica}
+        setOpen={setOpen_vu_ocupacao_pacifica}
+        setValue={setValor_vu_ocupacao_pacifica}
+        setItems={setItem_vu_ocupacao_pacifica} //aux_acesso
+        //dropDownDirection='BOTTOM'
+        onChangeValue={() =>
+          onPressTitle(
+            "vu",
+            "vu_ocupacao_pacifica",
+            valor_vu_ocupacao_pacifica,
+            sync
+            )
+          }
+          listMode="SCROLLVIEW"
+          placeholder="Selecione:"
+          />
+    </View>
+
+      <View style={styles.municipio}>
+        <Text>Ocupação benfeitoria</Text>
+      </View>
+
+      <View style={{ alignSelf: "center", alignContent: "center" }}>
+      <DropDownPicker
+        style={styles.abrangencia}
+        open={open_vu_ocupacao_benfeitoria}
+        value={parseInt(valor_vu_ocupacao_benfeitoria)}
+        items={item_vu_ocupacao_benfeitoria}
+        setOpen={setOpen_vu_ocupacao_benfeitoria}
+        setValue={setValor_vu_ocupacao_benfeitoria}
+        setItems={setItem_vu_ocupacao_benfeitoria} //aux_acesso
+        //dropDownDirection='BOTTOM'
+        onChangeValue={() =>
+          onPressTitle(
+            "vu",
+            "vu_ocupacao_benfeitoria",
+            valor_vu_ocupacao_benfeitoria,
+            sync
+            )
+          }
+          listMode="SCROLLVIEW"
+          placeholder="Selecione:"
+          />
+    </View>
+
+    <View style={{ alignItems: "center" }}>
+      <TextInput
+        style={styles.inputOutros}
+        onChangeText={set_vu_ocupacao_benfeitoria_outros}
+        value={vu_ocupacao_benfeitoria_outros}
+        onBlur={() =>
+          onPressTitle(
+            "vu",
+            "vu_ocupacao_benfeitoria_outros",
+            outros,
+            sync
+            )
+          }
+          placeholder={" Outros"}
+          />
+    </View>
+
+
 </View>
-        <View style={{ alignItems: "center" }}>
-          <TextInput
-            style={styles.inputOutros}
-            onChangeText={setOutros}
-            value={outros}
-            onBlur={() =>
-              onPressTitle(
-                "se_ruj",
-                "se_ruj_natureza_atividades_outros",
-                outros,
-                sync
-              )
-            }
-            placeholder={" Outros"}
-          />
-        </View>
-        <View>
-          <Text style={styles.NaturezaAtvTitle}>Ramo da Atividade</Text>
-        </View>
-        <View style={{ alignItems: "center" }}>
-          <TextInput
-            style={styles.inputOutros}
-            onChangeText={setComercio}
-            value={comercio}
-            onBlur={() =>
-              onPressTitle(
-                "se_ruj",
-                "se_ruj_ramo_atividade_comercio",
-                comercio,
-                sync
-              )
-            }
-            placeholder={"  Comércio"}
-          />
-          <TextInput
-            style={styles.inputOutros}
-            onChangeText={setIndustria}
-            value={industria}
-            onBlur={() =>
-              onPressTitle(
-                "se_ruj",
-                "se_ruj_ramo_atividade_industria",
-                industria,
-                sync
-              )
-            }
-            placeholder={"  Indústria"}
-          />
-          <TextInput
-            style={styles.inputOutros}
-            onChangeText={setRecursosNaturais}
-            value={recursosNaturais}
-            onBlur={() =>
-              onPressTitle(
-                "se_ruj",
-                "se_ruj_ramo_atividade_recursos_naturais",
-                recursosNaturais,
-                sync
-              )
-            }
-            placeholder={"  Recursos Naturais"}
-          />
-          <TextInput
-            style={styles.inputOutros}
-            onChangeText={setT_I}
-            value={t_I}
-            onBlur={() =>
-              onPressTitle("se_ruj", "se_ruj_ramo_atividade_tic", t_I, sync)
-            }
-            placeholder={"   Tecnologia da Informação/Comunicação"}
-          />
-           </View>
-      </View>
-      </View>
-      {/* </ScrollView> */}
-    </SafeAreaView>
+
+  </View>
   );
 };
 
 const styles = StyleSheet.create({
+  municipio: {
+    color: "#121212",
+    marginLeft: 30,
+    marginTop: 10,
+  },
+  input_style: {
+    height: 40,
+    width: "85%",
+    marginTop: 10,
+    marginLeft: 10,
+    borderWidth: 1,
+    backgroundColor: "white",
+  },
+  abrangencia: {
+    height: 40,
+    width: "85%",
+    // marginLeft: 30,
+    height: 40,
+    marginTop: 20,
+    borderRadius: 0,
+    borderWidth: 1,
+  },
+  form_step1: {
+    width: "95%",
+    height: "auto",
+    paddingBottom: 10,
+    marginTop: 10,
+    //marginLeft: 20,
+    borderWidth: 1,
+    borderColor: "rgba(74,144,226,1)",
+    borderRadius: 3,
+    alignSelf: `center`,
+    zIndex: -1,
+  },
   NaturezaAtvTitle: {
     color: "#121212",
     //marginLeft: 30,

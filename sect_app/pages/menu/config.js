@@ -10,7 +10,7 @@ const db = DatabaseConnection.getConnection();
 
 const Config = ()=> {
 
- // console.log(api_metas());
+ //console.log(api_metas());
   //cria e faz o drop das tabelas principais
   // useEffect(() => {
 
@@ -52,9 +52,9 @@ const Config = ()=> {
           });
           alert("Criado as tabelas!");
           // db.transaction((tx) => {
-          //   //tx.executeSql("delete from log", []);
+          // //   //tx.executeSql("delete from log", []);
 
-          //  //tx.executeSql("drop table log", []);
+          // //  //tx.executeSql("drop table log", []);
 
           //   tx.executeSql("CREATE TABLE IF NOT EXISTS log ( chave TEXT UNIQUE , codigo INTEGER, tabela TEXT, campo TEXT, valor BLOB, cod_tabela TEXT, cod_processo TEXT, data TEXT DEFAULT CURRENT_TIMESTAMP, situacao TEXT, tipo TEXT, nome TEXT, PRIMARY KEY(codigo))", []);
           // }, (err) => {
@@ -63,7 +63,6 @@ const Config = ()=> {
           // }, (success) => {
           //   console.log("criou a tabela log", success);
           // });
-
 
         });
       })
@@ -134,10 +133,7 @@ const Config = ()=> {
     }, (success) => {
     });
 
-
   }
-
-
 
   //////////////////////////////////////////////tabelas auxiliares///////////////////////////////////
   async function aux_dados() {
@@ -167,28 +163,12 @@ const Config = ()=> {
 
 
           }, (err) => {
-            //console.error("There was a problem with the tx", err);
+            console.error("There was a problem with the tx", err);
             return true;
           }, (success) => {
             //console.log("all done",success );
           });
         });
-        // db.transaction((tx) => {
-        //   tx.executeSql(
-        //     "insert into aux_acesso (descricao) values ('teste')"
-        //   );
-        //   tx.executeSql(
-        //     "select descricao from aux_acesso", [], (tx, rows) => {
-        //       console.log(tx, rows);
-        //     }
-        //   );
-
-        // }, (err) => {
-        //   console.error("There was a problem with the tx", err);
-        //   return true;
-        // }, (success) => {
-        //   console.log("all done" + success);
-        // });
 
       })
       .catch(function (error) {

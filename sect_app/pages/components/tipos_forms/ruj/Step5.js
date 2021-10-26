@@ -98,7 +98,7 @@ const Step5 = (props) => {
               );
             },
             (tx, err) => {
-              console.error("There was a problem with the tx", err);
+              console.error("iii deu ruim", err);
               return true;
             },
             (tx, success) => {}
@@ -784,11 +784,11 @@ const styles = StyleSheet.create({
     marginLeft: 30,
   },
   form8: {
-    width: '95%',
-    left:11,
-    height: 1250,
-   // marginLeft: 25,
-    marginTop: 10,
+    width: "95%",
+    height: "auto",
+    paddingBottom: 10,
+    marginTop:10,
+    //marginLeft: 20,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,

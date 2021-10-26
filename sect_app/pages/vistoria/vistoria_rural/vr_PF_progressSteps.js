@@ -5,13 +5,28 @@ import  ProgressSteps from '../../components/ProgressSteps/ProgressSteps'
 import ProgressStep  from '../../components/ProgressSteps/ProgressStep';
 import api from '../../../services/api';
 import Step1 from '../../components/tipos_forms/vr/Step1';
+import Step2 from '../../components/tipos_forms/vr/Step2';
+import Step3 from '../../components/tipos_forms/vr/Step3';
+import Step4 from '../../components/tipos_forms/vr/Step4';
 
 const db = DatabaseConnection.getConnection();
 import { DatabaseConnection } from '../../database/database';
+import Step5 from '../../components/tipos_forms/vr/Step5';
+import { NavigationContext } from '@react-navigation/core';
 
 function Vr_PF_progressSteps({ navigation }) {
 
+  const [sync, setSync] = useState("");
   useEffect(()=>{
+
+    var cod_processo = "";
+    //carrega o valor do select na tela index.js
+    AsyncStorage.getItem("pr_codigo").then((value) => {
+      console.log(value);
+      setSync(value);
+      cod_processo = value;
+    });
+
 
     var  prss= '';
     AsyncStorage.getItem('cod_prss').then(value_prss => {
@@ -65,42 +80,42 @@ function Vr_PF_progressSteps({ navigation }) {
       <ProgressSteps>
 
         <ProgressStep
-          label="Area"
+          label="Dados Ocupacao"
           onNext={onNextStep}
           onPrevious={onPrevStep}
           previousBtnText={ 'voltar'}
           nextBtnText={'próximo'}
         >
           <View>
-
             <Step1
-
             />
           </View>
         </ProgressStep>
 
-        {/* <ProgressStep
-          label="Atividades"
+        <ProgressStep
+          label="Identif. do Imovel/Pontencialidade"
           onNext={onNextStep}
           onPrevious={onPrevStep}
           previousBtnText={ 'voltar'}
           nextBtnText={'próximo'}
         >
           <Step2 />
+        </ProgressStep>
 
-        </ProgressStep> */}
-        {/* <ProgressStep
-          label="Empregados/Associados"
+        <ProgressStep
+          label="Utilizacao economica"
           onPrevious={onPrevStep}
           onNext={onNextStep}
           previousBtnText={ 'voltar'}
           nextBtnText={'próximo'}
         >
-          <Step3 />
-        </ProgressStep> */}
+          <Step3
+          codigo_pr={sync}
+          />
+        </ProgressStep>
 
-        {/* <ProgressStep
-          label="Infra"
+        <ProgressStep
+          label="Edificaçoes e Benfeitorias"
           onPrevious={onPrevStep}
           onNext={onNextStep}
           scrollable={true}
@@ -108,18 +123,20 @@ function Vr_PF_progressSteps({ navigation }) {
           nextBtnText={'próximo'}
         >
           <Step4 />
-        </ProgressStep> */}
-{/*
+        </ProgressStep>
+
         <ProgressStep
-          label="Saneamento"
+          label="Relatorio Fotografico"
           onPrevious={onPrevStep}
           onNext={onNextStep}
           scrollable={true}
           previousBtnText={ 'voltar'}
           nextBtnText={'próximo'}
         >
-          <Step5 />
-        </ProgressStep> */}
+          <Step5
+           navigation= {navigation}
+            />
+        </ProgressStep>
         {/* <ProgressStep
           label="Patrimonio"
           onPrevious={onPrevStep}

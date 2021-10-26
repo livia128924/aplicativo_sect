@@ -6,7 +6,7 @@ import HomeScreen from './pages/HomeScreen';
 import Menu from './pages/menu/Menu';
 import Sincronizacao from './pages/menu/Sincronizacao';
 import camera from './pages/camera';
-import relatorio_camera from './pages/socio/relatorio_camera';
+import relatorio_camera from './pages/camera/relatorio_camera';
 import leitor from './pages/leitor';
 import ViewAllUser from './pages/listar';
 import Login from "./pages/login";

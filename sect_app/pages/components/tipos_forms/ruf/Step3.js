@@ -549,7 +549,7 @@ async function loadStep3(){
 
           </View>
 
-          <View style={styles.form6}>
+          <View style={styles.form5}>
             <View style={styles.rect2}>
               <Text style={styles.titulo} >INFRAESTRUTURA DO IMÓVEL</Text>
             </View>
@@ -667,24 +667,15 @@ checkboxlabel: {
     marginTop: 5,
     marginLeft: 30,
 },
-form6: {
-    width: '92%',
-    height: 650,
-    marginLeft: 25,
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3,
-  },
   form5: {
-    width: '92%',
-    height: 840,
-    marginLeft: 25,
-    marginTop: 10,
+    width: "95%",
+    height: "auto",
+    paddingBottom: 10,
+    //marginLeft: 20,
+    marginTop:10,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
-
   },
   title_style: {
     color: "#121212",
@@ -698,7 +689,6 @@ form6: {
     marginLeft: 30,
     borderRadius: 0,
     borderWidth: 1,
-
   },
   rect2: {
     width: '100%',

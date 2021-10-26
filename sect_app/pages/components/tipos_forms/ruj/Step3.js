@@ -224,20 +224,9 @@ const Step3 = (props) => {
    }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <>
         <View
-          style={{
-            width: '95%',
-            left:11,
-            height: 540,
-            //marginLeft: 25,
-            marginTop: 10,
-            borderWidth: 1,
-            borderColor: "rgba(74,144,226,1)",
-            borderRadius: 3,
-            flex:1
-          }}
-        >
+          style={styles.form}>
           <View style={styles.rect2}>
             <Text style={styles.titulo}>
               NÚMERO DE EMPREGADOS E/OU ASSOCIADOS, COOPERADOS
@@ -318,7 +307,9 @@ const Step3 = (props) => {
               placeholder="Selecione::"
               />
 
-        <View style={styles.politica}>
+</View>
+<View style={styles.form}>
+        <View style={styles.rect2}>
           <Text style={styles.titulo}>POLÍTICA DE BENFÍCIOS</Text>
         </View>
         <View style={styles.municipio}>
@@ -358,29 +349,22 @@ const Step3 = (props) => {
           }
           placeholder={"    Outros"}
         />
+
 </View>
-    </SafeAreaView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  form6: {
-    width: 340,
-    height: 215,
-    marginLeft: 25,
-    marginTop: 10,
+  form: {
+    width: "95%",
+    height: "auto",
+    paddingBottom: 10,
+    marginTop:10,
+    //marginLeft: 20,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
-  },
-  form5: {
-    // width: 340,
-    // height: 340,
-    // marginLeft: 25,
-    // marginTop: 10,
-    // borderWidth: 1,
-    // borderColor: "rgba(74,144,226,1)",
-    // borderRadius: 3,
   },
   municipio: {
     color: "#121212",
@@ -408,14 +392,6 @@ const styles = StyleSheet.create({
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,
-  },
-  politica:{
-    marginTop:30,
-    width: '100%',
-    height: 36,
-    backgroundColor: "rgba(74,144,226,1)",
-    borderRadius: 3,
-    zIndex:1
   },
   acessoText: {
     color: "#121212",

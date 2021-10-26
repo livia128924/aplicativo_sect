@@ -71,6 +71,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "auto",
     padding: 10,
+    alignContent:"center",
+    alignItems:"center"
   },
   containerAzul: {
     width: 144,

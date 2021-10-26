@@ -8,7 +8,7 @@ import {
   AsyncStorage,
   Image,
 } from "react-native";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { FlatList, ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Card, Button, Title } from "react-native-paper";
 import { DatabaseConnection } from "../../../database/database";
 const db = DatabaseConnection.getConnection();
@@ -148,22 +148,22 @@ console.log(" UPDATE log set nome = '" + valor +"', situacao= '1' where tipo = '
           <Text style={styles.titulo}>RELATÓRIO FOTOGRÁFICO</Text>
         </View>
 
-        <View
+        <TouchableOpacity
           style={{
-            backgroundColor: "white",
-            height: 50,
+            height: "auto",
             paddingTop: 5,
             //paddingLeft: 80,
           }}
+          onPress={() => camera(sync, "se_ruf_relatorio_imagens", "se_ruf")} //passar por paramentro os campos que irao para o registro das foto
         >
           <Button
             icon="camera"
             mode="outlined"
             color="black"
-            onPress={() => camera(sync, "se_ruf_relatorio_imagens", "se_ruf")} //passar por paramentro os campos que irao para o registro das foto
+
             style={{ width: "70%", borderRadius: 3, alignContent:'center', alignSelf:'center', alignItems:'center'  }}
           ></Button>
-        </View>
+        </TouchableOpacity>
 
         {/* //////////// */}
         <View>
@@ -240,10 +240,12 @@ const styles = StyleSheet.create({
   },
 
   form9: {
-    width: '92%',
-    marginLeft: 25,
-    marginTop: 10,
+    width: "95%",
+    height: 90,
+   // paddingBottom: 10,
+    //marginLeft: 20,
     borderWidth: 1,
+    backgroundColor:"white",
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
   },

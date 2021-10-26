@@ -1,753 +1,269 @@
-import React, { useEffect, useState } from "react";
-import { Text, StyleSheet, View, TextInput, AsyncStorage } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
-import Checkbox from "expo-checkbox";
+import React, { useCallback, useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import {
+  Text,
+  StyleSheet,
+  View,
+  TextInput,
+  AsyncStorage,
+  TouchableOpacity,
+  Image,
+  SafeAreaView,
+} from "react-native";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { Card, Button, Title } from "react-native-paper";
 import { DatabaseConnection } from "../../../database/database";
 const db = DatabaseConnection.getConnection();
-const Step5 = (props) => {
+
+const Step7 = ({ navigation }) => {
   const [sync, setSync] = useState("");
-  const [dados_valor, setDados_valor] = useState("");
+  const [nome, setNome] = useState("");
+  const [dados_valor, setDados_valor] = useState([]);
 
-  const [check_Se_ruj_sanitario, set_Check_Se_ruj_sanitario] = useState([]);
+  let [dados, setDados] = useState([]);
 
-  const [se_ruj_tratamento_agua_clorada, setSe_ruj_tratamento_agua_clorada] =
-    React.useState([]);
+  const [text, setText] = useState("");
 
-  const [se_ruj_rede_agua_publica, setSe_ruj_rede_agua_publica] =
-    React.useState([]);
+  var cod_processo = "";
+  AsyncStorage.getItem("pr_codigo").then((value) => {
+    setSync(value);
+    cod_processo = value;
+  });
 
-  const [se_ruj_rede_energia_publica, setSe_ruj_rede_energia_publica] =
-    React.useState([]);
-
-  const [se_ruj_coleta_lixo_outros, setOutrosSe_ruj_coleta_lixo_outros] =
-    useState("");
-  const [outrosSe_ruj_destino_dejetos, setOutrosSe_ruj_destino_dejetos] =
-    useState("");
-
-  const [se_ruj_coleta_lixo_publica, setSe_ruj_coleta_lixo_publica] =
-    React.useState([]);
-
-  const [openSe_ruj_destino_dejetos, setOpenSe_ruj_destino_dejetos] =
-    useState(false);
-  const [valorSe_ruj_destino_dejetos, setValorSe_ruj_destino_dejetos] =
-    useState(null);
-  const [itemSe_ruj_destino_dejetos, setItemSe_ruj_destino_dejetos] = useState([]);
+  AsyncStorage.getItem("codigo").then((codigo) => {
+    setDados_valor(codigo);
+  });
 
   useEffect(() => {
-    //carrega o valor do select na tela index.jss
-    var cod_processo = "";
-    AsyncStorage.getItem("pr_codigo").then((value) => {
-      //console.log(value);
-      setSync(value);
-      cod_processo = value;
-      //console.log("tste", cod_processo);
+    // var cod_processo = "";
+    // //carrega o valor do select na tela index.js
+    // AsyncStorage.getItem("pr_codigo").then((value) => {
+    //   //console.log(value);
+    //   setSync(value);
+    //   cod_processo = value;
+    // });
+
+    AsyncStorage.getItem("valor").then((res) => {
+      setDados_valor(res);
     });
 
-    AsyncStorage.getItem("codigo").then((codigo) => {
-      setDados_valor(codigo);
-    });
+    //console.log(cod_processo);
+    AsyncStorage.getItem('codigo_nome').then(res => {
+        var codigo_nome = res;
 
-    loadStep5();
+      console.log("Codigo nome", codigo_nome);
+    if (dados_valor) {
+      //console.log("cheguei");
+      db.transaction((tx) => {
+        tx.executeSql(
+          "select nome from log where cod_processo = '" + cod_processo +"' and codigo = '"+ codigo_nome+"'",
+          [],
+          (tx, results) => {
+            var row = [];
+            for (let i = 0; i < results.rows.length; ++i) {
+             // setDados(results.rows);
 
-    AsyncStorage.getItem("nome_tabela").then((tabela) => {
-        // console.log("loadDados");
-        if (tabela) {
-          db.transaction(
-            (tx) => {
-              tx.executeSql(
-                "select * from " +
-                  tabela +
-                  " where se_ruj_cod_processo = '" +
-                  cod_processo +
-                  "'",
-                [],
-                (tx, results) => {
-                  //var x = "";
-                  // console.log(results.rows.length);
-                  var row = [];
-                  for (let i = 0; i < results.rows.length; ++i) {
-                    setOutrosSe_ruj_coleta_lixo_outros(
-                      results.rows.item(i).se_ruj_coleta_lixo_outros
-                    );
-                    setOutrosSe_ruj_destino_dejetos(
-                      results.rows.item(i).se_ruj_destino_dejetos_outros
-                    );
-                    setValorSe_ruj_destino_dejetos(
-                      results.rows.item(i).se_ruj_destino_dejetos
-                    );
-
-                    var x = results.rows.item(i).se_ruj_sanitario;
-                    //console.log( "conole", results.rows.item(i).se_ruj_sanitario);
-                    valor_checked(x.split(","));
-
-                    var y = results.rows.item(i).se_ruj_coleta_lixo;
-                    valor_checked_coleta_lixo(y.split(","));
-
-                    var w = results.rows.item(i).se_ruj_rede_energia;
-                    valor_checked_rede_energia(w.split(","));
-
-                    var z = results.rows.item(i).se_ruj_rede_agua;
-                    valor_checked_rede_agua(z.split(","));
-
-                    var q = results.rows.item(i).se_ruj_tratamento_agua;
-                    valor_checked_tratamento_agua(q.split(","));
-
-                    //console.log(results.rows.item(i).se_ruj_sanitario);
-                  }
-                }
-              );
-            },
-            (tx, err) => {
-              console.error("There was a problem with the tx", err);
-              return true;
-            },
-            (tx, success) => {}
-          );
-        }
+            }
+          },  function (tx, error) {
+            console.log("SELECT Log error: " + error.message);
+          }
+        );
+        console.log("select * from log where vu_cod_processo = '" + cod_processo +"' and codigo = '"+ codigo_nome+"'");
       });
+    }
+  });
 
   }, []);
 
-  async function loadStep5() {
-    db.transaction(
-      (tx) => {
-        tx.executeSql("select * from aux_sanitario", [], (tx, results) => {
-          //var len = results.rows.length, i;
+  useFocusEffect(
+    useCallback(() => {
+      loadFotos();
+    }, [])
+  );
+
+  function loadFotos() {
+    db.transaction((tx) => {
+      // tx.executeSql(
+      //   "DELETE from log'",[]
+      // );
+      tx.executeSql(
+        "SELECT * FROM log where tipo = 'i' and cod_processo = '" + cod_processo + "' ",
+        [],
+        (tx, results) => {
+         // console.log(results.rows);
           var temp = [];
-          //console.log(len);
-          for (let i = 0; i < results.rows.length; ++i) {
+          //console.log("ok");
+          for (var i = 0; i < results.rows.length; ++i)
+          //console.log("ok", results.rows.item(i).nome);
             temp.push({
-              label: results.rows.item(i).descricao,
-              id: results.rows.item(i).codigo,
-              isChecked: false,
+              key: results.rows.item(i).codigo,
+              tabela: results.rows.item(i).tabela,
+              image: results.rows.item(i).valor,
+              nome: results.rows.item(i).nome,
+
             });
-          }
-          //console.log(temp);
-          set_Check_Se_ruj_sanitario(temp);
-        });
-        tx.executeSql(
-          "select * from aux_destino_dejetos",
-          [],
-          (tx, results) => {
-            //var len = results.rows.length, i;
-            var temp = [];
-            //console.log(len);
-            for (let i = 0; i < results.rows.length; ++i) {
-              temp.push({
-                label: results.rows.item(i).descricao,
-                value: results.rows.item(i).codigo,
-              });
-              //console.log( results.rows.item(i).nome);
-            }
-            setItemSe_ruj_destino_dejetos(temp);
-          }
-        );
-        tx.executeSql("select * from aux_coleta_lixo", [], (tx, results) => {
-          //var len = results.rows.length, i;
-          var temp = [];
-          //console.log(len);
-          for (let i = 0; i < results.rows.length; ++i) {
-            temp.push({
-              label: results.rows.item(i).descricao,
-              id: results.rows.item(i).codigo,
-              isChecked: false,
-            });
-            //console.log( results.rows.item(i).nome);
-          }
-          setSe_ruj_coleta_lixo_publica(temp);
-        });
-        tx.executeSql("select * from aux_rede_energia", [], (tx, results) => {
-          //var len = results.rows.length, i;
-          var temp = [];
-          //console.log(len);
-          for (let i = 0; i < results.rows.length; ++i) {
-            temp.push({
-              label: results.rows.item(i).descricao,
-              id: results.rows.item(i).codigo,
-              isChecked: false,
-            });
-            //console.log( results.rows.item(i).nome);
-          }
-          setSe_ruj_rede_energia_publica(temp);
-        });
-        tx.executeSql("select * from aux_rede_agua", [], (tx, results) => {
-          //var len = results.rows.length, i;
-          var temp = [];
-          //console.log(len);
-          for (let i = 0; i < results.rows.length; ++i) {
-            temp.push({
-              label: results.rows.item(i).descricao,
-              id: results.rows.item(i).codigo,
-              isChecked: false,
-            });
-            //console.log( results.rows.item(i).nome);
-          }
-          setSe_ruj_rede_agua_publica(temp);
-        });
-        tx.executeSql(
-          "select * from aux_tratamento_agua",
-          [],
-          (tx, results) => {
-            //var len = results.rows.length, i;
-            var temp = [];
-            //console.log(len);
-            for (let i = 0; i < results.rows.length; ++i) {
-              temp.push({
-                label: results.rows.item(i).descricao,
-                id: results.rows.item(i).codigo,
-                isChecked: false,
-              });
-              //console.log( results.rows.item(i).nome);
-            }
-            setSe_ruj_tratamento_agua_clorada(temp);
-          }
-        );
-      },
-      (err) => {
-        // console.error("There was a problem with the tx", err);
-        return true;
-      },
-      (success) => {
-        // console.log("all done", success);
-      }
-    );
-  }
-
-  // //função que aciona quando o estado do componente muda e seta os valores correspondente
-  function onPressTitle(tabela, campo, valor, codigo) {
-    //     ///console.log(codigo);
-    db.transaction(
-      (tx) => {
-        const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_ruj_cod_processo = '${codigo}'`;
-        //console.log(query);
-        tx.executeSql(query, [], (tx, results) => {
-          for (let i = 0; i < results.rows.length; ++i) {
-            alert("INSERIDO COM SUCESSO");
-          }
-        });
-      },
-      (tx, err) => {
-        //console.error("error em alguma coisa", err);
-        return true;
-      },
-      (tx, success) => {
-        //console.log("tudo certo por aqui", success);
-        //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
-      }
-    );
-
-    var chaves = '"' + tabela + " " + campo + " " + valor + " " + codigo + '"';
-
-    db.transaction((tx) => {
-      //tx.executeSql("DROP TABLE log", []);
-      const log_delete =
-        "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" +
-        chaves +
-        " ,'" +
-        tabela +
-        "', '" +
-        campo +
-        "', '" +
-        valor +
-        "', '" +
-        codigo +
-        "', '1')";
-        tx.executeSql(log_delete, []);
-        console.log(log_delete);
-    });
-
-    db.transaction((tx) => {
-      const log_update =
-        "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" +
-        chaves +
-        ", '" +
-        tabela +
-        "', '" +
-        campo +
-        "', '" +
-        valor +
-        "', '" +
-        codigo +
-        "', '1')";
-        tx.executeSql(log_update, [], (tx, results) => {});
-        console.log(log_update);
-    });
-
-    AsyncStorage.setItem("nome_tabela", tabela);
-
-    AsyncStorage.setItem("codigo", valor.toString());
-  }
-
-  const handleChange = (id) => {
-    const newState = check_Se_ruj_sanitario.map((el) => {
-      const label = el;
-
-      if (el.id === id) {
-        // verificamos se o nome do label foi passado na função
-        label.isChecked = !el.isChecked; // se sim, vamos alterar o estado do "checked"
-      }
-
-      return label;
-    });
-
-    set_Check_Se_ruj_sanitario(newState); // atualiza o estado
-  };
-
-  const handleChange_coleta_lixo = (id) => {
-    const newState = se_ruj_coleta_lixo_publica.map((el) => {
-      const label = el;
-
-      if (el.id === id) {
-        // verificamos se o nome do label foi passado na função
-        label.isChecked = !el.isChecked; // se sim, vamos alterar o estado do "checked"
-      }
-
-      return label;
-    });
-
-    setSe_ruj_coleta_lixo_publica(newState); // atualiza o estado
-  };
-  const handleChange_rede_energia = (id) => {
-    const newState = se_ruj_rede_energia_publica.map((el) => {
-      const label = el;
-
-      if (el.id === id) {
-        // verificamos se o nome do label foi passado na função
-        label.isChecked = !el.isChecked; // se sim, vamos alterar o estado do "checked"
-      }
-
-      return label;
-    });
-    setSe_ruj_rede_energia_publica(newState);
-  };
-  const handleChange_rede_agua = (id) => {
-    const newState = se_ruj_rede_agua_publica.map((el) => {
-      const label = el;
-
-      if (el.id === id) {
-        // verificamos se o nome do label foi passado na função
-        label.isChecked = !el.isChecked; // se sim, vamos alterar o estado do "checked"
-      }
-
-      return label;
-    });
-    setSe_ruj_rede_agua_publica(newState);
-  };
-  const handleChange_tratamento_agua = (id) => {
-    const newState = se_ruj_tratamento_agua_clorada.map((el) => {
-      const label = el;
-
-      if (el.id === id) {
-        // verificamos se o nome do label foi passado na função
-        label.isChecked = !el.isChecked; // se sim, vamos alterar o estado do "checked"
-      }
-
-      return label;
-    });
-
-    //console.log(ischecado);
-    setSe_ruj_tratamento_agua_clorada(newState);
-  };
-
-  function muda() {
-    //await api
-    var str_valores = [];
-
-    check_Se_ruj_sanitario
-      .filter((value) => value.isChecked === true)
-      .map((item) => {
-        // console.log(item);
-        str_valores.push(item.id);
-      });
-    //console.log(ischecado);
-    return str_valores.join(",");
-  }
-
-  function muda_coleta_lixo() {
-    //await api
-    var str_valores = [];
-
-    se_ruj_coleta_lixo_publica
-      .filter((value) => value.isChecked === true)
-      .map((item) => {
-        str_valores.push(item.id);
-      });
-    //console.log(ischecado);
-    return str_valores.join(",");
-  }
-  function muda_energia_publica() {
-    //await api
-    var str_valores = [];
-
-    se_ruj_rede_energia_publica
-      .filter((value) => value.isChecked === true)
-      .map((item) => {
-        str_valores.push(item.id);
-      });
-    //console.log(ischecado);
-    return str_valores.join(",");
-  }
-  function muda_rede_agua() {
-    //await api
-    var str_valores = [];
-
-    se_ruj_rede_agua_publica
-      .filter((value) => value.isChecked === true)
-      .map((item) => {
-        str_valores.push(item.id);
-      });
-    //console.log(ischecado);
-    return str_valores.join(",");
-  }
-  function muda_tratamento_agua() {
-    //await api
-    var str_valores = [];
-
-    se_ruj_tratamento_agua_clorada
-      .filter((value) => value.isChecked === true)
-      .map((item) => {
-        str_valores.push(item.id);
-      });
-    //console.log(ischecado);
-    return str_valores.join(",");
-  }
-
-  function valor_checked(ruj_sanitario) {
-    db.transaction((tx) => {
-      tx.executeSql("select * from aux_sanitario", [], (tx, results) => {
-        //var len = results.rows.length, i;
-        var temp = [];
-        //console.log(len);
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push({
-            label: results.rows.item(i).descricao,
-            id: results.rows.item(i).codigo,
-            isChecked: false,
-          });
+           // console.log(temp)
+          setDados(temp);
+        },
+        function (tx, error) {
+          console.log("SELECT Log error: " + error.message);
         }
-        //console.log(temp);
-        let x = temp;
-
-        //console.log(x);
-        ruj_sanitario.forEach((item) => {
-          //console.log(ruj_sanitario);
-          //console.log(x);
-          x.forEach((val) => {
-            if (val.id == item) {
-              val.isChecked = true;
-            }
-          });
-        });
-
-        return set_Check_Se_ruj_sanitario(x);
-      });
+      );
     });
   }
 
-  function valor_checked_coleta_lixo(ruj_lixo) {
+  function camera(codigo_tab_camera, campo_relatorio_img, tabela) {
+    //  db.transaction((tx) => {
+    //  //// tx.executeSql("delete from log", []);
+    //   //tx.executeSql("drop table log", []);
+
+    //   tx.executeSql("CREATE TABLE IF NOT EXISTS log ( chave TEXT UNIQUE , codigo INTEGER, tabela TEXT, campo TEXT, valor BLOB, cod_tabela TEXT, cod_processo TEXT, data TEXT DEFAULT CURRENT_TIMESTAMP, situacao TEXT, tipo TEXT, nome TEXT, PRIMARY KEY(codigo))", []);
+    // }, (err) => {
+    //   console.error("There was a problem with the log ", err);
+    //   return true;
+    // }, (success) => {
+    //   console.log("criou a tabela log", success);
+    // })
+   // alert(codigo_tab_camera);
+    //"DROP TABLE foto_relatorio",[], (tx, results) => {}
+    //console.log(codigo_tab_camera);
+
+    //var items = [['codigo_tab_camera', 'campo_relatorio_img', 'tabela'], [codigo_tab_camera, campo_relatorio_img, tabela]]
+    var item = [
+      ["codigo_tab_camera", codigo_tab_camera],
+      ["campo_relatorio_img", campo_relatorio_img],
+      ["tabela", tabela],
+    ];
+
+    AsyncStorage.multiSet(item);
+   // console.log(item);
+    navigation.navigate("Relatorio_camera");
+  }
+
+  // function salvar(codigo_tab, image, codigo) {
+  //   db.transaction((tx) => {
+  //     tx.executeSql(
+  //       `UPDATE log set valor = '${image}' where tipo = 'i' and codigo = '${codigo}'`,
+  //       [],
+  //       (tx, results) => {
+  //         alert("salvo com successo!");
+  //         loadFotos();
+  //       },
+  //       function (tx, error) {
+  //         console.log("SELECT error: " + error.message);
+  //       }
+  //     );
+  //   });
+  // }
+
+  function deletar(codigo) {
     db.transaction((tx) => {
-      tx.executeSql("select * from aux_coleta_lixo", [], (tx, results) => {
-        //var len = results.rows.length, i;
-        var temp = [];
-        //console.log(len);
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push({
-            label: results.rows.item(i).descricao,
-            id: results.rows.item(i).codigo,
-            isChecked: false,
-          });
+      tx.executeSql(
+        `delete from log where tipo = 'i' and codigo = '${codigo}'`,
+        [],
+        (tx, results) => {
+          // console.log(
+          //   `delete from log where tipo = 'i' and codigo = '${codigo}'`
+          // );
+          alert("Deletado com successo!");
+          loadFotos();
+        },
+        function (tx, error) {
+          console.log("SELECT error: " + error.message);
         }
-        //console.log(temp);
-        let x = temp;
-
-        //console.log(x);
-        ruj_lixo.forEach((item) => {
-          //console.log(ruj_sanitario);
-          //console.log(x);
-          x.forEach((val) => {
-            if (val.id == item) {
-              val.isChecked = true;
-            }
-          });
-        });
-
-        return setSe_ruj_coleta_lixo_publica(x);
-      });
+      );
     });
   }
 
-  function valor_checked_rede_energia(ruj_energia) {
+  //função que aciona quando o estado do componente muda e seta os valores correspondente
+  function onPressTitle(valor, codigo, codigo_tab) {
+console.log(valor);
+
     db.transaction((tx) => {
-      tx.executeSql("select * from aux_rede_energia", [], (tx, results) => {
-        //var len = results.rows.length, i;
-        var temp = [];
-        //console.log(len);
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push({
-            label: results.rows.item(i).descricao,
-            id: results.rows.item(i).codigo,
-            isChecked: false,
-          });
-        }
-        //console.log(temp);
-        let x = temp;
-
-        // console.log(x);
-        ruj_energia.forEach((item) => {
-          //console.log(ruj_sanitario);
-          //console.log(x);
-          x.forEach((val) => {
-            if (val.id == item) {
-              val.isChecked = true;
-            }
-          });
-        });
-
-        return setSe_ruj_rede_energia_publica(x);
-      });
+      const log_delete = "UPDATE log set nome = '" + valor + "', situacao= '1'  where tipo = 'i' and codigo =  '" + codigo + "'";
+      tx.executeSql(log_delete, []);
+      console.log(log_delete);
+      //tx.executeSql(log_delete, []);
+    },
+    function (tx, error) {
+      console.log("SELECT error: " + error.message);
     });
-  }
-  function valor_checked_rede_agua(ruj_agua) {
-    db.transaction((tx) => {
-      tx.executeSql("select * from aux_rede_agua", [], (tx, results) => {
-        //var len = results.rows.length, i;
-        var temp = [];
-        //console.log(len);
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push({
-            label: results.rows.item(i).descricao,
-            id: results.rows.item(i).codigo,
-            isChecked: false,
-          });
-        }
-        //console.log(temp);
-        let x = temp;
 
-        // console.log(x);
-        ruj_agua.forEach((item) => {
-          //console.log(ruj_sanitario);
-          //console.log(x);
-          x.forEach((val) => {
-            if (val.id == item) {
-              val.isChecked = true;
-            }
-          });
-        });
+    AsyncStorage.setItem("codigo_nome", codigo.toString());
 
-        return setSe_ruj_rede_agua_publica(x);
-      });
-    });
-  }
-  function valor_checked_tratamento_agua(ruj_tratamento_agua) {
-    db.transaction((tx) => {
-      tx.executeSql("select * from aux_tratamento_agua", [], (tx, results) => {
-        //var len = results.rows.length, i;
-        var temp = [];
-        //console.log(len);
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push({
-            label: results.rows.item(i).descricao,
-            id: results.rows.item(i).codigo,
-            isChecked: false,
-          });
-        }
-        //console.log(temp);
-        let x = temp;
-
-        // console.log(x);
-        ruj_tratamento_agua.forEach((item) => {
-          //console.log(ruj_sanitario);
-          //console.log(x);
-          x.forEach((val) => {
-            if (val.id == item) {
-              val.isChecked = true;
-            }
-          });
-        });
-
-        return setSe_ruj_tratamento_agua_clorada(x);
-      });
-    });
+    AsyncStorage.setItem("valor", valor);
   }
 
   return (
     <>
-      <View style={styles.form8}>
+      <View style={styles.form9}>
         <View style={styles.rect2}>
-          <Text style={styles.titulo}>
-            SANEAMENTO BÁSICO E INSTALAÇÕES SANITÁRIAS
-          </Text>
-        </View>
-        <View style={styles.municipio}>
-          <Text>Sanitário</Text>
+          <Text style={styles.titulo}>RELATÓRIO FOTOGRÁFICO</Text>
         </View>
 
-        <View style={styles.checkboxlabel}>
-          {[...check_Se_ruj_sanitario].map((item, index) => (
-            <View style={styles.checkboxGroup} key={item.id}>
-              <Checkbox
-                style={styles.checkbox}
-                value={item.isChecked}
-                onValueChange={() => {
-                  handleChange(item.id);
-                  onPressTitle("se_ruj", "se_ruj_sanitario", muda(), sync);
-                }}
-              />
-              <Text>{item.label}</Text>
-            </View>
-          ))}
+        <View
+          style={{
+            backgroundColor: "white",
+            height: 50,
+            paddingTop: 5,
+            //paddingLeft: 80,
+          }}
+        >
+          <Button
+            icon="camera"
+            mode="outlined"
+            color="black"
+            onPress={() => camera(sync, "vu_relatorio_imagens", "vu")} //passar por paramentro os campos que irao para o registro das foto
+            style={{ width: "70%", borderRadius: 3, alignContent:'center', alignSelf:'center', alignItems:'center' }}
+          ></Button>
         </View>
 
-        <View style={styles.municipio}>
-          <Text>Destino dos Dejetos</Text>
-        </View>
+        <View>
+          {dados.map((item, index) => (
+            <View key={item.key}>
+              <Card style={{ backgroundColor: "white" }}>
+                <Title>{item.key}</Title>
+                <Image
+                  style={{
+                    width: "100%",
+                    height: 300,
+                    resizeMode: "stretch",
+                    borderRadius: 20,
+                  }}
+                  source={{ uri: item.image }}
+                />
+                {/* <Card.Cover source={{  uri:  }} /> */}
+                <TextInput
+                  style={styles.inputNome}
+                  onChangeText={(text) => {
+                    dados[index].nome = text;
+                    setDados([...dados], dados);
+                    //console.log(item.key);
+                  }}
+                  value={item.nome}
+                  placeholder="   Digite aqui"
+                  onBlur={() => onPressTitle(item.nome, item.key, sync)}
+                ></TextInput>
 
-        <DropDownPicker
-          style={styles.Dejetos}
-          open={openSe_ruj_destino_dejetos}
-          value={parseInt(valorSe_ruj_destino_dejetos)}
-          items={itemSe_ruj_destino_dejetos}
-          setOpen={setOpenSe_ruj_destino_dejetos}
-          setValue={setValorSe_ruj_destino_dejetos}
-          setItems={setItemSe_ruj_destino_dejetos}
-          onChangeValue={() =>
-            onPressTitle(
-              "se_ruj",
-              "Se_ruj_destino_dejetos",
-              valorSe_ruj_destino_dejetos,
-              sync
-            )
-          }
-          listMode="SCROLLVIEW"
-          placeholder="Selecione::"
-        />
-
-        <View style={{ alignItems: "center" }}>
-          <TextInput
-            style={styles.inputStyle}
-            onChangeText={setOutrosSe_ruj_destino_dejetos}
-            value={outrosSe_ruj_destino_dejetos}
-            onBlur={() =>
-              onPressTitle(
-                "se_ruj",
-                "Se_ruj_destino_dejetos_outros",
-                outrosSe_ruj_destino_dejetos,
-                sync
-              )
-            }
-            placeholder={" Outros"}
-          />
-        </View>
-        <View style={styles.municipio}>
-          <Text>Lixo</Text>
-        </View>
-
-        <View style={styles.checkboxlabel}>
-          {[...se_ruj_coleta_lixo_publica].map((item, index) => (
-            <View style={styles.checkboxGroup} key={item.id}>
-              <Checkbox
-                style={styles.checkbox}
-                value={item.isChecked}
-                onValueChange={() => {
-                  handleChange_coleta_lixo(item.id);
-                  onPressTitle(
-                    "se_ruj",
-                    "se_ruj_coleta_lixo",
-                    muda_coleta_lixo(),
-                    sync
-                  );
-                }}
-              />
-              <Text>{item.label}</Text>
-            </View>
-          ))}
-        </View>
-
-        <View style={{ alignItems: "center" }}>
-          <TextInput
-            style={styles.inputStyle}
-            onChangeText={setOutrosSe_ruj_coleta_lixo_outros}
-            value={se_ruj_coleta_lixo_outros}
-            onBlur={() =>
-              onPressTitle(
-                "se_ruj",
-                "se_ruj_coleta_lixo_outros",
-                se_ruj_coleta_lixo_outros,
-                sync
-              )
-            }
-            placeholder={" Outros"}
-          />
-        </View>
-        <View style={styles.municipio}>
-          <Text>Rede de Energia</Text>
-        </View>
-
-        <View style={styles.checkboxlabel}>
-          {[...se_ruj_rede_energia_publica].map((item, index) => (
-            <View style={styles.checkboxGroup} key={item.id}>
-              <Checkbox
-                style={styles.checkbox}
-                value={item.isChecked}
-                onValueChange={() => {
-                  handleChange_rede_energia(item.id);
-                  onPressTitle(
-                    "se_ruj",
-                    "se_ruj_rede_energia",
-                    muda_energia_publica(),
-                    sync
-                  );
-                }}
-              />
-              <Text>{item.label}</Text>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.municipio}>
-          <Text>Rede de Agua</Text>
-        </View>
-        <View style={styles.checkboxlabel}>
-          {[...se_ruj_rede_agua_publica].map((item, index) => (
-            <View style={styles.checkboxGroup} key={item.id}>
-              <Checkbox
-                style={styles.checkbox}
-                value={item.isChecked}
-                onValueChange={() => {
-                  handleChange_rede_agua(item.id);
-                  onPressTitle(
-                    "se_ruj",
-                    "se_ruj_rede_agua",
-                    muda_rede_agua(),
-                    sync
-                  );
-                }}
-              />
-              <Text>{item.label}</Text>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.municipio}>
-          <Text>Tratamento da agua</Text>
-        </View>
-        <View style={styles.checkboxlabel}>
-          {[...se_ruj_tratamento_agua_clorada].map((item, index) => (
-            <View style={styles.checkboxGroup} key={item.id}>
-              <Checkbox
-                style={styles.checkbox}
-                value={item.isChecked}
-                onValueChange={() => {
-                  handleChange_tratamento_agua(item.id);
-                  onPressTitle(
-                    "se_ruj",
-                    "se_ruj_tratamento_agua",
-                    muda_tratamento_agua(),
-                    sync
-                  );
-                }}
-              />
-              <Text>{item.label}</Text>
+                <Card.Actions>
+                  <Button color={"red"} onPress={() => deletar(item.key)}>
+                    Deletar
+                  </Button>
+                  {/* <Button color={"#4a90e2"} onPress={() => salvar(sync, item.valor, item.key)}>Salvar</Button> */}
+                </Card.Actions>
+              </Card>
+              <View>
+                <Text></Text>
+              </View>
+              {/* <Button
+          icon="camera"
+          mode="outlined"
+          color="black"
+          onPress={() => camera()}
+          style={{width:'70%', borderRadius: 3}}
+          >
+        </Button> */}
+              {/*<Mybutton title='Deletar' customClick={() => deletar_foto(item.id)}/> */}
             </View>
           ))}
         </View>
@@ -757,46 +273,29 @@ const Step5 = (props) => {
 };
 
 const styles = StyleSheet.create({
-  inputStyle: {
+  inputNome: {
     height: 40,
-    width: "85%",
+    width: "100%",
     marginTop: 10,
-    //marginLeft: 10,
-    marginRight:25,
+    marginLeft: 0,
     borderWidth: 1,
+    borderColor: "grey",
     backgroundColor: "white",
   },
-  Dejetos: {
-    marginTop: 5,
-    height: 40,
-    width: "85%",
-    marginLeft: 30,
-    borderRadius: 0,
+  input: {
+    width: 278,
+    height: 30,
+    marginRight: 5,
     borderWidth: 1,
   },
-
-  checkboxGroup: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  checkboxlabel: {
-    marginTop: 5,
-    marginLeft: 30,
-  },
-  form8: {
+  form9: {
     width: '95%',
     left:11,
-    height: 1250,
-   // marginLeft: 25,
+    //marginLeft: 25,
     marginTop: 10,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
-  },
-  municipio: {
-    color: "#121212",
-    marginLeft: 30,
-    marginTop: 15,
   },
   rect2: {
     width: '100%',
@@ -804,7 +303,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,
   },
-
   titulo: {
     color: "white",
     marginLeft: 9,
@@ -812,4 +310,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Step5;
+export default Step7;

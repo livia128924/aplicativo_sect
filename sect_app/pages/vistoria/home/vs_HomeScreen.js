@@ -51,22 +51,14 @@ const VShome = ({ navigation }) => {
     AsyncStorage.setItem("cod_prss", cod_prss);
     AsyncStorage.setItem("rq_nome", rq_nome);
 
-    if (rq_tipo_pessoa === "j") {
-     // navigation.navigate("Vu_PJ");
-
-    } else if (rq_tipo_pessoa === "f") {
+    if (pr_tipo_formulario === "1"){
       navigation.navigate("VuPFprogressSteps");
+
+    } else if (pr_tipo_formulario === "2"){
+      navigation.navigate("Vr_PF");
     }
   }
-//   if(pr_tipo_formulario = "1"){
-//     navigation.navigate("Stepper_PF");
-//     }
-//     else if(pr_tipo_formulario === "2" ){
-//         navigation.navigate("Stepper_rrf");
-//     }
-//     if(pr_tipo_formulario === "4" ){
-//         navigation.navigate("Stepper_PF_D");
-//     }
+
   useEffect(() => {
     db.transaction(
       (tx) => {

@@ -434,7 +434,7 @@ const Step6 = (props) => {
         </View>
       </View>
 
-      <View style={styles.form10}>
+      <View style={styles.form9}>
         <View style={styles.rect2}>
           <Text style={styles.titulo}>
             RESPONSABILIDADE SOCIAL NA ORGANIZAÇÃO
@@ -545,11 +545,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   form9: {
-    width: '95%',
-    left:11,
-    height: 920,
-    //marginLeft: 25,
-    marginTop: 10,
+    width: "95%",
+    height: "auto",
+    paddingBottom: 10,
+    marginTop:10,
+    //marginLeft: 20,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,

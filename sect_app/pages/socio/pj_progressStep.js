@@ -77,11 +77,9 @@ function Index({ navigation }) {
           previousBtnText={ 'voltar'}
           nextBtnText={'próximo'}
         >
-          <View>
+           <View style={{ display: "flex", alignItems: "center" }}>
 
-            <Step1
-
-            />
+            <Step1/>
           </View>
         </ProgressStep>
 
@@ -92,8 +90,9 @@ function Index({ navigation }) {
           previousBtnText={ 'voltar'}
           nextBtnText={'próximo'}
         >
+           <View style={{ display: "flex", alignItems: "center" }}>
           <Step2 />
-
+            </View>
         </ProgressStep>
         <ProgressStep
           label="Empregados/Associados"
@@ -102,7 +101,9 @@ function Index({ navigation }) {
           previousBtnText={ 'voltar'}
           nextBtnText={'próximo'}
         >
+           <View style={{ display: "flex", alignItems: "center" }}>
           <Step3 />
+          </View>
         </ProgressStep>
 
         <ProgressStep
@@ -113,7 +114,9 @@ function Index({ navigation }) {
           previousBtnText={ 'voltar'}
           nextBtnText={'próximo'}
         >
+           <View style={{ display: "flex", alignItems: "center" }}>
           <Step4 />
+          </View>
         </ProgressStep>
 
         <ProgressStep
@@ -124,7 +127,9 @@ function Index({ navigation }) {
           previousBtnText={ 'voltar'}
           nextBtnText={'próximo'}
         >
+           <View style={{ display: "flex", alignItems: "center" }}>
           <Step5 />
+          </View>
         </ProgressStep>
         <ProgressStep
           label="Patrimonio"
@@ -134,7 +139,9 @@ function Index({ navigation }) {
           previousBtnText={ 'voltar'}
           nextBtnText={'próximo'}
         >
+           <View style={{ display: "flex", alignItems: "center" }}>
           <Step6 />
+          </View>
         </ProgressStep>
 
         <ProgressStep
@@ -145,9 +152,11 @@ function Index({ navigation }) {
           previousBtnText={ 'voltar'}
           nextBtnText={'próximo'}
         >
+           <View style={{ display: "flex", alignItems: "center" }}>
           <Step7
           navigation= {navigation}
           />
+          </View>
         </ProgressStep>
       </ProgressSteps>
 

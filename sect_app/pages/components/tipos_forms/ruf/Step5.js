@@ -422,7 +422,7 @@ const Step5 = (props) => {
         </View>
       </View>
 
-      <View style={styles.form}>
+      <View style={styles.form8}>
         <View style={styles.rect2}>
           <Text style={styles.titulo}>ORGANIZAÇÃO SOCIAL</Text>
         </View>
@@ -516,15 +516,7 @@ const Step5 = (props) => {
 };
 
 const styles = StyleSheet.create({
-  form: {
-    width: '92%',
-    height: 560,
-    marginLeft: 25,
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3,
-  },
+
   inputOutrosDejetos: {
     height: 40,
     width: "85%",
@@ -551,10 +543,11 @@ const styles = StyleSheet.create({
     marginLeft: 30,
   },
   form8: {
-    width: '92%',
-    height: 800,
-    marginLeft: 25,
-    marginTop: 10,
+    width: "95%",
+    height: "auto",
+    paddingBottom: 10,
+    marginTop:10,
+    //marginLeft: 20,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
