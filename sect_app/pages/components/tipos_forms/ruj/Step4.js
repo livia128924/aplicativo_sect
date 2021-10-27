@@ -334,11 +334,12 @@ const Step4 = (props) => {
         <View style={styles.rect2}>
           <Text style={styles.titulo}>INFRAESTRUTURA DO IMÓVEL</Text>
         </View>
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Tipo de Construção</Text>
         </View>
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
-          style={styles.Mao_de_obra}
+          style={styles.dropdown_style}
           open={openSe_ruj_tipo_construcao}
           value={parseInt(valorSe_ruj_tipo_construcao)}
           items={itemSe_ruj_tipo_construcao}
@@ -357,6 +358,8 @@ const Step4 = (props) => {
           listMode="SCROLLVIEW"
           placeholder="Selecione::"
         />
+        </View>
+        <View style={{ alignItems: "center" }}>
         <TextInput
           style={styles.inputOutrosBeneficios}
           onChangeText={setOutros_Se_ruj_tipo_construcao}
@@ -371,12 +374,14 @@ const Step4 = (props) => {
           }
           placeholder={"    Outros"}
         />
+        </View>
 
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Nº de Cômodos</Text>
         </View>
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
-          style={styles.Mao_de_obra}
+          style={styles.dropdown_style}
           open={openSe_ruj_numero_comodos}
           value={parseInt(valorSe_ruj_numero_comodos)}
           items={itemSe_ruj_numero_comodos}
@@ -395,12 +400,13 @@ const Step4 = (props) => {
           listMode="SCROLLVIEW"
           placeholder="Selecione::"
         />
-        <View style={styles.municipio}>
+        </View>
+        <View style={styles.title_style}>
           <Text>Nº de Pisos</Text>
         </View>
-
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
-          style={styles.Mao_de_obra}
+          style={styles.dropdown_style}
           open={openSe_ruj_numero_pisos}
           value={parseInt(valorSe_ruj_numero_pisos)}
           items={itemSe_ruj_numero_pisos}
@@ -419,7 +425,8 @@ const Step4 = (props) => {
           listMode="SCROLLVIEW"
           placeholder="Selecione::"
         />
-        <View style={styles.municipio}>
+        </View>
+        <View style={styles.title_style}>
           <Text>Material da Corbertura</Text>
         </View>
         <View style={styles.checkboxlabel}>
@@ -443,12 +450,13 @@ const Step4 = (props) => {
           ))}
         </View>
 
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Estado de Conservação do Imóvel</Text>
         </View>
         <View>
+        <View style={{ alignSelf: "center", width: "85%" }}>
           <DropDownPicker
-            style={styles.Mao_de_obra}
+            style={styles.dropdown_style}
             open={openSe_ruj_estado_conservacao}
             value={parseInt(valorSe_ruj_estado_conservacao)}
             items={itemSe_ruj_estado_conservacao}
@@ -466,6 +474,7 @@ const Step4 = (props) => {
             listMode="SCROLLVIEW"
             placeholder="Selecione::"
           />
+          </View>
         </View>
       </View>
     </>
@@ -491,16 +500,14 @@ const styles = StyleSheet.create({
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
   },
-  municipio: {
+  title_style: {
     color: "#121212",
-    marginLeft: 30,
+    marginLeft: 40,
     marginTop: 15,
   },
-  Mao_de_obra: {
-    marginTop: 5,
+  dropdown_style: {
     height: 40,
-    width: "85%",
-    marginLeft: 30,
+    marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,
   },
@@ -519,8 +526,9 @@ const styles = StyleSheet.create({
   inputOutrosBeneficios: {
     height: 40,
     width: "85%",
-    marginTop: 5,
-    marginLeft: 30,
+    marginTop: 10,
+    //marginLeft: 10,
+    //marginRight:25,
     borderWidth: 1,
     backgroundColor: "white",
   },

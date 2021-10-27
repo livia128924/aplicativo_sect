@@ -578,7 +578,7 @@ const Step5 = (props) => {
             SANEAMENTO BÁSICO E INSTALAÇÕES SANITÁRIAS
           </Text>
         </View>
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Sanitário</Text>
         </View>
 
@@ -598,12 +598,12 @@ const Step5 = (props) => {
           ))}
         </View>
 
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Destino dos Dejetos</Text>
         </View>
-
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
-          style={styles.Dejetos}
+          style={styles.dropdown_style}
           open={openSe_ruj_destino_dejetos}
           value={parseInt(valorSe_ruj_destino_dejetos)}
           items={itemSe_ruj_destino_dejetos}
@@ -621,6 +621,7 @@ const Step5 = (props) => {
           listMode="SCROLLVIEW"
           placeholder="Selecione::"
         />
+        </View>
 
         <View style={{ alignItems: "center" }}>
           <TextInput
@@ -638,7 +639,7 @@ const Step5 = (props) => {
             placeholder={" Outros"}
           />
         </View>
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Lixo</Text>
         </View>
 
@@ -679,7 +680,7 @@ const Step5 = (props) => {
             placeholder={" Outros"}
           />
         </View>
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Rede de Energia</Text>
         </View>
 
@@ -704,7 +705,7 @@ const Step5 = (props) => {
           ))}
         </View>
 
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Rede de Agua</Text>
         </View>
         <View style={styles.checkboxlabel}>
@@ -728,7 +729,7 @@ const Step5 = (props) => {
           ))}
         </View>
 
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Tratamento da agua</Text>
         </View>
         <View style={styles.checkboxlabel}>
@@ -762,15 +763,13 @@ const styles = StyleSheet.create({
     width: "85%",
     marginTop: 10,
     //marginLeft: 10,
-    marginRight:25,
+    //marginRight:25,
     borderWidth: 1,
     backgroundColor: "white",
   },
-  Dejetos: {
-    marginTop: 5,
+  dropdown_style: {
     height: 40,
-    width: "85%",
-    marginLeft: 30,
+    marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,
   },
@@ -793,9 +792,9 @@ const styles = StyleSheet.create({
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
   },
-  municipio: {
+  title_style: {
     color: "#121212",
-    marginLeft: 30,
+    marginLeft: 40,
     marginTop: 15,
   },
   rect2: {

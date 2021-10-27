@@ -78,22 +78,17 @@ const Step1 = () => {
     useState(false);
   const [valor_se_rrj_mao_de_obra, setValor_se_rrj_mao_de_obra] =
     useState(null);
-  const [item_se_rrj_mao_de_obra, setItem_se_rrj_mao_de_obra] =
-    useState([]);
+  const [item_se_rrj_mao_de_obra, setItem_se_rrj_mao_de_obra] = useState([]);
 
-    const [aberto_se_rrj_associados, setAberto_se_rrj_associados] =
+  const [aberto_se_rrj_associados, setAberto_se_rrj_associados] =
     useState(false);
-  const [valor_se_rrj_associados, setValor_se_rrj_associados] =
-    useState(null);
-  const [item_se_rrj_associados, setItem_se_rrj_associados] =
-    useState([]);
+  const [valor_se_rrj_associados, setValor_se_rrj_associados] = useState(null);
+  const [item_se_rrj_associados, setItem_se_rrj_associados] = useState([]);
 
-    const [aberto_se_rrj_cooperados, setAberto_se_rrj_cooperados] =
+  const [aberto_se_rrj_cooperados, setAberto_se_rrj_cooperados] =
     useState(false);
-  const [valor_se_rrj_cooperados, setValor_se_rrj_cooperados] =
-    useState(null);
-  const [item_se_rrj_cooperados, setItem_se_rrj_cooperados] =
-    useState([]);
+  const [valor_se_rrj_cooperados, setValor_se_rrj_cooperados] = useState(null);
+  const [item_se_rrj_cooperados, setItem_se_rrj_cooperados] = useState([]);
 
   useEffect(() => {
     var cod_processo = "";
@@ -112,18 +107,29 @@ const Step1 = () => {
       if (tabela) {
         db.transaction((tx) => {
           tx.executeSql(
-            "select * from " + tabela + " where se_rrj_cod_processo = '" + cod_processo + "'",
+            "select * from " +
+              tabela +
+              " where se_rrj_cod_processo = '" +
+              cod_processo +
+              "'",
             [],
             (tx, results) => {
               var x = "";
               var row = [];
               for (let i = 0; i < results.rows.length; ++i) {
-              console.log(results.rows);
-                setRq_nome(results.rows.item(0).se_rrj_nome);
+                //console.log(results.rows);
+                setLocalizacao(results.rows.item(0).se_rrj_localizacao);
 
                 setValor(results.rows.item(i).se_rrj_municipio);
-
                 setValorAcesso(results.rows.item(i).se_rrj_acesso);
+                setValor_se_rrj_inicio_atividades(results.rows.item(i).se_rrj_inicio_atividades);
+                setValor_se_rrj_setor_abrangencia(results.rows.item(i).se_rrj_setor_abrangencia);
+                setValor_se_rrj_natureza_atividades(results.rows.item(i).se_rrj_natureza_atividades);
+                setValor_se_rrj_ramo_atividades(results.rows.item(i).se_rrj_ramo_atividades);
+                set_se_rrj_descricao_ramo_atividades(results.rows.item(i).se_rrj_descricao_ramo_atividades);
+                setValor_se_rrj_mao_de_obra(results.rows.item(i).se_rrj_mao_de_obra);
+                setValor_se_rrj_associados(results.rows.item(i).se_rrj_associados);
+                setValor_se_rrj_cooperados(results.rows.item(i).se_rrj_cooperados);
 
                 // var x = results.rows.item(i).se_ruf_tipo_atividades;
                 // valor_checked(x.split(","));
@@ -235,23 +241,19 @@ const Step1 = () => {
             setItem_se_rrj_ramo_atividades(temp);
           }
         );
-        tx.executeSql(
-          "select * from aux_mao_de_obra ",
-          [],
-          (tx, results) => {
-            //var len = results.rows.length, i;
-            var temp = [];
-            //console.log(len);
-            for (let i = 0; i < results.rows.length; ++i) {
-              temp.push({
-                label: results.rows.item(i).descricao,
-                value: results.rows.item(i).codigo,
-              });
-              //console.log( results.rows.item(i).nome);
-            }
-            setItem_se_rrj_mao_de_obra(temp);
+        tx.executeSql("select * from aux_mao_de_obra ", [], (tx, results) => {
+          //var len = results.rows.length, i;
+          var temp = [];
+          //console.log(len);
+          for (let i = 0; i < results.rows.length; ++i) {
+            temp.push({
+              label: results.rows.item(i).descricao,
+              value: results.rows.item(i).codigo,
+            });
+            //console.log( results.rows.item(i).nome);
           }
-        );
+          setItem_se_rrj_mao_de_obra(temp);
+        });
       },
       (err) => {
         console.error("There was a problem with the tx", err);
@@ -274,7 +276,7 @@ const Step1 = () => {
         });
       },
       (tx, err) => {
-        console.error("error em alguma coisa", err);
+        console.error("error", err.message);
         return true;
       },
       (tx, success) => {
@@ -282,7 +284,6 @@ const Step1 = () => {
         //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
       }
     );
-
     var chaves = '"' + tabela + " " + campo + " " + valor + " " + codigo + '"';
     db.transaction((tx) => {
       //tx.executeSql("DROP TABLE log", []);
@@ -332,52 +333,6 @@ const Step1 = () => {
     AsyncStorage.setItem("nome_tabela", tabela);
     AsyncStorage.setItem("codigo", valor.toString());
   }
-
-  // const handleChange = (id) => {
-  //   const newState = rq_filiacao.map((el) => {
-  //     const label = el;
-
-  //     if (el.id === id) {
-  //       // verificamos se o nome do label foi passado na função
-  //       label.isChecked = !el.isChecked; // se sim, vamos alterar o estado do "checked"
-  //     }
-
-  //     return label;
-  //   });
-
-  //   setRq_filiacao(newState); // atualiza o estado
-  // };
-
-  // function muda() {
-  //   //await api
-  //   var str_valores = [];
-
-  //   rq_filiacao.filter((value) => value.isChecked === true)
-  //     .map((item) => {
-  //       // console.log(item);
-  //       str_valores.push(item.id);
-  //     });
-  //   //console.log(ischecado);
-  //   return str_valores.join(",");
-  // }
-
-  // function valor_checked(rq_filiacao) {
-  //   db.transaction((tx) => {
-  //       //console.log(temp);
-  //       let x = temp;
-  //       //console.log(x);
-  //       rq_filiacao.forEach((item) => {
-  //         x.forEach((val) => {
-  //           if (val.id == item) {
-  //             val.isChecked = true;
-  //           }
-  //         });
-  //       });
-
-  //       return setRq_filiacao(x);
-  //   });
-  // }
-
   return (
     <>
       <View style={styles.form_}>
@@ -391,42 +346,44 @@ const Step1 = () => {
           <Text>MUNICIPIOS </Text>
         </View>
 
-        <DropDownPicker
-          style={styles.dropdown_style}
-          open={aberto}
-          value={parseInt(valor)}
-          items={item}
-          setOpen={setAberto}
-          setValue={setValor}
-          setItems={setItem_cidades} //cidades
-          zIndex={9999}
-          listMode="SCROLLVIEW"
-          onChangeValue={() =>
-            onPressTitle("se_rrj", "se_rrj_municipio", valor, sync)
-          }
-          placeholder={"Municipios"} //aqui eu tentei colocar o retorno da funcao do select
-        />
-
+        <View style={{ alignSelf: "center", width: "85%" }}>
+          <DropDownPicker
+            style={styles.dropdown_style}
+            open={aberto}
+            value={parseInt(valor)}
+            items={item}
+            setOpen={setAberto}
+            setValue={setValor}
+            setItems={setItem_cidades} //cidades
+            zIndex={9999}
+            listMode="SCROLLVIEW"
+            onChangeValue={() =>
+              onPressTitle("se_rrj", "se_rrj_municipio", valor, sync)
+            }
+            placeholder={"Municipios"} //aqui eu tentei colocar o retorno da funcao do select
+          />
+        </View>
         <View style={styles.title_style}>
           <Text>ACESSO</Text>
         </View>
-        <DropDownPicker
-          style={styles.dropdown_style}
-          open={abertoAcesso}
-          value={parseInt(valorAcesso)}
-          items={itemAcesso}
-          setOpen={setAbertoAcesso}
-          setValue={setValorAcesso}
-          setItems={setItem_aux_acesso} //aux_acesso
-          onChangeValue={() =>
-            onPressTitle("se_rrj", "se_rrj_acesso", valorAcesso, sync)
-          }
-          listMode="SCROLLVIEW"
-          placeholder="acesso"
-        />
-
-        <View>
-          <Text style={styles.title_style}>LOCALIZAÇÃO</Text>
+        <View style={{ alignSelf: "center", width: "85%" }}>
+          <DropDownPicker
+            style={styles.dropdown_style}
+            open={abertoAcesso}
+            value={parseInt(valorAcesso)}
+            items={itemAcesso}
+            setOpen={setAbertoAcesso}
+            setValue={setValorAcesso}
+            setItems={setItem_aux_acesso} //aux_acesso
+            onChangeValue={() =>
+              onPressTitle("se_rrj", "se_rrj_acesso", valorAcesso, sync)
+            }
+            listMode="SCROLLVIEW"
+            placeholder="acesso"
+          />
+        </View>
+        <View style={styles.title_style}>
+          <Text>LOCALIZAÇÃO</Text>
         </View>
         <View style={{ alignItems: "center" }}>
           <TextInput
@@ -451,7 +408,7 @@ const Step1 = () => {
         <View style={styles.title_style}>
           <Text>Inicio das atividades </Text>
         </View>
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignSelf: "center", width: "85%" }}>
           <DropDownPicker
             style={styles.dropdown_style}
             open={aberto_se_rrj_inicio_atividades}
@@ -477,7 +434,7 @@ const Step1 = () => {
         <View style={styles.title_style}>
           <Text>Setor de Abrangência </Text>
         </View>
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignSelf: "center", width: "85%" }}>
           <DropDownPicker
             zIndex={aberto_se_rrj_setor_abrangencia ? 9999 : 0}
             style={styles.dropdown_style}
@@ -504,7 +461,7 @@ const Step1 = () => {
         <View style={styles.title_style}>
           <Text>Natureza da Atividade</Text>
         </View>
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignSelf: "center", width: "85%" }}>
           <DropDownPicker
             zIndex={aberto_se_rrj_natureza_atividades ? 9999 : 0}
             style={styles.dropdown_style}
@@ -531,6 +488,7 @@ const Step1 = () => {
         <View style={styles.title_style}>
           <Text>Ramo de Atividade</Text>
         </View>
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
           style={styles.dropdown_style}
           // zIndex={aberto_se_rrj_ramo_atividades ? 9999 : 0}
@@ -553,7 +511,7 @@ const Step1 = () => {
           }
           placeholder={"Selecione:"} //aqui eu tentei colocar o retorno da funcao do select
         />
-
+</View>
         <View style={styles.title_style}>
           <Text>Descricao </Text>
         </View>
@@ -585,7 +543,7 @@ const Step1 = () => {
         <View style={styles.title_style}>
           <Text>Mão de Obra Empregada</Text>
         </View>
-
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
           style={styles.dropdown_style}
           // zIndex={aberto_se_rrj_ramo_atividades ? 9999 : 0}
@@ -608,10 +566,11 @@ const Step1 = () => {
           }
           placeholder={"Selecione:"} //aqui eu tentei colocar o retorno da funcao do select
         />
-
+</View>
         <View style={styles.title_style}>
           <Text>Número de Associados </Text>
         </View>
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
           style={styles.dropdown_style}
           // zIndex={aberto_se_rrj_ramo_atividades ? 9999 : 0}
@@ -634,9 +593,11 @@ const Step1 = () => {
           }
           placeholder={"Selecione:"} //aqui eu tentei colocar o retorno da funcao do select
         />
+        </View>
         <View style={styles.title_style}>
           <Text>Número de Cooperados</Text>
         </View>
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
           style={styles.dropdown_style}
           // zIndex={aberto_se_rrj_ramo_atividades ? 9999 : 0}
@@ -658,11 +619,8 @@ const Step1 = () => {
           }
           placeholder={"Selecione:"} //aqui eu tentei colocar o retorno da funcao do select
         />
-
+        </View>
       </View>
-
-
-
     </>
   );
 };
@@ -689,6 +647,7 @@ const styles = StyleSheet.create({
     width: "95%",
     height: "auto",
     paddingBottom: 10,
+    marginTop: 10,
     //marginLeft: 20,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
@@ -698,7 +657,7 @@ const styles = StyleSheet.create({
     width: "95%",
     //left: 11,
     height: "auto",
-    paddingBottom:10,
+    paddingBottom: 10,
     marginTop: 15,
     //   marginRight: 25,
     borderWidth: 1,
@@ -708,10 +667,10 @@ const styles = StyleSheet.create({
   input_style: {
     height: 40,
     width: "85%",
+    marginTop: 10,
+    //marginLeft: 10,
     //marginRight:25,
-    marginTop: 2,
     borderWidth: 1,
-
     backgroundColor: "white",
   },
   form: {
@@ -732,14 +691,14 @@ const styles = StyleSheet.create({
   },
   title_style: {
     color: "#121212",
-    marginLeft: 30,
+    marginLeft: 40,
     marginTop: 15,
   },
   dropdown_style: {
     height: 40,
-    width: "85%",
-    marginLeft: 30,
-    height: 40,
+    //width: "85%",
+    //marginLeft: 30,
+    //height: 40,
     marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,

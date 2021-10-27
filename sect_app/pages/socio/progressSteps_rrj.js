@@ -6,7 +6,7 @@ import Step2 from '../components/tipos_forms/rrj/Step2';
 import Step3 from '../components/tipos_forms/rrj/Step3';
 import Step4 from '../components/tipos_forms/rrj/Step4';
 import Step5 from '../components/tipos_forms/rrj/Step5';
-import Step7 from '../components/tipos_forms/rrj/Step7';
+import Step6 from '../components/tipos_forms/rrj/Step6';
 //import Step6 from '../components/rrj/Step6';
 import Swiper from 'react-native-swiper';
 const db = DatabaseConnection.getConnection();
@@ -142,14 +142,11 @@ function Index_rrj({ navigation }) {
           finishBtnText={'enviar'}
           scrollable={true}
         >
-          <Step7
+          <Step6
           navigation= {navigation}
           />
         </ProgressStep>
       </ProgressSteps>
-
-
-
 
     </View>
   );

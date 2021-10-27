@@ -9,33 +9,6 @@ const db = DatabaseConnection.getConnection();
 const Step2 = (props) => {
   const [sync, setSync] = useState("");
   const [se_rrj_material_cobertura, setItem_se_rrj_material_cobertura] = useState([]);
-
-  const [dados_valor, setDados_valor] = useState("");
-  const [rq_profissao_local, set_rq_profissao_local] = useState("");
-  const [rq_profissao_endereco, set_rq_profissao_endereco] = useState("");
-  const [rq_profissao_cargo, set_rq_profissao_cargo] = useState("");
-  const [rq_renda_comprovada, set_rq_renda_comprovada] = useState("");
-  const [rq_profissao_fone, set_rq_profissao_fone] = useState("");
-  const [rq_profissao_email, set_rq_profissao_email] = useState("");
-  const [aberto_rq_profissao_local, setAberto_rq_profissao_local] =
-    useState(false);
-  const [valor_rq_profissao_local, setValor_rq_profissao_local] =
-    useState(null);
-  const [item_rq_profissao_local, setItem_rq_profissao_local] = useState([
-    { label: "Empregado com vínculo empregatício", value: "1" },
-    { label: "Empregado sem vínculo empregatício", value: "2" },
-    { label: "Autônomo", value: "3" },
-    { label: "Empregador", value: "4" },
-    { label: "Trabalho Informal", value: "5" },
-    { label: "Desempregado", value: "6" },
-    { label: "Aposentado", value: "7" },
-    { label: "Outros", value: "8" },
-  ]);
-
-  const [aberto_rq_profissao, setAberto_rq_profissao] = useState(false);
-  const [valor_rq_profissao, setValor_rq_profissao] = useState(null);
-  const [item_rq_profissao, setItem_rq_profissao] = useState([]);
-
   const [aberto_se_rrj_beneficios_concedidos, setAberto_se_rrj_beneficios_concedidos] = useState(false);
   const [valor_se_rrj_beneficios_concedidos, setValor_se_rrj_beneficios_concedidos] = useState(null);
   const [item_se_rrj_beneficios_concedidos, setItem_se_rrj_beneficios_concedidos] = useState([]);
@@ -71,60 +44,52 @@ const Step2 = (props) => {
 
     loadStep2();
 
-    // AsyncStorage.getItem("nome_tabela").then((tabela) => {
-    //   //console.log(cod_processo);
-    //   if (tabela) {
-    //     db.transaction((tx) => {
-    //       tx.executeSql(
-    //         "select * from " +
-    //           tabela +
-    //           " where se_duf_cod_processo = '" +
-    //           cod_processo +
-    //           "'",
-    //         [],
-    //         (tx, results) => {
-    //           var row = [];
+    AsyncStorage.getItem("nome_tabela").then((tabela) => {
+      //console.log(cod_processo);
+      if (tabela) {
+        db.transaction((tx) => {
+          tx.executeSql(
+            "select * from " +
+              tabela +
+              " where se_rrj_cod_processo = '" +
+              cod_processo +
+              "'",
+            [],
+            (tx, results) => {
+              var row = [];
 
-    //           for (let i = 0; i < results.rows.length; ++i) {
-    //             console.log(results.rows.item(0).se_duf_acesso);
+              for (let i = 0; i < results.rows.length; ++i) {
 
-    //             setSe_duf_natureza_atividades_outros(
-    //               results.rows.item(0).se_duf_natureza_atividades_outros
-    //             );
+                setValor_se_rrj_beneficios_concedidos(
+                  results.rows.item(0).se_rrj_beneficios_concedidos
+                );
 
-    //             setSe_duf_situacao_mercadoOutros(
-    //               results.rows.item(0).se_duf_situacao_mercado_outros
-    //             );
+                setValor_se_rrj_tipo_construcao(
+                  results.rows.item(0).se_rrj_tipo_construcao
+                );
 
-    //             setSe_duf_tipo_beneficio_outros(
-    //               results.rows.item(0).se_duf_tipo_beneficio_outros
-    //             );
+                setValor_se_rrj_numero_comodos(
+                  results.rows.item(0).se_rrj_numero_comodos
+                );
+                setValor_se_rrj_numero_pisos(
+                  results.rows.item(0).se_rrj_numero_pisos
+                );
+                setValor_se_rrj_estado_conservacao(
+                  results.rows.item(0).se_rrj_estado_conservacao
+                );
 
-    //             setSe_duf_valor_beneficio(
-    //               results.rows.item(0).se_duf_tipo_beneficio_outros
-    //             );
+                //console.log(typeof (results.rows.item(i).se_duf_municipio));
+                //valor(row);
 
-    //             setSe_duf_valor_beneficio(
-    //               results.rows.item(0).se_duf_valor_beneficio
-    //             );
-
-    //             //console.log(typeof (results.rows.item(i).se_duf_municipio));
-    //             //valor(row);
-
-    //             var x = results.rows.item(i).se_duf_tipo_atividades;
-    //             valor_checked(x.split(","));
-
-    //             var y = results.rows.item(i).se_duf_situacao_mercado;
-    //             valor_checked_situacao_mercado(y.split(","));
-
-    //             var w = results.rows.item(i).se_duf_tipo_beneficio;
-    //             valor_checked_tipo_beneficio(w.split(","));
-    //           }
-    //         }
-    //       );
-    //     });
-    //   } //
-    // });
+                var x = results.rows.item(i).se_rrj_material_cobertura;
+                valor_checked(x.split(","));
+                console.log("asdasf",x);
+              }
+            }
+          );
+        });
+      } //
+    });
   }, []);
 
   // function mask() {
@@ -221,46 +186,46 @@ const Step2 = (props) => {
   }
 
   //função que aciona quando o estado do componente muda e seta os valores correspondente
-  // function onPressTitle(tabela, campo, valor, codigo) {
+  function onPressTitle(tabela, campo, valor, codigo) {
 
-  //     db.transaction((tx) => {
-  //         const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_duf_cod_processo = '${codigo}'`;
-  //         console.log(query);
-  //         tx.executeSql(query, [], (tx, results) => {
-  //             for (let i = 0; i < results.rows.length; ++i) {
-  //                 alert("INSERIDO COM SUCESSO");
-  //             }
-  //         });
+      db.transaction((tx) => {
+          const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_rrj_cod_processo = '${codigo}'`;
+          console.log(query);
+          tx.executeSql(query, [], (tx, results) => {
+              for (let i = 0; i < results.rows.length; ++i) {
+                  alert("INSERIDO COM SUCESSO");
+              }
+          });
 
-  //     }, (tx, err) => {
-  //         console.error("error", err.message);
-  //         return true;
-  //     }, (tx, success) => {
-  //         console.log("tudo certo por aqui", success);
-  //         //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
-  //     });
+      }, (tx, err) => {
+          console.error("error", err);
+          return true;
+      }, (tx, success) => {
+          console.log("tudo certo por aqui", success);
+          //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
+      });
 
-  //     var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
+      var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
 
-  //     db.transaction((tx) => {
-  //       //tx.executeSql("DROP TABLE log", []);
-  //       const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-  //       console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
-  //       tx.executeSql(log_delete, []);
-  //     });
+      db.transaction((tx) => {
+        //tx.executeSql("DROP TABLE log", []);
+        const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+        console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
+        tx.executeSql(log_delete, []);
+      });
 
-  //     db.transaction((tx) => {
-  //       const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-  //       console.log(log_update);
-  //       tx.executeSql(log_update, [], (tx, results) => {
+      db.transaction((tx) => {
+        const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+        console.log(log_update);
+        tx.executeSql(log_update, [], (tx, results) => {
 
-  //       });
-  //     })
+        });
+      })
 
-  //     AsyncStorage.setItem('nome_tabela', tabela);
+      AsyncStorage.setItem('nome_tabela', tabela);
 
-  //     AsyncStorage.setItem('codigo', valor.toString());
-  // };
+      AsyncStorage.setItem('codigo', valor.toString());
+  };
 
   const handleChange = (id) => {
     const newState = se_rrj_material_cobertura.map((el) => {
@@ -273,38 +238,8 @@ const Step2 = (props) => {
 
       return label;
     });
-
+    //console.log("newState",newState);
     setItem_se_rrj_material_cobertura(newState); // atualiza o estado
-  };
-
-  const handleChange_situacao_mercado = (id) => {
-    const newState = se_duf_situacao_mercado.map((el) => {
-      const label = el;
-
-      if (el.id === id) {
-        // verificamos se o nome do label foi passado na função
-        label.isChecked = !el.isChecked; // se sim, vamos alterar o estado do "checked"
-      }
-
-      return label;
-    });
-
-    setSe_duf_situacao_mercado(newState); // atualiza o estado
-  };
-
-  const handleChange_tipo_beneficio = (id) => {
-    const newState = se_duf_tipo_beneficio.map((el) => {
-      const label = el;
-
-      if (el.id === id) {
-        // verificamos se o nome do label foi passado na função
-        label.isChecked = !el.isChecked; // se sim, vamos alterar o estado do "checked"
-      }
-
-      return label;
-    });
-
-    setSe_duf_tipo_beneficio(newState); // atualiza o estado
   };
 
   function muda() {
@@ -314,40 +249,13 @@ const Step2 = (props) => {
     se_rrj_material_cobertura
       .filter((value) => value.isChecked === true)
       .map((item) => {
-        // console.log(item);
+        //console.log(item);
         str_valores.push(item.id);
       });
-    //console.log(ischecado);
+   //console.log("muda", str_valores);
     return str_valores.join(",");
   }
 
-  function muda_situacao_mercado() {
-    //await api
-    var str_valores = [];
-
-    se_duf_situacao_mercado
-      .filter((value) => value.isChecked === true)
-      .map((item) => {
-        // console.log(item);
-        str_valores.push(item.id);
-      });
-    //console.log(ischecado);
-    return str_valores.join(",");
-  }
-
-  function muda_tipo_beneficio() {
-    //await api
-    var str_valores = [];
-
-    se_duf_tipo_beneficio
-      .filter((value) => value.isChecked === true)
-      .map((item) => {
-        // console.log(item);
-        str_valores.push(item.id);
-      });
-    //console.log(ischecado);
-    return str_valores.join(",");
-  }
 
   function valor_checked(material_cobertura) {
     db.transaction((tx) => {
@@ -379,69 +287,6 @@ const Step2 = (props) => {
     });
   }
 
-  function valor_checked_situacao_mercado(situacao_mercado) {
-    db.transaction((tx) => {
-      tx.executeSql("select * from aux_situacao_mercado", [], (tx, results) => {
-        //var len = results.rows.length, i;
-        var temp = [];
-        //console.log(len);
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push({
-            label: results.rows.item(i).descricao,
-            id: results.rows.item(i).codigo,
-            isChecked: false,
-          });
-        }
-        //console.log(temp);
-        let x = temp;
-
-        //console.log(x);
-        situacao_mercado.forEach((item) => {
-          x.forEach((val) => {
-            if (val.id == item) {
-              val.isChecked = true;
-            }
-          });
-        });
-
-        return setSe_duf_situacao_mercado(x);
-      });
-    });
-  }
-
-  function valor_checked_tipo_beneficio(tipo_beneficio) {
-    db.transaction((tx) => {
-      tx.executeSql(
-        "select * from aux_tipo_beneficios_sociais",
-        [],
-        (tx, results) => {
-          //var len = results.rows.length, i;
-          var temp = [];
-          //console.log(len);
-          for (let i = 0; i < results.rows.length; ++i) {
-            temp.push({
-              label: results.rows.item(i).descricao,
-              id: results.rows.item(i).codigo,
-              isChecked: false,
-            });
-          }
-          //console.log(temp);
-          let x = temp;
-
-          //console.log(x);
-          tipo_beneficio.forEach((item) => {
-            x.forEach((val) => {
-              if (val.id == item) {
-                val.isChecked = true;
-              }
-            });
-          });
-
-          return setSe_duf_tipo_beneficio(x);
-        }
-      );
-    });
-  }
 
   return (
     <>
@@ -450,9 +295,11 @@ const Step2 = (props) => {
           <Text style={styles.titulo}>POLÍTICA DE BENFÍCIOS</Text>
         </View>
 
-        <View style={{ marginTop: 10, marginLeft: 30 }}>
+        <View style={styles.title_style}>
           <Text>Tipos de Benefícios Concedidos</Text>
         </View>
+
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
             zIndex={aberto_se_rrj_beneficios_concedidos ? 9999 : 0}
             style={styles.dropdown_style}
@@ -474,17 +321,18 @@ const Step2 = (props) => {
               )}
             placeholder={"Selecione:"} //aqui eu tentei colocar o retorno da funcao do select
           />
+          </View>
       </View>
 
       <View style={styles.form4}>
         <View style={styles.rect2}>
           <Text style={styles.titulo}>INFRAESTRUTURA DO IMÓVEL</Text>
         </View>
-        <View style={{ marginTop: 10, marginLeft: 30 }}>
+        <View style={styles.title_style}>
           <Text>Tipo de Construção</Text>
         </View>
 
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignSelf: "center", width: "85%" }}>
           <DropDownPicker
             zIndex={aberto_se_rrj_tipo_construcao ? 9999 : 0}
             style={styles.dropdown_style}
@@ -507,9 +355,10 @@ const Step2 = (props) => {
             placeholder={"Selecione:"} //aqui eu tentei colocar o retorno da funcao do select
           />
         </View>
-        <View style={{ marginTop: 10, marginLeft: 30 }}>
+        <View style={styles.title_style}>
           <Text>Nº de Cômodos</Text>
         </View>
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
             zIndex={aberto_se_rrj_numero_comodos ? 9999 : 0}
             style={styles.dropdown_style}
@@ -531,10 +380,11 @@ const Step2 = (props) => {
             }
             placeholder={"Selecione:"} //aqui eu tentei colocar o retorno da funcao do select
           />
-
-        <View style={{ marginTop: 10, marginLeft: 30 }}>
+</View>
+        <View style={styles.title_style}>
           <Text>Nº de Pisos</Text>
         </View>
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
             zIndex={aberto_se_rrj_numero_pisos ? 9999 : 0}
             style={styles.dropdown_style}
@@ -556,8 +406,8 @@ const Step2 = (props) => {
             }
             placeholder={"Selecione:"} //aqui eu tentei colocar o retorno da funcao do select
           />
-
-        <View style={{ marginTop: 10, marginLeft: 30 }}>
+</View>
+        <View style={styles.title_style}>
           <Text>Material da Cobertura</Text>
         </View>
 
@@ -577,10 +427,10 @@ const Step2 = (props) => {
             ))}
           </View>
 
-        <View style={{ marginTop: 10, marginLeft: 30 }}>
+        <View style={styles.title_style}>
           <Text>Estado de Conservação do Imóvel</Text>
         </View>
-
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
             zIndex={aberto_se_rrj_estado_conservacao ? 9999 : 0}
             style={styles.dropdown_style}
@@ -602,7 +452,7 @@ const Step2 = (props) => {
             }
             placeholder={"Selecione:"} //aqui eu tentei colocar o retorno da funcao do select
           />
-
+</View>
 
       </View>
 
@@ -611,11 +461,16 @@ const Step2 = (props) => {
 };
 
 const styles = StyleSheet.create({
+  title_style: {
+    color: "#121212",
+    marginLeft: 40,
+    marginTop: 15,
+  },
   dropdown_style: {
     height: 40,
-    width: "85%",
-    marginLeft: 30,
-    height: 40,
+    //width: "85%",
+    //marginLeft: 30,
+    //height: 40,
     marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,
@@ -628,40 +483,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginLeft: 30,
   },
-  input_style: {
-    height: 40,
-    width: "85%",
-    marginTop: 10,
-    marginLeft: 10,
-    borderWidth: 1,
-    backgroundColor: "white",
-  },
-  input_style_titulo: {
-    height: 40,
-    width: "100%",
-    marginTop: 10,
-    //marginLeft: 10,
-    borderWidth: 1,
-    backgroundColor: "white",
-  },
-  input_style_zona: {
-    height: 40,
-    width: "100%",
-    marginTop: 10,
-    // marginLeft: 10,
-    backgroundColor: "red",
-    borderWidth: 1,
-    backgroundColor: "white",
-  },
-  eleitorStyle: {
-    flexDirection: "row",
-    //alignItems: "center",
-    display: "flex",
-    justifyContent: "space-between",
-    height: 'auto',
-    width:'85%',
-    flexWrap:'wrap'
-  },
+
   form4: {
     width: "95%",
     height: 'auto',
@@ -672,30 +494,15 @@ const styles = StyleSheet.create({
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
   },
-  form5: {
-    width: "95%",
-    height: 620,
-    //marginLeft: 20,
-    marginVertical: 10,
-    borderWidth: 1,
-    borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3,
-  },
   form3: {
-    width: "95%",
-    height: 'auto',
-    paddingBottom:10,
+  width: "95%",
+    height: "auto",
+    paddingBottom: 10,
+    marginTop: 10,
     //marginLeft: 20,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
-  },
-  input2: {
-    height: 40,
-    width: "85%",
-    marginTop: 2,
-    borderWidth: 1,
-    backgroundColor: "white",
   },
   rect2: {
     width: "100%",
@@ -708,12 +515,7 @@ const styles = StyleSheet.create({
     marginLeft: 9,
     marginTop: 1,
   },
-  title_style: {
-    color: "#121212",
-    //marginLeft: 30,
-    marginTop: 10,
-    alignItems: "center",
-  },
+
 });
 
 export default Step2;

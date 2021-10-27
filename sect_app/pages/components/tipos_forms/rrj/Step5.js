@@ -42,44 +42,36 @@ const Step5 = (props) => {
 
     loadStep5();
 
-  //    AsyncStorage.getItem('nome_tabela').then(tabela => {
-  //     //console.log("ok",cod_processo);
-  //      if (tabela ) {
+     AsyncStorage.getItem('nome_tabela').then(tabela => {
+      //console.log("ok",cod_processo);
+       if (tabela ) {
 
-  //          db.transaction((tx) => {
+           db.transaction((tx) => {
 
-  //              tx.executeSql(
-  //                  "select * from " + tabela + " where se_duf_cod_processo = '" + cod_processo + "'", [], (tx, results) => {
-  //                      //var x = "";
-  //                     // console.log(results.rows.length);
-  //                      var row = [];
-  //                      for (let i = 0; i < results.rows.length; ++i) {
+               tx.executeSql(
+                   "select * from " + tabela + " where se_rrj_cod_processo = '" + cod_processo + "'", [], (tx, results) => {
+                       //var x = "";
+                      // console.log(results.rows.length);
+                       var row = [];
+                       for (let i = 0; i < results.rows.length; ++i) {
 
-  //                        setSe_duf_equipamentos_domesticos_outros(results.rows.item(0).se_duf_equipamentos_domesticos_outros);
+                        setValor_se_rrj_responsabilidade_social(results.rows.item(0).se_rrj_responsabilidade_social);
 
-  //                        setSe_duf_organizacao_informal_outros(results.rows.item(0).se_duf_organizacao_informal_outros);
+                        setValor_se_rrj_formacao_atuacao(results.rows.item(0).se_rrj_formacao_atuacao);
 
-  //                        setSe_duf_organizacao_formal_outros(results.rows.item(0).se_duf_organizacao_formal_outros);
+                        setValor_se_rrj_investimento_financeiro(results.rows.item(0).se_rrj_investimento_financeiro);
 
+                        set_se_rrj_informacaoes_adicionais(results.rows.item(0).se_rrj_informacaoes_adicionais);
 
-  //                           var x = results.rows.item(i).se_duf_equipamentos_domesticos;
-  //                           valor_checked(x.split(','));
+                           //console.log(results.rows.item(i).se_rrj_sanitario);
+                       }
 
-  //                           var y = results.rows.item(i).se_duf_organizacao_informal;
-  //                          valor_checked_organizacao_informal(y.split(','));
-
-  //                          var w = results.rows.item(i).se_duf_organizacao_formal;
-  //                          valor_checked_organizacao_formal(w.split(','));
-
-  //                          //console.log(results.rows.item(i).se_duf_sanitario);
-  //                      }
-
-  //                  }, function(tx, error) {
-  //                   alert('SELECT error: ' + error.message);
-  //               });
-  //          })
-  //      }
-  //  });
+                   }, function(tx, error) {
+                    alert('SELECT error: ' + error.message);
+                });
+           })
+       }
+   });
   }, []);
 
 
@@ -126,59 +118,58 @@ const Step5 = (props) => {
 
 
   //função que aciona quando o estado do componente muda e seta os valores correspondente
-  // function onPressTitle(tabela, campo, valor, codigo) {
+  function onPressTitle(tabela, campo, valor, codigo) {
 
-  //     ///console.log(codigo);
-  //     db.transaction((tx) => {
+      ///console.log(codigo);
+      db.transaction((tx) => {
 
-  //         const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_duf_cod_processo = '${codigo}'`;
-  //         //console.log(query);
-  //         tx.executeSql(query, [], (tx, results) => {
-  //             for (let i = 0; i < results.rows.length; ++i) {
-  //                 alert("INSERIDO COM SUCESSO");
-  //             }
-  //         });
-  //     }, (tx, err) => {
-  //         //console.error("error em alguma coisa", err);
-  //         return true;
-  //     }, (tx, success) => {
-  //         //console.log("tudo certo por aqui", success);
-  //         //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
-  //     });
+          const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_rrj_cod_processo = '${codigo}'`;
+          //console.log(query);
+          tx.executeSql(query, [], (tx, results) => {
+              for (let i = 0; i < results.rows.length; ++i) {
+                  alert("INSERIDO COM SUCESSO");
+              }
+          });
+      }, (tx, err) => {
+          //console.error("error em alguma coisa", err);
+          return true;
+      }, (tx, success) => {
+          //console.log("tudo certo por aqui", success);
+          //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
+      });
 
-  //     var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
+      var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
 
-  //     db.transaction((tx) => {
-  //         //tx.executeSql("DROP TABLE log", []);
-  //         const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-  //         console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
-  //         tx.executeSql(log_delete, []);
-  //     });
+      db.transaction((tx) => {
+          //tx.executeSql("DROP TABLE log", []);
+          const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+          console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
+          tx.executeSql(log_delete, []);
+      });
 
-  //     db.transaction((tx) => {
-  //         const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-  //         console.log(log_update);
-  //         tx.executeSql(log_update, [], (tx, results) => {
+      db.transaction((tx) => {
+          const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+          console.log(log_update);
+          tx.executeSql(log_update, [], (tx, results) => {
 
-  //         });
-  //     })
-  //       AsyncStorage.setItem('nome_tabela', tabela);
+          });
+      })
+        AsyncStorage.setItem('nome_tabela', tabela);
 
 
-  //     AsyncStorage.setItem('codigo', valor.toString());
-  // };
-
+      AsyncStorage.setItem('codigo', valor.toString());
+  };
 
   return (
     <>
-      <View style={styles.form8}>
+      <View style={styles.form}>
         <View style={styles.rect2}>
           <Text style={styles.titulo}>RESPONSABILIDADE SOCIAL NA ORGANIZAÇÃO</Text>
         </View>
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Possui programa de responsabilidade social</Text>
         </View>
-        <View style={{ alignItems: "center", }}>
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
           style={styles.drop_down_Style}
           zIndex={open_se_rrj_responsabilidade_social ? 9999 : 0}
@@ -190,7 +181,7 @@ const Step5 = (props) => {
           setItems={setItem_se_rrj_responsabilidade_social}
           onChangeValue={() =>
             onPressTitle(
-              "se_duf",
+              "se_rrj",
               "se_rrj_responsabilidade_social",
               valor_se_rrj_responsabilidade_social,
               sync
@@ -200,10 +191,10 @@ const Step5 = (props) => {
             placeholder="Selecione::"
             />
         </View>
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Formação de Atuação</Text>
         </View>
-
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
           style={styles.drop_down_Style}
           zIndex={open_se_rrj_formacao_atuacao ? 9999 : 0}
@@ -224,12 +215,13 @@ const Step5 = (props) => {
             listMode="SCROLLVIEW"
             placeholder="Selecione::"
             />
+            </View>
 
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Investimento Financeiro destinado</Text>
         </View>
 
-
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
           style={styles.drop_down_Style}
           zIndex={open_se_rrj_investimento_financeiro ? 9999 : 0}
@@ -250,14 +242,14 @@ const Step5 = (props) => {
             listMode="SCROLLVIEW"
             placeholder="Selecione::"
             />
-
+</View>
       </View>
       <View style={styles.form}>
         <View style={styles.rect2}>
           <Text style={styles.titulo}>INFORMAÇÕES ADICIONAIS</Text>
         </View>
 
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Informações adicionais</Text>
         </View>
 
@@ -288,18 +280,15 @@ const styles = StyleSheet.create({
   input_style: {
     height: 40,
     width: "85%",
+    marginTop: 10,
+    //marginLeft: 10,
     //marginRight:25,
-    marginTop: 2,
     borderWidth: 1,
-
     backgroundColor: "white",
   },
   drop_down_Style: {
-    marginTop: 5,
     height: 40,
-    width: "85%",
-    display:'flex', alignItems: "center" , alignSelf:'center',
-    //marginLeft: 30,
+    marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,
   },
@@ -312,45 +301,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
-
-
   },
-  inputOutrosDejetos: {
-    height: 40,
-    width: "85%",
-    marginTop: 10,
-    marginLeft: 10,
-    borderWidth: 1,
-    backgroundColor: "white",
-  },
-  Dejetos: {
-    marginTop: 5,
-    height: 40,
-    width: "85%",
-    marginLeft: 30,
-    borderRadius: 0,
-    borderWidth: 1,
-  },
-
-  checkboxGroup: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  checkboxlabel: {
-    marginTop: 5,
-    marginLeft: 30,
-  },
-  form8: {
-    width: '95%',
-    height: 'auto',
-    //marginLeft: 25,
-    paddingBottom:10,
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3,
-  },
-  municipio: {
+  title_style: {
     color: "#121212",
     marginLeft: 30,
     marginTop: 15,

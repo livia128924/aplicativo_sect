@@ -8,54 +8,15 @@ const db = DatabaseConnection.getConnection();
 
 const Step3 = (props) => {
   const [sync, setSync] = useState("");
-  const [dados_valor, setDados_valor] = useState("");
-
-  const [rq_conjuge_nome, set_rq_conjuge_nome] = useState("");
-  const [rq_conjuge_data_nascimento, set_rq_conjuge_data_nascimento] =
-    useState("");
-  const [unmasked, setUnmasked] = useState("");
-  const [unmasked_rq_salario, setUnmasked_rq_salario] = useState("");
-
   const [se_rrj_sanitario, set_se_rrj_sanitario] = useState([]);
   const [se_rrj_coleta_lixo, set_se_rrj_coleta_lixo] = useState([]);
   const [se_rrj_rede_energia, set_se_rrj_rede_energia] = useState([]);
   const [se_rrj_rede_agua, set_se_rrj_rede_agua] = useState([]);
   const [se_rrj_tratamento_agua, set_se_rrj_tratamento_agua] = useState([]);
 
-
-  const [rq_conjuge_cpf, set_rq_conjuge_cpf] = useState("");
-  const [rq_conjuge_rg, set_rq_conjuge_rg] = useState("");
-  const [rq_conjuge_titulo_eleitor, set_rq_conjuge_titulo_eleitor] = useState("");
-  const [rq_conjuge_titulo_eleitor_zona, set_rq_conjuge_titulo_eleitor_zona] = useState("");
-  const [rq_conjuge_titulo_eleitor_sessao, set_rq_conjuge_titulo_eleitor_sessao] = useState("");
-  const [rq_conjuge_rg_uf, set_rq_conjuge_rg_uf] = useState("");
-  const [rq_conjuge_cpts_numero, set_rq_conjuge_cpts_numero] = useState("");
-  const [rq_conjuge_cpts_serie, set_rq_conjuge_cpts_serie] = useState("");
-  const [rq_conjuge_profissao_local, set_rq_conjuge_profissao_local] = useState("");
-  const [rq_conjuge_profissao, set_rq_conjuge_profissao] = useState("");
-  const [rq_conjuge_profissao_cargo, set_rq_conjuge_profissao_cargo] = useState("");
-  const [rq_conjuge_renda_comprovada, set_rq_conjuge_renda_comprovada] = useState("");
-  const [rq_conjuge_profissao_endereco, set_rq_conjuge_profissao_endereco] = useState("");
-  const [rq_conjuge_profissao_fone, set_rq_conjuge_profissao_fone] = useState("");
-
-
   const [aberto_se_rrj_destino_dejetos, setAberto_se_rrj_destino_dejetos] = useState(false);
   const [valor_se_rrj_destino_dejetos, setValor_se_rrj_destino_dejetos] = useState(null);
   const [item_se_rrj_destino_dejetos, setItem_se_rrj_destino_dejetos] = useState([]);
-
-  const [aberto_rq_grau_instrucao, setAberto_rq_grau_instrucao] =
-    useState(false);
-  const [valor_rq_grau_instrucao, setValor_rq_grau_instrucao] = useState(null);
-  const [item_rq_grau_instrucao, setItem_rq_grau_instrucao] = useState([
-    { label: "Nao Alfabetizado", value: "1" },
-    { label: "Alfabetizado", value: "2" },
-    { label: "Ens.Fundamental Incompleto", value: "3" },
-    { label: "Ens.Fundamental Completo", value: "4" },
-    { label: "Ens.Medio Inconpleto", value: "5" },
-    { label: "Ens.Medio Completo", value: "6" },
-    { label: "Ens.Superior Completo", value: "7" },
-    { label: "Ens.Superior Incompleto", value: "8" },
-  ]);
 
 
   useEffect(() => {
@@ -73,50 +34,44 @@ const Step3 = (props) => {
 
     loadStep3();
 
-    //   AsyncStorage.getItem('nome_tabela').then(tabela => {
-    //     //console.log(cod_processo);
-    //     if (tabela) {
+      AsyncStorage.getItem('nome_tabela').then(tabela => {
+        //console.log(cod_processo);
+        if (tabela) {
 
-    //         db.transaction((tx) => {
+            db.transaction((tx) => {
 
-    //             tx.executeSql(
-    //                 "select * from " + tabela + " where rq = '" + cod_processo + "'", [], (tx, results) => {
+                tx.executeSql(
+                  "select * from " + tabela + " where se_rrj_cod_processo = '" + cod_processo + "'",[], (tx, results) => {
 
-    //                     var row = [];
-    //                     for (let i = 0; i < results.rows.length; ++i) {
-    //                         console.log(results.rows.item(0).se_duf_acesso);
+                        var row = [];
+                        for (let i = 0; i < results.rows.length; ++i) {
+                            //setValorMao_de_obra(results.rows.item(i).se_duf_mao_de_obra);
 
-    //                         //setValorMao_de_obra(results.rows.item(i).se_duf_mao_de_obra);
+                            setValor_se_rrj_destino_dejetos(results.rows.item(i).se_rrj_destino_dejetos);
 
-    //                         setSe_duf_situacao_imovel_outros(results.rows.item(i).se_duf_situacao_imovel_outros);
+                            var x = results.rows.item(i).se_rrj_sanitario;
+                            valor_checked_sanitario(x.split(","));
 
-    //                         setSe_duf_tipo_documento_outros(results.rows.item(0).se_duf_tipo_documento_outros);
+                            var y = results.rows.item(i).se_rrj_coleta_lixo;
+                            valor_checked_coleta_lixo(y.split(","));
 
-    //                         setValorSe_duf_tipo_ocupacao(results.rows.item(i).se_duf_tipo_ocupacao);
+                            var w = results.rows.item(i).se_rrj_rede_energia;
+                            valor_checked_rede_energia(w.split(","));
 
-    //                         setValorSe_duf_tempo_ocupacao(results.rows.item(i).se_duf_tempo_ocupacao);
+                            var k = results.rows.item(i).se_rrj_rede_agua;
+                            valor_checked_rede_agua(k.split(","));
 
-    //                         setValorSe_duf_onde_reside(results.rows.item(i).se_duf_onde_reside);
+                            var q = results.rows.item(i).se_rrj_tratamento_agua;
+                            valor_checked_tratamento_agua(q.split(","));
 
-    //                         setSe_duf_onde_reside_outros(results.rows.item(0).se_duf_onde_reside_outros);
+                            //console.log(typeof (results.rows.item(i).se_duf_title_style));
+                            //valor(row);
+                        }
 
-    //                         var x = results.rows.item(i).se_duf_situacao_imovel;
-    //                         valor_checked(x.split(","));
-
-    //                         var y = results.rows.item(i).se_duf_tipo_documento;
-    //                         valor_checked_tipo_documento(y.split(","));
-
-    //                         var w = results.rows.item(i).se_duf_material_cobertura;
-    //                         valor_checked_material_cobertura(w.split(","));
-
-    //                         //console.log(typeof (results.rows.item(i).se_duf_title_style));
-    //                         //valor(row);
-    //                     }
-
-    //                 });
-    //         })
-    //     }
-    // });
+                    });
+            })
+        }
+    });
   }, []);
 
   //////////////primeira coisa que faz quando entra na tela:  faz um select das tabelas aux para carregar nos components //////////////
@@ -224,48 +179,48 @@ const Step3 = (props) => {
     );
   }
 
-  //   //função que aciona quando o estado do componente muda e seta os valores correspondente
-  //   function onPressTitle(tabela, campo, valor, codigo) {
+    //função que aciona quando o estado do componente muda e seta os valores correspondente
+    function onPressTitle(tabela, campo, valor, codigo) {
 
-  //     db.transaction((tx) => {
-  //         const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_duf_cod_processo = '${codigo}'`;
-  //         console.log(query);
-  //         tx.executeSql(query, [], (tx, results) => {
-  //             for (let i = 0; i < results.rows.length; ++i) {
-  //                 alert("INSERIDO COM SUCESSO");
-  //             }
-  //         });
+      db.transaction((tx) => {
+          const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_rrj_cod_processo = '${codigo}'`;
+          console.log(query);
+          tx.executeSql(query, [], (tx, results) => {
+              for (let i = 0; i < results.rows.length; ++i) {
+                  alert("INSERIDO COM SUCESSO");
+              }
+          });
 
-  //     }, (tx, err) => {
-  //         console.error("error", err);
-  //         return true;
-  //     }, (tx, success) => {
-  //         console.log("tudo certo por aqui", success);
-  //         //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
-  //     });
+      }, (tx, err) => {
+        console.error("error", err.message);
+          return true;
+      }, (tx, success) => {
+          console.log("tudo certo por aqui", success);
+          //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
+      });
 
-  //     var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
+      var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
 
-  //     db.transaction((tx) => {
-  //       //tx.executeSql("DROP TABLE log", []);
-  //       const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-  //       console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
-  //       tx.executeSql(log_delete, []);
-  //     });
+      db.transaction((tx) => {
+        //tx.executeSql("DROP TABLE log", []);
+        const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+        console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
+        tx.executeSql(log_delete, []);
+      });
 
-  //     db.transaction((tx) => {
-  //       const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-  //       console.log(log_update);
-  //       tx.executeSql(log_update, [], (tx, results) => {
+      db.transaction((tx) => {
+        const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+        console.log(log_update);
+        tx.executeSql(log_update, [], (tx, results) => {
 
-  //       });
-  //     })
+        });
+      })
 
-  //     AsyncStorage.setItem('nome_tabela', tabela);
+      AsyncStorage.setItem('nome_tabela', tabela);
 
-  //     AsyncStorage.setItem('codigo', valor.toString());
+      AsyncStorage.setItem('codigo', valor.toString());
 
-  // };
+  };
 
   const handleChange = (id) => {
     const newState = se_rrj_sanitario.map((el) => {
@@ -567,7 +522,6 @@ const Step3 = (props) => {
     });
   }
 
-
   return (
     <>
       <View style={styles.form5}>
@@ -596,7 +550,7 @@ const Step3 = (props) => {
         <View style={styles.titulo_style}>
           <Text>Destino dos Dejetos</Text>
         </View>
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignSelf: "center", width: "85%" }}>
           <DropDownPicker
             style={styles.dropdown_style}
             open={aberto_se_rrj_destino_dejetos}
@@ -698,91 +652,24 @@ const Step3 = (props) => {
 };
 
 const styles = StyleSheet.create({
-  eleitorStyle: {
-    flexDirection: "row",
-    //alignItems: "center",
-    display: "flex",
-    justifyContent: "space-between",
-    height: 'auto',
-    width:'85%',
-    flexWrap:'wrap'
-  },
-  collumStyle:{
-    flexDirection: "column",
-    alignContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
-  },
-  input_style_titulo: {
-    height: 40,
-    width: "100%",
-    marginTop: 10,
-    //marginLeft: 10,
-    borderWidth: 1,
-    backgroundColor: "white",
-  },
-  input_style_zona: {
-    height: 40,
-    width: "100%",
-    marginTop: 10,
-    // marginLeft: 10,
-    backgroundColor: "red",
-    borderWidth: 1,
-    backgroundColor: "white",
-  },
-  checkbox: {
-    //alignContent:'space-around',
-  },
   checkboxGroup: {
-    // backgroundColor:'red',
-    //height:20,
     alignItems: "center",
     flexDirection: "row",
-
   },
   checkboxlabel: {
-    // width: "100%",
-    // //textAlign:'center',
-    // flexDirection: "row",
-    // height: 45,
-    // alignItems: "center",
-    // display: "flex",
-    // justifyContent: "space-evenly",
+
     marginTop: 5,
     marginLeft: 30,
   },
-  form6: {
-    width: "95%",
-    height: 'auto',
-    paddingBottom:10,
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3,
-  },
-  form7: {
-    width: "95%",
-    height: 'auto',
-    paddingBottom:10,
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3,
-  },
   form5: {
     width: "95%",
-    height: 'auto',
+    height: "auto",
+    paddingBottom: 10,
     marginTop: 10,
-    paddingBottom:10,
+    //marginLeft: 20,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
-  },
-  title_style: {
-    color: "#121212",
-    //marginLeft: 30,
-    marginTop: 10,
-    alignItems: "center",
   },
   titulo_style: {
     color: "#121212",
@@ -791,10 +678,8 @@ const styles = StyleSheet.create({
     //alignItems: "center",
   },
   dropdown_style: {
-    marginTop: 5,
     height: 40,
-    width: "85%",
-    marginLeft: 30,
+    marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,
   },

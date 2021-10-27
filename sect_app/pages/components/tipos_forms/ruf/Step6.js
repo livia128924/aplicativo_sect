@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
 
   form9: {
     width: "95%",
-    height: 90,
+    height:  "auto",
    // paddingBottom: 10,
     //marginLeft: 20,
     borderWidth: 1,

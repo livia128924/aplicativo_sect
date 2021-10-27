@@ -222,7 +222,6 @@ const Step3 = (props) => {
 
     AsyncStorage.setItem("codigo", valor.toString());
    }
-
   return (
     <>
         <View
@@ -232,12 +231,12 @@ const Step3 = (props) => {
               NÚMERO DE EMPREGADOS E/OU ASSOCIADOS, COOPERADOS
             </Text>
           </View>
-          <View style={styles.municipio}>
+          <View style={styles.title_style}>
             <Text>Mão de Obra Empregada</Text>
           </View>
-
+          <View style={{ alignSelf: "center", width: "85%" }}>
           <DropDownPicker
-          zIndex={ openMao_de_obra ? 9999 : 0}
+            zIndex={ openMao_de_obra ? 9999 : 0}
             style={styles.dropdown_style}
             open={openMao_de_obra}
             value={parseInt(valorMao_de_obra)}
@@ -256,11 +255,13 @@ const Step3 = (props) => {
             listMode="SCROLLVIEW"
             placeholder="Selecione::"
           />
+          </View>
 
-          <View style={styles.municipio}>
+          <View style={styles.title_style}>
             <Text>Número de Associados</Text>
           </View>
 
+          <View style={{ alignSelf: "center", width: "85%" }}>
           <DropDownPicker
             style={styles.dropdown_style}
             open={openSe_ruj_associados}
@@ -280,10 +281,12 @@ const Step3 = (props) => {
             listMode="SCROLLVIEW"
             placeholder="Selecione::"
           />
+          </View>
 
-          <View style={styles.municipio}>
+          <View style={styles.title_style}>
             <Text>Número de Cooperados</Text>
           </View>
+          <View style={{ alignSelf: "center", width: "85%" }}>
           <DropDownPicker
             style={styles.dropdown_style}
             open={openSe_ruj_cooperados}
@@ -306,15 +309,17 @@ const Step3 = (props) => {
               listMode="SCROLLVIEW"
               placeholder="Selecione::"
               />
+              </View>
 
-</View>
-<View style={styles.form}>
+        </View>
+        <View style={styles.form}>
         <View style={styles.rect2}>
           <Text style={styles.titulo}>POLÍTICA DE BENFÍCIOS</Text>
         </View>
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>Tipos de Benefícios Concedidos</Text>
         </View>
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
           style={styles.dropdown_style}
           open={openSe_ruj_beneficios_concedidos}
@@ -335,6 +340,8 @@ const Step3 = (props) => {
           listMode="SCROLLVIEW"
           placeholder="Selecione::"
         />
+        </View>
+        <View style={{ alignItems: "center" }}>
         <TextInput
           style={styles.inputOutrosBeneficios}
           onChangeText={setOutrosBeneficios}
@@ -349,6 +356,7 @@ const Step3 = (props) => {
           }
           placeholder={"    Outros"}
         />
+        </View>
 
 </View>
     </>
@@ -366,16 +374,17 @@ const styles = StyleSheet.create({
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
   },
-  municipio: {
+  title_style: {
     color: "#121212",
-    marginLeft: 30,
+    marginLeft: 40,
     marginTop: 15,
   },
   dropdown_style: {
-    marginTop: 5,
     height: 40,
-    width: "85%",
-    marginLeft: 30,
+    //width: "85%",
+    //marginLeft: 30,
+    //height: 40,
+    marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,
   },
@@ -416,8 +425,9 @@ const styles = StyleSheet.create({
   inputOutrosBeneficios: {
     height: 40,
     width: "85%",
-    marginTop: 5,
-    marginLeft: 30,
+    marginTop: 10,
+    //marginLeft: 10,
+    //marginRight:25,
     borderWidth: 1,
     backgroundColor: "white",
   },

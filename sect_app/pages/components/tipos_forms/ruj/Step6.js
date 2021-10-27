@@ -443,9 +443,9 @@ const Step6 = (props) => {
         <Text style={styles.titleStyle}>
           Possui programa de responsabilidade social
         </Text>
-
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
-          style={styles.selectResponsabilidade}
+          style={styles.select}
           dropDownDirection="TOP"
           open={openSe_ruj_responsabilidade_social}
           value={parseInt(valorSe_ruj_responsabilidade_social)}
@@ -464,11 +464,12 @@ const Step6 = (props) => {
           listMode="SCROLLVIEW"
           placeholder="Selecione"
         />
+        </View>
 
         <View style={styles.titleStyle}>
           <Text>Formação de Atuação</Text>
         </View>
-
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
           style={styles.select}
           open={openSe_ruj_formacao_atuacao}
@@ -488,11 +489,11 @@ const Step6 = (props) => {
           listMode="SCROLLVIEW"
           placeholder="Selecione"
         />
-
+</View>
         <View style={styles.titleStyle}>
           <Text>Investimento Financeiro destinado</Text>
         </View>
-
+ <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
           style={styles.select}
           open={openSe_ruj_investimento_financeiro}
@@ -512,6 +513,7 @@ const Step6 = (props) => {
           listMode="SCROLLVIEW"
           placeholder="Selecione"
         />
+        </View>
       </View>
     </>
   );
@@ -520,20 +522,15 @@ const Step6 = (props) => {
 const styles = StyleSheet.create({
   select: {
     height: 40,
-    width: "85%",
-    marginLeft: 30,
-    height: 40,
+    marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,
   },
   selectResponsabilidade: {
     height: 40,
-    width: "85%",
-    marginLeft: 30,
-    height: 40,
+    marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,
-    //zIndex:9999
   },
 
   checkboxlabel: {
@@ -566,7 +563,7 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     color: "#121212",
-    marginLeft: 30,
+    marginLeft: 40,
     marginTop: 15,
   },
 

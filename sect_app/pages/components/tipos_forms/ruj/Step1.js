@@ -135,9 +135,10 @@ const [valor_Se_ruj_setor_abrangencia, setValor_Se_ruj_setor_abrangencia]= useSt
           <Text style={styles.titulo}>ÁREA DE ABRANGÊNCIA</Text>
         </View>
 
-        <View style={styles.municipio}>
+        <View style={styles.title_style}>
           <Text>MUNICIPIOS </Text>
         </View>
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
           style={styles.select}
           open={aberto}
@@ -148,16 +149,17 @@ const [valor_Se_ruj_setor_abrangencia, setValor_Se_ruj_setor_abrangencia]= useSt
           setValue={setValor}
           setItems={setItem_cidades}//cidades
           listMode="SCROLLVIEW"
-          onChangeValue={() => onPressTitle("se_ruj", "se_ruj_municipio", valor, sync)}
+          onChangeValue={() => onPressTitle("se_ruj", "se_ruj_title_style", valor, sync)}
           placeholder={"Municipios"} //aqui eu tentei colocar o retorno da funcao do select
         />
-
+        </View>
 
         <View>
-          <Text style={styles.acessoText}>ACESSO</Text>
+          <Text style={styles.title_style}>ACESSO</Text>
         </View>
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
-          style={styles.acesso}
+          style={styles.select}
           open={abertoAcesso}
           value={parseInt(valorAcesso)}
           items={itemAcesso}
@@ -168,9 +170,10 @@ const [valor_Se_ruj_setor_abrangencia, setValor_Se_ruj_setor_abrangencia]= useSt
           listMode="SCROLLVIEW"
           placeholder="acesso"
         />
+        </View>
 
         <View>
-          <Text style={styles.localizacao}>LOCALIZAÇÃO</Text>
+          <Text style={styles.title_style}>LOCALIZAÇÃO</Text>
         </View>
         <View style={{ alignItems: 'center' }}>
           <TextInput
@@ -187,9 +190,9 @@ const [valor_Se_ruj_setor_abrangencia, setValor_Se_ruj_setor_abrangencia]= useSt
         <View style={styles.rect2}>
           <Text style={styles.titulo}>SETOR DE ABRANGÊNCIA</Text>
         </View>
-
+        <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
-          style={styles.abrangencia}
+          style={styles.select}
           open={open_Se_ruj_setor_abrangencia}
           value={parseInt(valor_Se_ruj_setor_abrangencia)}
           items={item_Se_ruj_setor_abrangencia}
@@ -201,6 +204,7 @@ const [valor_Se_ruj_setor_abrangencia, setValor_Se_ruj_setor_abrangencia]= useSt
           listMode="SCROLLVIEW"
           placeholder="Setor Abrangência"
           />
+          </View>
 
           </View>
 
@@ -243,11 +247,12 @@ const styles = StyleSheet.create({
   },
   input2: {
     height: 40,
-    width: '85%',
-    marginTop: 2,
-    marginRight:20,
+    width: "85%",
+    marginTop: 10,
+    //marginLeft: 10,
+    //marginRight:25,
     borderWidth: 1,
-    backgroundColor: 'white'
+    backgroundColor: "white",
   },
   form: {
     width: "95%",
@@ -266,16 +271,17 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     zIndex:2
   },
-  municipio: {
+  title_style: {
     color: "#121212",
-    marginLeft: 30,
+    marginLeft: 40,
     marginTop: 15,
   },
   select: {
     height: 40,
-    width: '85%',
-    marginLeft: 30,
-    height: 40,
+    //width: "85%",
+    //marginLeft: 30,
+    //height: 40,
+    marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,
   },

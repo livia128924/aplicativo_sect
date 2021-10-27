@@ -200,7 +200,6 @@ console.log(valor);
         <View style={styles.rect2}>
           <Text style={styles.titulo}>RELATÓRIO FOTOGRÁFICO</Text>
         </View>
-
         <TouchableOpacity
           style={{
             height: "auto",
@@ -217,7 +216,6 @@ console.log(valor);
             style={{ width: "70%", borderRadius: 3, alignContent:'center', alignSelf:'center', alignItems:'center'  }}
           ></Button>
         </TouchableOpacity>
-
         <View>
           {dados.map((item, index) => (
             <View key={item.key}>
@@ -290,11 +288,11 @@ const styles = StyleSheet.create({
   },
   form9: {
     width: "95%",
-    height: "auto",
-    paddingBottom: 10,
-    marginTop:10,
+    height: `auto`,
+   // paddingBottom: 10,
     //marginLeft: 20,
     borderWidth: 1,
+    backgroundColor:"white",
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
   },

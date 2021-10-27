@@ -8,8 +8,6 @@ const db = DatabaseConnection.getConnection();
 
 const Step4 = (props) => {
   const [sync, setSync] = useState("");
-  const [dados_valor, setDados_valor] = useState("");
-
   const [se_rrj_bens_moveis, set_se_rrj_bens_moveis] = useState([]);
   const [se_rrj_bens_imoveis, set_se_rrj_bens_imoveis] = useState([]);
 
@@ -21,59 +19,32 @@ const Step4 = (props) => {
       setSync(value);
       cod_processo = value;
     });
-
-    // AsyncStorage.getItem("codigo").then((codigo) => {
-    //   setDados_valor(codigo);
-    // });
-
     loadStep4();
 
-    // AsyncStorage.getItem('nome_tabela').then(tabela => {
-    //     //console.log(cod_processo);
-    //     if (tabela) {
+    AsyncStorage.getItem('nome_tabela').then(tabela => {
+        //console.log(cod_processo);
+        if (tabela) {
 
-    //         db.transaction((tx) => {
-    //             tx.executeSql(
-    //                 "select * from " + tabela + " where se_duf_cod_processo = '" + cod_processo + "'", [], (tx, results) => {
-    //                    var x = "";
-    //                    var y = "";
-    //                    var w = "";
-    //                    var z = "";
-    //                    var t = "";
-    //                     var row = [];
-    //                     for (let i = 0; i < results.rows.length; ++i) {
-    //                         console.log(results.rows.item(0).se_duf_acesso);
+            db.transaction((tx) => {
+                tx.executeSql(
+                    "select * from " + tabela + " where se_rrj_cod_processo = '" + cod_processo + "'", [], (tx, results) => {
+                       var x = "";
+                       var y = "";
+                        var row = [];
+                        for (let i = 0; i < results.rows.length; ++i) {
 
-    //                         setSe_duf_destino_dejetos_outros(results.rows.item(0).se_duf_destino_dejetos_outros);
+                            x = results.rows.item(i).se_rrj_bens_imoveis;
+                            valor_checked_bens_imoveis(x.split(','));
+                            y = results.rows.item(i).se_rrj_bens_moveis;
+                            valor_checked_bens_moveis(y.split(','));
 
-    //                         setSe_duf_coleta_lixo_outros(results.rows.item(0).se_duf_coleta_lixo_outros);
 
-    //                         setSe_duf_rede_energia_outros(results.rows.item(0).se_duf_rede_energia_outros);
+                        }
 
-    //                         setSe_duf_rede_coleta_agua_outros(results.rows.item(0).se_duf_rede_coleta_agua_outros);
-
-    //                         setValorSe_duf_destino_dejetos(results.rows.item(i).se_duf_destino_dejetos);
-
-    //                         x = results.rows.item(i).se_duf_sanitario;
-    //                         valor_checked_duf_sanitario(x.split(','));
-
-    //                          y= results.rows.item(i).se_duf_coleta_lixo;
-    //                          valor_checked_duf_coleta_lixo(y.split(','));
-
-    //                          w= results.rows.item(i).se_duf_rede_energia;
-    //                          valor_checked_duf_rede_energia(w.split(','));
-
-    //                          z= results.rows.item(i).se_duf_rede_coleta_agua;
-    //                          valor_checked_duf_rede_coleta_agua(z.split(','));
-
-    //                          t= results.rows.item(i).se_duf_tratamento_agua;
-    //                          valor_checked_duf_tratamento_agua(t.split(','));
-    //                     }
-
-    //                 });
-    //         })
-    //     }//
-    // });
+                    });
+            })
+        }//
+    });
   }, []);
 
   async function loadStep4() {
@@ -120,47 +91,47 @@ const Step4 = (props) => {
   }
 
   // //função que aciona quando o estado do componente muda e seta os valores correspondente
-//   function onPressTitle(tabela, campo, valor, codigo) {
+  function onPressTitle(tabela, campo, valor, codigo) {
 
-//       db.transaction((tx) => {
+      db.transaction((tx) => {
 
-//           const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_duf_cod_processo = '${codigo}'`;
-//           //console.log(query);
-//           tx.executeSql(query, [], (tx, results) => {
-//               for (let i = 0; i < results.rows.length; ++i) {
-//                   alert("INSERIDO COM SUCESSO");
-//     }
-//   });
-//       }, (tx, err) => {
-//           console.error("error em alguma coisa", err);
-//           return true;
-//       }, (tx, success) => {
-//           console.log("tudo certo por aqui", success);
-//           //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
-//       });
+          const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_rrj_cod_processo = '${codigo}'`;
+          //console.log(query);
+          tx.executeSql(query, [], (tx, results) => {
+              for (let i = 0; i < results.rows.length; ++i) {
+                  alert("INSERIDO COM SUCESSO");
+    }
+  });
+      }, (tx, err) => {
+          console.error("error em alguma coisa", err);
+          return true;
+      }, (tx, success) => {
+          console.log("tudo certo por aqui", success);
+          //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
+      });
 
-//       var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
+      var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
 
-//       db.transaction((tx) => {
-//           //tx.executeSql("DROP TABLE log", []);
-//           const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-//           console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
-//           tx.executeSql(log_delete, []);
-//       });
+      db.transaction((tx) => {
+          //tx.executeSql("DROP TABLE log", []);
+          const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+          console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
+          tx.executeSql(log_delete, []);
+      });
 
-//       db.transaction((tx) => {
-//           const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-//           console.log(log_update);
-//           tx.executeSql(log_update, [], (tx, results) => {
+      db.transaction((tx) => {
+          const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+          console.log(log_update);
+          tx.executeSql(log_update, [], (tx, results) => {
 
-//           });
-//       })
+          });
+      })
 
-//       AsyncStorage.setItem('nome_tabela', tabela);
+      AsyncStorage.setItem('nome_tabela', tabela);
 
-//       AsyncStorage.setItem('codigo', valor.toString());
+      AsyncStorage.setItem('codigo', valor.toString());
 
-// };
+};
 
   const handleChange_bens_moveis = (id) => {
     const newState = se_rrj_bens_moveis.map((el) => {
@@ -217,7 +188,6 @@ const Step4 = (props) => {
     //console.log(ischecado);
     return str_valores.join(",");
   }
-
 
   function valor_checked_bens_moveis(bens_moveis) {
     db.transaction((tx) => {
@@ -278,7 +248,6 @@ const Step4 = (props) => {
       });
     });
   }
-
 
   return (
     <>
@@ -341,9 +310,11 @@ const styles = StyleSheet.create({
     marginLeft: 30,
   },
   form7: {
-    width: '95%',
-    height: 'auto',
-    //marginLeft: 25,
+    width: "95%",
+    height: "auto",
+    paddingBottom: 10,
+    marginTop: 10,
+    //marginLeft: 20,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
@@ -353,15 +324,7 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginTop: 15,
   },
-  drop_down_Style: {
-    marginTop: 5,
-    height: 40,
-    width: "85%",
-    display:'flex', alignItems: "center" , alignSelf:'center',
-    //marginLeft: 30,
-    borderRadius: 0,
-    borderWidth: 1,
-  },
+
   rect2: {
     width: '100%',
     height: 36,
@@ -374,14 +337,7 @@ const styles = StyleSheet.create({
     marginLeft: 9,
     marginTop: 1,
   },
-  input_style: {
-    height: 40,
-    width: "85%",
-    marginTop: 5,
-    //marginLeft: 30,
-    borderWidth: 1,
-    backgroundColor: "white",
-  },
+
 });
 
 export default Step4;

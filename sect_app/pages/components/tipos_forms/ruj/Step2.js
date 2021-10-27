@@ -259,7 +259,7 @@ const Step2 = (props) => {
             NATUREZA E RAMO DA ATIVIDADE ECONÔMICA
           </Text>
         </View>
-        <View style={styles.NaturezaAtvTitle}>
+        <View style={styles.title_style}>
           <Text>Natureza da Atividade</Text>
         </View>
 
@@ -303,7 +303,7 @@ const Step2 = (props) => {
           />
         </View>
         <View>
-          <Text style={styles.NaturezaAtvTitle}>Ramo da Atividade</Text>
+          <Text style={styles.title_style}>Ramo da Atividade</Text>
         </View>
         <View style={{ alignItems: "center" }}>
           <TextInput
@@ -365,10 +365,10 @@ const Step2 = (props) => {
 };
 
 const styles = StyleSheet.create({
-  NaturezaAtvTitle: {
+  title_style: {
     color: "#121212",
-    //marginLeft: 30,
-    marginTop: 10,
+    marginLeft: 40,
+    marginTop: 15,
   },
 
   inputOutros: {
@@ -424,7 +424,7 @@ const styles = StyleSheet.create({
   titulo: {
     color: "white",
     marginLeft: 9,
-    marginTop: 1,
+    marginTop: 1
   },
   atividadeTitle: {
     color: "#121212",
