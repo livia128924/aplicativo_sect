@@ -2,9 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Text, StyleSheet, View, TextInput, AsyncStorage } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { DatabaseConnection } from '../../../database/database';
-import { Formik, useFormik } from 'formik';
-import Checkbox from 'expo-checkbox';
-import { RadioButton } from 'react-native-paper';
 
 const db = DatabaseConnection.getConnection();
 
@@ -43,6 +40,34 @@ const [valor_Se_ruj_setor_abrangencia, setValor_Se_ruj_setor_abrangencia]= useSt
 
 
     loadDados();
+
+    AsyncStorage.getItem("nome_tabela").then((tabela) => {
+      if (tabela) {
+        db.transaction((tx) => {
+          tx.executeSql(
+            "select * from " + tabela + " where se_ruj_cod_processo = '" + cod_processo + "'",[],
+            (tx, results) => {
+              var x = "";
+              var row = [];
+              for (let i = 0; i < results.rows.length; ++i) {
+                setLocalizacao(results.rows.item(0).se_ruj_localizacao);
+
+                setValor(results.rows.item(i).se_ruj_municipio);
+
+                setValorAcesso(results.rows.item(i).se_ruj_acesso);
+
+                setValor_Se_ruj_setor_abrangencia(results.rows.item(i).se_ruj_setor_abrangencia);
+
+
+              }
+            },
+            function (tx, error) {
+              alert("SELECT error: " + error.message);
+            }
+          );
+        });
+      } //
+    });
 
 
   }, []);
@@ -132,7 +157,7 @@ const [valor_Se_ruj_setor_abrangencia, setValor_Se_ruj_setor_abrangencia]= useSt
     <>
       <View style={styles.form}>
         <View style={styles.rect2}>
-          <Text style={styles.titulo}>ÁREA DE ABRANGÊNCIA</Text>
+          <Text style={styles.title_style}>ÁREA DE ABRANGÊNCIA</Text>
         </View>
 
         <View style={styles.title_style}>
@@ -177,7 +202,7 @@ const [valor_Se_ruj_setor_abrangencia, setValor_Se_ruj_setor_abrangencia]= useSt
         </View>
         <View style={{ alignItems: 'center' }}>
           <TextInput
-            style={styles.input2}
+            style={styles.input_style}
             onChangeText={ setLocalizacao}
             value={localizacao}
             onBlur={() => onPressTitle("se_ruj", "se_ruj_localizacao", localizacao, sync)}
@@ -188,7 +213,7 @@ const [valor_Se_ruj_setor_abrangencia, setValor_Se_ruj_setor_abrangencia]= useSt
 
       <View style={styles.form}>
         <View style={styles.rect2}>
-          <Text style={styles.titulo}>SETOR DE ABRANGÊNCIA</Text>
+          <Text style={styles.title_style}>SETOR DE ABRANGÊNCIA</Text>
         </View>
         <View style={{ alignSelf: "center", width: "85%" }}>
         <DropDownPicker
@@ -214,38 +239,7 @@ const [valor_Se_ruj_setor_abrangencia, setValor_Se_ruj_setor_abrangencia]= useSt
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  checkboxGroup: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  checkboxlabel: {
-    marginTop: 5,
-    marginLeft: 30,
-  },
-  form_step1: {
-    marginTop: 15,
-    width: '95%',
-    left:11,
-    height:200,
-    //marginLeft: 25,
-    borderWidth: 1,
-    borderColor: "rgba(74,144,226,1)",
-    borderRadius: 3,
-    zIndex:1
-  },
-  localizacao: {
-    color: "#121212",
-    marginLeft: 30,
-    marginTop: 20,
-    marginBottom: 9
-  },
-  input2: {
+  input_style: {
     height: 40,
     width: "85%",
     marginTop: 10,
@@ -278,43 +272,12 @@ const styles = StyleSheet.create({
   },
   select: {
     height: 40,
-    //width: "85%",
-    //marginLeft: 30,
-    //height: 40,
     marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,
-  },
-  acessoText: {
-    color: "#121212",
-    marginTop: 20,
-    marginLeft: 30,
-    marginBottom: 9
-  },
-  acesso: {
-    height: 40,
-    width: '85%',
-    marginLeft: 30,
-    height: 40,
-    marginTop: 5,
-    borderRadius: 0,
-    borderWidth: 1,
-  },
-  titulo: {
-    color: "white",
-    marginLeft: 9,
-    marginTop: 1
   },
 
-  abrangencia: {
-    height: 40,
-    width: '85%',
-    marginLeft: 30,
-    height: 40,
-    marginTop: 20,
-    borderRadius: 0,
-    borderWidth: 1,
-  },
+
 });
 
 export default Step1;

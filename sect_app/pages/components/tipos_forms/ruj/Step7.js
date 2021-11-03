@@ -22,8 +22,6 @@ const Step7 = ({ navigation }) => {
 
   let [dados, setDados] = useState([]);
 
-  const [text, setText] = useState("");
-
   var cod_processo = "";
   AsyncStorage.getItem("pr_codigo").then((value) => {
     setSync(value);
@@ -35,23 +33,12 @@ const Step7 = ({ navigation }) => {
   });
 
   useEffect(() => {
-    // var cod_processo = "";
-    // //carrega o valor do select na tela index.js
-    // AsyncStorage.getItem("pr_codigo").then((value) => {
-    //   //console.log(value);
-    //   setSync(value);
-    //   cod_processo = value;
-    // });
-
     AsyncStorage.getItem("valor").then((res) => {
       setDados_valor(res);
     });
-
-    //console.log(cod_processo);
     AsyncStorage.getItem('codigo_nome').then(res => {
         var codigo_nome = res;
 
-      console.log("Codigo nome", codigo_nome);
     if (dados_valor) {
       //console.log("cheguei");
       db.transaction((tx) => {

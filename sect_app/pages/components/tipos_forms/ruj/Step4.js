@@ -8,47 +8,21 @@ const db = DatabaseConnection.getConnection();
 const Step4 = (props) => {
   const [sync, setSync] = useState("");
   const [dados_valor, setDados_valor] = useState("");
-  const [openSe_ruj_tipo_construcao, setOpenSe_ruj_tipo_construcao] =
-    useState(false);
-  const [valorSe_ruj_tipo_construcao, setValorSe_ruj_tipo_construcao] =
-    useState(null);
-  const [itemSe_ruj_tipo_construcao, setItemSe_ruj_tipo_construcao] = useState([
-    { label: "950", value: "950" },
-    { label: "1050", value: "1050" },
-  ]);
-  const [openSe_ruj_numero_comodos, setOpenSe_ruj_numero_comodos] =
-    useState(false);
-  const [valorSe_ruj_numero_comodos, setValorSe_ruj_numero_comodos] =
-    useState(null);
-  const [itemSe_ruj_numero_comodos, setItemSe_ruj_numero_comodos] = useState([
-    { label: "147", value: "147" },
-    { label: "258", value: "258" },
-  ]);
+  const [openSe_ruj_tipo_construcao, setOpenSe_ruj_tipo_construcao] = useState(false);
+  const [valorSe_ruj_tipo_construcao, setValorSe_ruj_tipo_construcao] = useState(null);
+  const [itemSe_ruj_tipo_construcao, setItemSe_ruj_tipo_construcao] = useState([]);
+  const [openSe_ruj_numero_comodos, setOpenSe_ruj_numero_comodos] = useState(false);
+  const [valorSe_ruj_numero_comodos, setValorSe_ruj_numero_comodos] = useState(null);
+  const [itemSe_ruj_numero_comodos, setItemSe_ruj_numero_comodos] = useState([]);
   const [openSe_ruj_numero_pisos, setOpenSe_ruj_numero_pisos] = useState(false);
-  const [valorSe_ruj_numero_pisos, setValorSe_ruj_numero_pisos] =
-    useState(null);
-  const [itemSe_ruj_numero_pisos, setItemSe_ruj_numero_pisos] = useState([
-    { label: "123", value: "123" },
-    { label: "456", value: "456" },
-  ]);
+  const [valorSe_ruj_numero_pisos, setValorSe_ruj_numero_pisos] = useState(null);
+  const [itemSe_ruj_numero_pisos, setItemSe_ruj_numero_pisos] = useState([]);
 
-  const [itemAbrangencia, setItem_aux_setor_abrangencia] = useState([]);
-
-  const [openSe_ruj_estado_conservacao, setOpenSe_ruj_estado_conservacao] =
-    useState(false);
-  const [valorSe_ruj_estado_conservacao, setValorSe_ruj_estado_conservacao] =
-    useState(null);
-  const [itemSe_ruj_estado_conservacao, setItemSe_ruj_estado_conservacao] =
-    useState([
-      { label: "123", value: "123" },
-      { label: "456", value: "456" },
-    ]);
-  const [outros_Se_ruj_tipo_construcao, setOutros_Se_ruj_tipo_construcao] =
-    useState("");
-
-  const [se_ruj_material_cobertura, setSe_ruj_material_cobertura] = useState(
-    []
-  ); ///checkbox
+  const [openSe_ruj_estado_conservacao, setOpenSe_ruj_estado_conservacao] = useState(false);
+  const [valorSe_ruj_estado_conservacao, setValorSe_ruj_estado_conservacao] = useState(null);
+  const [itemSe_ruj_estado_conservacao, setItemSe_ruj_estado_conservacao] = useState([]);
+  const [outros_Se_ruj_tipo_construcao, setOutros_Se_ruj_tipo_construcao] = useState("");
+  const [se_ruj_material_cobertura, setSe_ruj_material_cobertura] = useState([]); ///checkbox
 
   useEffect(() => {
     var cod_processo = "";
@@ -70,37 +44,20 @@ const Step4 = (props) => {
       if (tabela) {
         db.transaction((tx) => {
           tx.executeSql(
-            "select * from " +
-              tabela +
-              " where se_ruj_cod_processo = '" +
-              cod_processo +
-              "'",
-            [],
+            "select * from " + tabela +" where se_ruj_cod_processo = '" + cod_processo + "'", [],
             (tx, results) => {
               var x = "";
               var row = [];
               for (let i = 0; i < results.rows.length; ++i) {
-                console.log(results.rows.item(0).se_ruj_acesso);
+                setValorSe_ruj_tipo_construcao( results.rows.item(i).se_ruj_tipo_construcao);
 
-                setValorSe_ruj_tipo_construcao(
-                  results.rows.item(i).se_ruj_tipo_construcao
-                );
+                setOutros_Se_ruj_tipo_construcao( results.rows.item(0).se_ruj_tipo_construcao_outros );
 
-                setOutros_Se_ruj_tipo_construcao(
-                  results.rows.item(0).se_ruj_tipo_construcao_outros
-                );
+                setValorSe_ruj_numero_comodos( results.rows.item(i).se_ruj_numero_comodos);
 
-                setValorSe_ruj_numero_comodos(
-                  results.rows.item(i).se_ruj_numero_comodos
-                );
+                setValorSe_ruj_numero_pisos( results.rows.item(i).se_ruj_numero_pisos );
 
-                setValorSe_ruj_numero_pisos(
-                  results.rows.item(i).se_ruj_numero_pisos
-                );
-
-                setValorSe_ruj_estado_conservacao(
-                  results.rows.item(i).se_ruj_estado_conservacao
-                );
+                setValorSe_ruj_estado_conservacao( results.rows.item(i).se_ruj_estado_conservacao );
 
                 x = results.rows.item(i).se_ruj_material_cobertura;
                 valor_checked(x.split(","));
@@ -361,7 +318,7 @@ const Step4 = (props) => {
         </View>
         <View style={{ alignItems: "center" }}>
         <TextInput
-          style={styles.inputOutrosBeneficios}
+          style={styles.input_style}
           onChangeText={setOutros_Se_ruj_tipo_construcao}
           value={outros_Se_ruj_tipo_construcao}
           onBlur={() =>
@@ -523,7 +480,7 @@ const styles = StyleSheet.create({
     marginLeft: 9,
     marginTop: 1,
   },
-  inputOutrosBeneficios: {
+  input_style: {
     height: 40,
     width: "85%",
     marginTop: 10,

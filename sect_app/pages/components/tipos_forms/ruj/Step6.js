@@ -9,53 +9,20 @@ const Step6 = (props) => {
   const [sync, setSync] = useState("");
   const [dados_valor, setDados_valor] = useState("");
 
-  const [
-    openSe_ruj_investimento_financeiro,
-    setOpenSe_ruj_investimento_financeiro,
-  ] = useState(false);
-  const [
-    valorSe_ruj_investimento_financeiro,
-    setValorSe_ruj_investimento_financeiro,
-  ] = useState(null);
-  const [
-    itemSe_ruj_investimento_financeiro,
-    setItemSe_ruj_investimento_financeiro,
-  ] = useState([
-    { label: "Menos de 100 mil reais", value: "Menos de 100 mil reais" },
-  ]);
-  const [openSe_ruj_formacao_atuacao, setOpenSe_ruj_formacao_atuacao] =
-    useState(false);
-  const [valorSe_ruj_formacao_atuacao, setValorSe_ruj_formacao_atuacao] =
-    useState(null);
-  const [itemSe_ruj_formacao_atuacao, setItemSe_ruj_formacao_atuacao] =
-    useState([
-      {
-        label: "Diretamente da Comunidade",
-        value: "Diretamente da Comunidade",
-      },
-      {
-        label: "Indiretamente por meio dos colaboradores",
-        value: "Indiretamente por meio dos colaboradores",
-      },
-    ]);
-  const [
-    openSe_ruj_responsabilidade_social,
-    setOpenSe_ruj_responsabilidade_social,
-  ] = useState(false);
-  const [
-    valorSe_ruj_responsabilidade_social,
-    setValorSe_ruj_responsabilidade_social,
-  ] = useState(null);
-  const [
-    itemSe_ruj_responsabilidade_social,
-    setItemSe_ruj_responsabilidade_social,
-  ] = useState([
+  const [ openSe_ruj_investimento_financeiro,setOpenSe_ruj_investimento_financeiro] = useState(false);
+  const [ valorSe_ruj_investimento_financeiro, setValorSe_ruj_investimento_financeiro] = useState(null);
+  const [ itemSe_ruj_investimento_financeiro,setItemSe_ruj_investimento_financeiro] = useState([]);
+  const [openSe_ruj_formacao_atuacao, setOpenSe_ruj_formacao_atuacao] = useState(false);
+  const [valorSe_ruj_formacao_atuacao, setValorSe_ruj_formacao_atuacao] = useState(null);
+  const [itemSe_ruj_formacao_atuacao, setItemSe_ruj_formacao_atuacao] = useState([]);
+  const [openSe_ruj_responsabilidade_social, setOpenSe_ruj_responsabilidade_social] = useState(false);
+  const [ valorSe_ruj_responsabilidade_social, setValorSe_ruj_responsabilidade_social] = useState(null);
+  const [itemSe_ruj_responsabilidade_social, setItemSe_ruj_responsabilidade_social] = useState([
     { label: "Sim", value: "s" },
     { label: "Nao", value: "n" },
   ]);
   const [se_ruj_bens_moveis, setSe_ruj_bens_moveis] = useState([]);
-
-  const [se_ruj_bens_imoveis, setSe_ruj_bens_imoveis] = React.useState([]);
+  const [se_ruj_bens_imoveis, setSe_ruj_bens_imoveis] = useState([]);
 
   useEffect(() => {
     var cod_processo = "";
@@ -76,18 +43,10 @@ const Step6 = (props) => {
       //console.log(cod_processo);
       if (tabela) {
         db.transaction((tx) => {
-          tx.executeSql(
-            "select * from " +
-              tabela +
-              " where se_ruj_cod_processo = '" +
-              cod_processo +
-              "'",
-            [],
+          tx.executeSql( "select * from " + tabela +  " where se_ruj_cod_processo = '" + cod_processo +"'",[],
             (tx, results) => {
               var row = [];
               for (let i = 0; i < results.rows.length; ++i) {
-                //console.log(results.rows.item(0).se_ruj_acesso);
-
                 setValorSe_ruj_responsabilidade_social(
                   results.rows.item(i).se_ruj_responsabilidade_social
                 );
@@ -276,7 +235,6 @@ const Step6 = (props) => {
 
     setSe_ruj_bens_moveis(newState); // atualiza o estado
   };
-
   const handleChange_bens_imoveis = (id) => {
     const newState = se_ruj_bens_imoveis.map((el) => {
       const label = el;
@@ -291,7 +249,6 @@ const Step6 = (props) => {
 
     setSe_ruj_bens_imoveis(newState); // atualiza o estado
   };
-
   function muda() {
     //await api
     var str_valores = [];
@@ -304,7 +261,6 @@ const Step6 = (props) => {
     //console.log(ischecado);
     return str_valores.join(",");
   }
-
   function muda_bens_imoveis() {
     //await api
     var str_valores = [];
@@ -317,7 +273,6 @@ const Step6 = (props) => {
     //console.log(ischecado);
     return str_valores.join(",");
   }
-
   function valor_checked(ruj_bens_moveis) {
     db.transaction((tx) => {
       tx.executeSql("select * from aux_bens_moveis", [], (tx, results) => {
@@ -349,7 +304,6 @@ const Step6 = (props) => {
       });
     });
   }
-
   function valor_checked_bens_imoveis(ruj_bens_imoveis) {
     db.transaction((tx) => {
       tx.executeSql("select * from aux_bens_imoveis", [], (tx, results) => {
@@ -526,13 +480,6 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     borderWidth: 1,
   },
-  selectResponsabilidade: {
-    height: 40,
-    marginTop: 5,
-    borderRadius: 0,
-    borderWidth: 1,
-  },
-
   checkboxlabel: {
     marginTop: 5,
     marginLeft: 30,
@@ -573,7 +520,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,
   },
-
   titulo: {
     color: "white",
     marginLeft: 9,

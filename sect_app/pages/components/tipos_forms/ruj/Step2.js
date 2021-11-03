@@ -55,41 +55,22 @@ const Step2 = (props) => {
       //console.log(cod_processo);
       if (tabela) {
         db.transaction((tx) => {
-          tx.executeSql(
-            "select * from " +
-              tabela +
-              " where se_ruj_cod_processo = '" +
-              cod_processo +
-              "'",
+          tx.executeSql("select * from " + tabela + " where se_ruj_cod_processo = '" + cod_processo + "'",
             [],
             (tx, results) => {
               var row = [];
               for (let i = 0; i < results.rows.length; ++i) {
-                console.log(results.rows.item(0).se_ruj_acesso);
+                setValorAtividade(results.rows.item(0).se_ruj_inicio_atividades);
 
-                setValorAtividade(
-                  results.rows.item(0).se_ruj_inicio_atividades
-                );
+                setValorNaturezaAtv(results.rows.item(i).se_ruj_natureza_atividades);
 
-                setValorNaturezaAtv(
-                  results.rows.item(i).se_ruj_natureza_atividades
-                );
+                setOutros(results.rows.item(i).se_ruj_natureza_atividades_outros);
 
-                setOutros(
-                  results.rows.item(i).se_ruj_natureza_atividades_outros
-                );
+                setComercio( results.rows.item(i).se_ruj_ramo_atividade_comercio);
 
-                setComercio(
-                  results.rows.item(i).se_ruj_ramo_atividade_comercio
-                );
+                setIndustria( results.rows.item(i).se_ruj_ramo_atividade_industria);
 
-                setIndustria(
-                  results.rows.item(i).se_ruj_ramo_atividade_industria
-                );
-
-                setRecursosNaturais(
-                  results.rows.item(i).se_ruj_ramo_atividade_recursos_naturais
-                );
+                setRecursosNaturais( results.rows.item(i).se_ruj_ramo_atividade_recursos_naturais);
 
                 setT_I(results.rows.item(i).se_ruj_ramo_atividade_tic);
               }
@@ -149,7 +130,7 @@ const Step2 = (props) => {
   }
 
   // //função que aciona quando o estado do componente muda e seta os valores correspondente
-   function onPressTitle(tabela, campo, valor, codigo) {
+  function onPressTitle(tabela, campo, valor, codigo) {
     db.transaction(
       (tx) => {
         const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE se_ruj_cod_processo = '${codigo}'`;
@@ -217,43 +198,39 @@ const Step2 = (props) => {
     });
     AsyncStorage.setItem("nome_tabela", tabela);
     AsyncStorage.setItem("codigo", valor.toString());
-   }
+  }
 
   return (
     <>
-      <View
-        style={styles.form}>
+      <View style={styles.form}>
         <View style={styles.rect2}>
           <Text style={styles.titulo}>INÍCIO DAS ATIVIDADES</Text>
         </View>
         <View style={{ alignSelf: "center", width: "85%" }}>
-        <DropDownPicker
-          zIndex={openDescricao ? 9999 : 0}
-          style={styles.NaturezaAtv}
-          open={openDescricao}
-          value={parseInt(valorAtividade)}
-          items={itemDescricao}
-          setOpen={setOpenDescricao}
-          setValue={setValorAtividade}
-          setItems={setItem_aux_inicio_atividades}
-          onChangeValue={() =>
-            onPressTitle(
-              "se_ruj",
-              "se_ruj_inicio_atividades",
-              valorAtividade,
-              sync
-            )
-          }
-          listMode="MODAL"
-          placeholder="Selecione::"
-        />
+          <DropDownPicker
+            zIndex={openDescricao ? 9999 : 0}
+            style={styles.NaturezaAtv}
+            open={openDescricao}
+            value={parseInt(valorAtividade)}
+            items={itemDescricao}
+            setOpen={setOpenDescricao}
+            setValue={setValorAtividade}
+            setItems={setItem_aux_inicio_atividades}
+            onChangeValue={() =>
+              onPressTitle(
+                "se_ruj",
+                "se_ruj_inicio_atividades",
+                valorAtividade,
+                sync
+              )
+            }
+            listMode="MODAL"
+            placeholder="Selecione::"
+          />
         </View>
       </View>
 
-
-      <View
-        style={styles.form}
-      >
+      <View style={styles.form}>
         <View style={styles.rect2}>
           <Text style={styles.titulo}>
             NATUREZA E RAMO DA ATIVIDADE ECONÔMICA
@@ -263,29 +240,28 @@ const Step2 = (props) => {
           <Text>Natureza da Atividade</Text>
         </View>
 
-
         <View style={{ alignSelf: "center", width: "85%" }}>
-        <DropDownPicker
-          zIndex={openNaturezaAtv ? 9999 : 0}
-          style={styles.NaturezaAtv}
-          open={openNaturezaAtv}
-          value={parseInt(valorNaturezaAtv)}
-          items={itemNaturezaAtv}
-          setOpen={setOpenNaturezaAtv}
-          setValue={setValorNaturezaAtv}
-          setItems={setItem_aux_natureza_atividades}
-          onChangeValue={() =>
-            onPressTitle(
-              "se_ruj",
-              "se_ruj_natureza_atividades",
-              valorNaturezaAtv,
-              sync
+          <DropDownPicker
+            zIndex={openNaturezaAtv ? 9999 : 0}
+            style={styles.NaturezaAtv}
+            open={openNaturezaAtv}
+            value={parseInt(valorNaturezaAtv)}
+            items={itemNaturezaAtv}
+            setOpen={setOpenNaturezaAtv}
+            setValue={setValorNaturezaAtv}
+            setItems={setItem_aux_natureza_atividades}
+            onChangeValue={() =>
+              onPressTitle(
+                "se_ruj",
+                "se_ruj_natureza_atividades",
+                valorNaturezaAtv,
+                sync
               )
             }
             listMode="SCROLLVIEW"
             placeholder="Selecione::"
-            />
-</View>
+          />
+        </View>
         <View style={{ alignItems: "center" }}>
           <TextInput
             style={styles.inputOutros}
@@ -357,7 +333,7 @@ const Step2 = (props) => {
             }
             placeholder={"   Tecnologia da Informação/Comunicação"}
           />
-           </View>
+        </View>
       </View>
       {/* </ScrollView> */}
     </>
@@ -384,7 +360,7 @@ const styles = StyleSheet.create({
     width: "95%",
     height: "auto",
     paddingBottom: 10,
-    marginTop:10,
+    marginTop: 10,
     //marginLeft: 20,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
@@ -407,7 +383,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   rect2: {
-    width: '100%',
+    width: "100%",
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,
@@ -424,7 +400,7 @@ const styles = StyleSheet.create({
   titulo: {
     color: "white",
     marginLeft: 9,
-    marginTop: 1
+    marginTop: 1,
   },
   atividadeTitle: {
     color: "#121212",

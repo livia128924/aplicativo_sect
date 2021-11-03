@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
   title_style: {
     color: "#121212",
-    marginLeft: 30,
+    marginLeft: 40,
     marginTop: 15,
   },
   dropdown_style: {

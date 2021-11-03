@@ -281,8 +281,6 @@ const styles = StyleSheet.create({
     height: 40,
     width: "85%",
     marginTop: 10,
-    //marginLeft: 10,
-    //marginRight:25,
     borderWidth: 1,
     backgroundColor: "white",
   },

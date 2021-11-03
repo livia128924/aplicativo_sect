@@ -28,10 +28,6 @@ const Step3 = (props) => {
       cod_processo = value;
     });
 
-    // AsyncStorage.getItem('codigo').then(codigo => {
-    //     setDados_valor(codigo);
-    // })
-
     loadStep3();
 
       AsyncStorage.getItem('nome_tabela').then(tabela => {

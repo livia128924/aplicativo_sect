@@ -9,27 +9,17 @@ const Step5 = (props) => {
   const [sync, setSync] = useState("");
   const [dados_valor, setDados_valor] = useState("");
 
-  const [se_ruf_equipamentos_domesticos, setSe_ruf_equipamentos_domesticos] =
-    useState([]);
+  const [se_ruf_equipamentos_domesticos, setSe_ruf_equipamentos_domesticos] = useState([]);
 
   const [se_ruf_organizacao_informal, setSe_ruf_organizacao_informal] = useState([]);
 
   const [se_ruf_organizacao_formal, setSe_ruf_organizacao_formal] = useState([]);
 
-  const [
-    se_ruf_equipamentos_domesticos_outros,
-    setSe_ruf_equipamentos_domesticos_outros,
-  ] = useState("");
+  const [se_ruf_equipamentos_domesticos_outros, setSe_ruf_equipamentos_domesticos_outros] = useState("");
 
-  const [
-    se_ruf_organizacao_informal_outros,
-    setSe_ruf_organizacao_informal_outros,
-  ] = useState("");
+  const [se_ruf_organizacao_informal_outros, setSe_ruf_organizacao_informal_outros] = useState("");
 
-  const [
-    se_ruf_organizacao_formal_outros,
-    setSe_ruf_organizacao_formal_outros,
-  ] = useState("");
+  const [se_ruf_organizacao_formal_outros, setSe_ruf_organizacao_formal_outros] = useState("");
 
 
   useEffect(() => {

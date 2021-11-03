@@ -89,6 +89,16 @@ const Step3 = (props) => {
 
                               setSe_ruf_onde_reside_outros(results.rows.item(0).se_ruf_onde_reside_outros);
 
+                              setValorSe_ruf_tipo_construcao(results.rows.item(i).se_ruf_tipo_construcao);
+
+                              setSe_ruf_tipo_construcao_outros(results.rows.item(0).se_ruf_tipo_construcao_outros);
+
+                              setValorSe_ruf_numero_comodos(results.rows.item(0).se_ruf_numero_comodos);
+
+                              setValorSe_ruf_numero_pisos(results.rows.item(0).se_ruf_numero_pisos);
+
+                              setValorSe_ruf_estado_conservacao(results.rows.item(i).se_ruf_estado_conservacao);
+
                               var x = results.rows.item(i).se_ruf_situacao_imovel;
                               valor_checked(x.split(","));
 
@@ -444,7 +454,6 @@ async function loadStep3(){
                         </View>
                     ))}
                 </View>
-
 
               <TextInput
               style={styles.input_style}

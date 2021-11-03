@@ -21,18 +21,9 @@ const Step3 = (props) => {
   const [valorSe_ruj_cooperados, setValorSe_ruj_cooperados] = useState(null);
   const [itemSe_ruj_cooperados, setItemSe_ruj_cooperados] = useState([]);
 
-  const [
-    openSe_ruj_beneficios_concedidos,
-    setOpenSe_ruj_beneficios_concedidos,
-  ] = useState(false);
-  const [
-    valorSe_ruj_beneficios_concedidos,
-    setValorSe_ruj_beneficios_concedidos,
-  ] = useState(null);
-  const [
-    itemSe_ruj_beneficios_concedidos,
-    setItemSe_ruj_beneficios_concedidos,
-  ] = useState([]);
+  const [openSe_ruj_beneficios_concedidos, setOpenSe_ruj_beneficios_concedidos] = useState(false);
+  const [valorSe_ruj_beneficios_concedidos, setValorSe_ruj_beneficios_concedidos] = useState(null);
+  const [itemSe_ruj_beneficios_concedidos, setItemSe_ruj_beneficios_concedidos] = useState([]);
 
   useEffect(() => {
     var cod_processo = "";
@@ -52,35 +43,20 @@ const Step3 = (props) => {
       //console.log(cod_processo);
       if (tabela) {
         db.transaction((tx) => {
-          tx.executeSql(
-            "select * from " +
-              tabela +
-              " where se_ruj_cod_processo = '" +
-              cod_processo +
-              "'",
+          tx.executeSql("select * from " + tabela + " where se_ruj_cod_processo = '" + cod_processo + "'",
             [],
             (tx, results) => {
               var row = [];
               for (let i = 0; i < results.rows.length; ++i) {
-                console.log(results.rows.item(0).se_ruj_acesso);
-
                 setValorMao_de_obra(results.rows.item(i).se_ruj_mao_de_obra);
 
-                setValorSe_ruj_associados(
-                  results.rows.item(i).se_ruj_associados
-                );
+                setValorSe_ruj_associados(results.rows.item(i).se_ruj_associados);
 
-                setValorSe_ruj_cooperados(
-                  results.rows.item(i).se_ruj_cooperados
-                );
+                setValorSe_ruj_cooperados(results.rows.item(i).se_ruj_cooperados);
 
-                setValorSe_ruj_beneficios_concedidos(
-                  results.rows.item(i).se_ruj_beneficios_concedidos
-                );
+                setValorSe_ruj_beneficios_concedidos(results.rows.item(i).se_ruj_beneficios_concedidos);
 
-                setOutrosBeneficios(
-                  results.rows.item(0).se_ruj_beneficios_concedidos_outros
-                );
+                setOutrosBeneficios(results.rows.item(0).se_ruj_beneficios_concedidos_outros);
               }
             }
           );
@@ -227,7 +203,7 @@ const Step3 = (props) => {
         <View
           style={styles.form}>
           <View style={styles.rect2}>
-            <Text style={styles.titulo}>
+            <Text style={styles.title_style}>
               NÚMERO DE EMPREGADOS E/OU ASSOCIADOS, COOPERADOS
             </Text>
           </View>
@@ -314,7 +290,7 @@ const Step3 = (props) => {
         </View>
         <View style={styles.form}>
         <View style={styles.rect2}>
-          <Text style={styles.titulo}>POLÍTICA DE BENFÍCIOS</Text>
+          <Text style={styles.title_style}>POLÍTICA DE BENFÍCIOS</Text>
         </View>
         <View style={styles.title_style}>
           <Text>Tipos de Benefícios Concedidos</Text>
@@ -343,7 +319,7 @@ const Step3 = (props) => {
         </View>
         <View style={{ alignItems: "center" }}>
         <TextInput
-          style={styles.inputOutrosBeneficios}
+          style={styles.input_style}
           onChangeText={setOutrosBeneficios}
           value={outrosBeneficios}
           onBlur={() =>
@@ -369,7 +345,6 @@ const styles = StyleSheet.create({
     height: "auto",
     paddingBottom: 10,
     marginTop:10,
-    //marginLeft: 20,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
@@ -381,53 +356,20 @@ const styles = StyleSheet.create({
   },
   dropdown_style: {
     height: 40,
-    //width: "85%",
-    //marginLeft: 30,
-    //height: 40,
     marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,
   },
-  input2: {
-    height: 40,
-    width: "85%",
-    marginTop: 2,
-    borderWidth: 1,
-    backgroundColor: "white",
-  },
-
   rect2: {
     width: '100%',
     height: 36,
     backgroundColor: "rgba(74,144,226,1)",
     borderRadius: 3,
   },
-  acessoText: {
-    color: "#121212",
-    marginTop: 20,
-    marginLeft: 30,
-    marginBottom: 9,
-  },
-  titulo: {
-    color: "white",
-    marginLeft: 9,
-    marginTop: 1,
-  },
-  abrangencia: {
-    height: 40,
-    width: "85%",
-    marginLeft: 30,
-    height: 40,
-    marginTop: 20,
-    borderRadius: 0,
-    borderWidth: 1,
-  },
-  inputOutrosBeneficios: {
+  input_style: {
     height: 40,
     width: "85%",
     marginTop: 10,
-    //marginLeft: 10,
-    //marginRight:25,
     borderWidth: 1,
     backgroundColor: "white",
   },

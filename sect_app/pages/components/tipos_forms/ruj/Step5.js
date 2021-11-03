@@ -4,33 +4,26 @@ import DropDownPicker from "react-native-dropdown-picker";
 import Checkbox from "expo-checkbox";
 import { DatabaseConnection } from "../../../database/database";
 const db = DatabaseConnection.getConnection();
+
 const Step5 = (props) => {
   const [sync, setSync] = useState("");
   const [dados_valor, setDados_valor] = useState("");
 
   const [check_Se_ruj_sanitario, set_Check_Se_ruj_sanitario] = useState([]);
 
-  const [se_ruj_tratamento_agua_clorada, setSe_ruj_tratamento_agua_clorada] =
-    React.useState([]);
+  const [se_ruj_tratamento_agua_clorada, setSe_ruj_tratamento_agua_clorada] = useState([]);
 
-  const [se_ruj_rede_agua_publica, setSe_ruj_rede_agua_publica] =
-    React.useState([]);
+  const [se_ruj_rede_agua_publica, setSe_ruj_rede_agua_publica] = useState([]);
 
-  const [se_ruj_rede_energia_publica, setSe_ruj_rede_energia_publica] =
-    React.useState([]);
+  const [se_ruj_rede_energia_publica, setSe_ruj_rede_energia_publica] = useState([]);
 
-  const [se_ruj_coleta_lixo_outros, setOutrosSe_ruj_coleta_lixo_outros] =
-    useState("");
-  const [outrosSe_ruj_destino_dejetos, setOutrosSe_ruj_destino_dejetos] =
-    useState("");
+  const [se_ruj_coleta_lixo_outros, setOutrosSe_ruj_coleta_lixo_outros] = useState("");
+  const [outrosSe_ruj_destino_dejetos, setOutrosSe_ruj_destino_dejetos] = useState("");
 
-  const [se_ruj_coleta_lixo_publica, setSe_ruj_coleta_lixo_publica] =
-    React.useState([]);
+  const [se_ruj_coleta_lixo_publica, setSe_ruj_coleta_lixo_publica] = useState([]);
 
-  const [openSe_ruj_destino_dejetos, setOpenSe_ruj_destino_dejetos] =
-    useState(false);
-  const [valorSe_ruj_destino_dejetos, setValorSe_ruj_destino_dejetos] =
-    useState(null);
+  const [openSe_ruj_destino_dejetos, setOpenSe_ruj_destino_dejetos] = useState(false);
+  const [valorSe_ruj_destino_dejetos, setValorSe_ruj_destino_dejetos] = useState(null);
   const [itemSe_ruj_destino_dejetos, setItemSe_ruj_destino_dejetos] = useState([]);
 
   useEffect(() => {
@@ -52,18 +45,9 @@ const Step5 = (props) => {
     AsyncStorage.getItem("nome_tabela").then((tabela) => {
         // console.log("loadDados");
         if (tabela) {
-          db.transaction(
-            (tx) => {
-              tx.executeSql(
-                "select * from " +
-                  tabela +
-                  " where se_ruj_cod_processo = '" +
-                  cod_processo +
-                  "'",
-                [],
+          db.transaction((tx) => {
+              tx.executeSql("select * from " + tabela + " where se_ruj_cod_processo = '" + cod_processo + "'",[],
                 (tx, results) => {
-                  //var x = "";
-                  // console.log(results.rows.length);
                   var row = [];
                   for (let i = 0; i < results.rows.length; ++i) {
                     setOutrosSe_ruj_coleta_lixo_outros(

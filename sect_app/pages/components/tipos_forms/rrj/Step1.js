@@ -11,82 +11,39 @@ const Step1 = () => {
   const [sync, setSync] = useState("");
   const [dados_valor, setDados_valor] = useState("");
   const [localizacao, setLocalizacao] = useState("");
-  const [rq_nome, setRq_nome] = useState("");
-  const [rq_cpf, setRq_cpf] = useState("");
-
-  const [
-    value_se_rrj_descricao_ramo_atividades,
-    set_se_rrj_descricao_ramo_atividades,
-  ] = useState("");
-
-  const [rq_bairro, set_rq_bairro] = useState("");
-  const [rq_numero, set_rq_numero] = useState("");
-  const [rq_complemento, set_rq_complemento] = useState("");
-  const [rq_telefone, set_rq_telefone] = useState("");
-  const [rq_telefone_celular, set_rq_telefone_celular] = useState("");
-  const [rq_email, set_rq_email] = useState("");
-
-  const [rq_filiacao, setRq_filiacao] = useState([
-    { label: "Mae", id: "1", isChecked: false },
-    { label: "Pai", id: "2", isChecked: false },
-  ]);
-
-  const [se_rrj_data_nascimento, setse_rrj_data_nascimento] = useState("");
-  const [unmasked, setUnmasked] = useState("");
-
+  const [ value_se_rrj_descricao_ramo_atividades, set_se_rrj_descricao_ramo_atividades ] = useState("");
   const [aberto, setAberto] = useState(false);
-  const [valor, setValor] = useState("");
+  const [valor, setValor_municipios] = useState("");
   const [item, setItem_cidades] = useState([]);
-
   const [abertoAcesso, setAbertoAcesso] = useState(false);
   const [valorAcesso, setValorAcesso] = useState(null);
   const [itemAcesso, setItem_aux_acesso] = useState([]);
 
-  const [aberto_se_rrj_inicio_atividades, setAberto_se_rrj_inicio_atividades] =
-    useState(false);
-  const [valor_se_rrj_inicio_atividades, setValor_se_rrj_inicio_atividades] =
-    useState(null);
-  const [item_se_rrj_inicio_atividades, setItem_se_rrj_inicio_atividades] =
-    useState([]);
+  const [aberto_se_rrj_inicio_atividades, setAberto_se_rrj_inicio_atividades] = useState(false);
+  const [valor_se_rrj_inicio_atividades, setValor_se_rrj_inicio_atividades] = useState(null);
+  const [item_se_rrj_inicio_atividades, setItem_se_rrj_inicio_atividades] = useState([]);
 
-  const [aberto_se_rrj_setor_abrangencia, setAberto_se_rrj_setor_abrangencia] =
-    useState(false);
-  const [valor_se_rrj_setor_abrangencia, setValor_se_rrj_setor_abrangencia] =
-    useState(null);
-  const [item_se_rrj_setor_abrangencia, setItem_se_rrj_setor_abrangencia] =
-    useState([]);
+  const [aberto_se_rrj_setor_abrangencia, setAberto_se_rrj_setor_abrangencia] = useState(false);
+  const [valor_se_rrj_setor_abrangencia, setValor_se_rrj_setor_abrangencia] =  useState(null);
+  const [item_se_rrj_setor_abrangencia, setItem_se_rrj_setor_abrangencia] = useState([]);
 
-  const [
-    aberto_se_rrj_natureza_atividades,
-    setAberto_se_rrj_natureza_atividades,
-  ] = useState(false);
-  const [
-    valor_se_rrj_natureza_atividades,
-    setValor_se_rrj_natureza_atividades,
-  ] = useState(null);
-  const [item_se_rrj_natureza_atividades, setItem_se_rrj_natureza_atividades] =
-    useState([]);
+  const [ aberto_se_rrj_natureza_atividades,   setAberto_se_rrj_natureza_atividades,] = useState(false);
+  const [ valor_se_rrj_natureza_atividades,setValor_se_rrj_natureza_atividades] = useState(null);
+  const [item_se_rrj_natureza_atividades, setItem_se_rrj_natureza_atividades] = useState([]);
 
-  const [aberto_se_rrj_ramo_atividades, setAberto_se_rrj_ramo_atividades] =
-    useState(false);
-  const [valor_se_rrj_ramo_atividades, setValor_se_rrj_ramo_atividades] =
-    useState(null);
-  const [item_se_rrj_ramo_atividades, setItem_se_rrj_ramo_atividades] =
-    useState([]);
+  const [aberto_se_rrj_ramo_atividades, setAberto_se_rrj_ramo_atividades] = useState(false);
+  const [valor_se_rrj_ramo_atividades, setValor_se_rrj_ramo_atividades] = useState(null);
+  const [item_se_rrj_ramo_atividades, setItem_se_rrj_ramo_atividades] =useState([]);
 
-  const [aberto_se_rrj_mao_de_obra, setAberto_se_rrj_mao_de_obra] =
-    useState(false);
-  const [valor_se_rrj_mao_de_obra, setValor_se_rrj_mao_de_obra] =
-    useState(null);
+  const [aberto_se_rrj_mao_de_obra, setAberto_se_rrj_mao_de_obra] =  useState(false);
+  const [valor_se_rrj_mao_de_obra, setValor_se_rrj_mao_de_obra] =  useState(null);
   const [item_se_rrj_mao_de_obra, setItem_se_rrj_mao_de_obra] = useState([]);
 
-  const [aberto_se_rrj_associados, setAberto_se_rrj_associados] =
-    useState(false);
+  const [aberto_se_rrj_associados, setAberto_se_rrj_associados] = useState(false);
   const [valor_se_rrj_associados, setValor_se_rrj_associados] = useState(null);
   const [item_se_rrj_associados, setItem_se_rrj_associados] = useState([]);
 
-  const [aberto_se_rrj_cooperados, setAberto_se_rrj_cooperados] =
-    useState(false);
+  const [aberto_se_rrj_cooperados, setAberto_se_rrj_cooperados] =  useState(false);
   const [valor_se_rrj_cooperados, setValor_se_rrj_cooperados] = useState(null);
   const [item_se_rrj_cooperados, setItem_se_rrj_cooperados] = useState([]);
 
@@ -117,10 +74,9 @@ const Step1 = () => {
               var x = "";
               var row = [];
               for (let i = 0; i < results.rows.length; ++i) {
-                //console.log(results.rows);
                 setLocalizacao(results.rows.item(0).se_rrj_localizacao);
 
-                setValor(results.rows.item(i).se_rrj_municipio);
+                setValor_municipios(results.rows.item(i).se_rrj_municipio);
                 setValorAcesso(results.rows.item(i).se_rrj_acesso);
                 setValor_se_rrj_inicio_atividades(results.rows.item(i).se_rrj_inicio_atividades);
                 setValor_se_rrj_setor_abrangencia(results.rows.item(i).se_rrj_setor_abrangencia);
@@ -136,7 +92,7 @@ const Step1 = () => {
               }
             },
             function (tx, error) {
-              alert("SELECT error: " + error.message);
+              alert("SELECT error: " + error);
             }
           );
         });
@@ -353,7 +309,7 @@ const Step1 = () => {
             value={parseInt(valor)}
             items={item}
             setOpen={setAberto}
-            setValue={setValor}
+            setValue={setValor_municipios}
             setItems={setItem_cidades} //cidades
             zIndex={9999}
             listMode="SCROLLVIEW"
