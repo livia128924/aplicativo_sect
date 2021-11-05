@@ -9,22 +9,22 @@ import {
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { DatabaseConnection } from "../../../database/database";
-import { TextInputMask } from "react-native-masked-text";
+import { TextInputMask, getRawValue } from "react-native-masked-text";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import moment from "moment";
 
 const db = DatabaseConnection.getConnection();
 
 const Step1 = (props) => {
-
   const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
+  const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
     console.log(selectedDate);
     const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
+    setShow(Platform.OS === "ios");
     setDate(currentDate);
   };
 
@@ -34,21 +34,35 @@ const Step1 = (props) => {
   };
 
   const showDatepicker = () => {
-    showMode('date');
+    showMode("date");
   };
 
   const showTimepicker = () => {
-    showMode('time');
+    showMode("time");
   };
   const [date_ocupacao_atual, setDate_ocupacao_atual] = useState(new Date());
-  const [mode_ocupacao_atual, setMode_ocupacao_atual] = useState('date');
+  const [mode_ocupacao_atual, setMode_ocupacao_atual] = useState("date");
   const [show_ocupacao_atual, setShow_ocupacao_atual] = useState(false);
 
   const onChange_ocupacao_atual = (event, selectedDate) => {
-    console.log(selectedDate);
+    //if(vr_ocupacao_data_atual  === null){
+    // var x =  selectedDate.split('-');
+    // console.log(x.join("/"));
+    var x = selectedDate;
+    let str = selectedDate;
+    let moments = moment(str);
+    console.log("data formatada", moments.format("YYYY/MM/DD"));
+    set_vr_ocupacao_data_atual(x);
+
+
+    //console.log("data selecionada", x);
     const currentDate_ocupacao_atual = selectedDate || date;
-    setShow_ocupacao_atual(Platform.OS === 'ios');
+    setShow_ocupacao_atual(Platform.OS === "ios");
     setDate_ocupacao_atual(currentDate_ocupacao_atual);
+    //}
+    //else{
+    // alert("ok");
+    //}
   };
 
   const showMode_ocupacao_atual = (currentMode) => {
@@ -57,7 +71,7 @@ const Step1 = (props) => {
   };
 
   const showDatepicker_ocupacao_atual = () => {
-    showMode_ocupacao_atual('date');
+    showMode_ocupacao_atual("date");
   };
 
   const [vr_ocupacao_primitiva_data, set_vr_ocupacao_primitiva_data] =
@@ -67,7 +81,6 @@ const Step1 = (props) => {
   const [vr_ocupacao_documento_qual, set_vr_ocupacao_documento_qual] =
     useState("");
   const [vr_nome_transmitente, set_vr_nome_transmitente] = useState("");
-  const [unmasked_vr_ocupacao_atual, setUnmasked_vr_ocupacao] = useState("");
 
   const [sync, setSync] = useState("");
   const [dados_valor, setDados_valor] = useState("");
@@ -113,7 +126,6 @@ const Step1 = (props) => {
     { label: "Nao", value: "N" },
   ]);
 
-
   useEffect(() => {
     var cod_processo = "";
     //carrega o valor do select na tela index.js
@@ -134,15 +146,24 @@ const Step1 = (props) => {
       if (tabela) {
         db.transaction((tx) => {
           tx.executeSql(
-            "select * from " + tabela + " where vr_cod_processo = '" + cod_processo + "'", [],
+            "select * from " +
+              tabela +
+              " where vr_cod_processo = '" +
+              cod_processo +
+              "'",
+            [],
             (tx, results) => {
               var x = "";
               var row = [];
               //console.log(cod_processo, tabela);
               for (let i = 0; i < results.rows.length; ++i) {
                 console.log(results.rows.length);
-                set_vr_nome_transmitente(results.rows.item(0).vr_nome_transmitente);
-                set_vr_ocupacao_documento_qual(results.rows.item(0).vr_ocupacao_documento_qual);
+                set_vr_nome_transmitente(
+                  results.rows.item(0).vr_nome_transmitente
+                );
+                set_vr_ocupacao_documento_qual(
+                  results.rows.item(0).vr_ocupacao_documento_qual
+                );
 
                 setValor_vr_ocupacao_utilizacao(
                   results.rows.item(i).vr_ocupacao_utilizacao
@@ -159,6 +180,9 @@ const Step1 = (props) => {
                 );
                 setValor_vr_ocupacao_pacifica(
                   results.rows.item(i).vr_ocupacao_pacifica
+                );
+                set_vr_ocupacao_data_atual(
+                  results.rows.item(i).vr_ocupacao_data_atual
                 );
               }
             }
@@ -197,39 +221,95 @@ const Step1 = (props) => {
 
   //função que aciona quando o estado do componente muda e seta os valores correspondente
   function onPressTitle(tabela, campo, valor, codigo) {
+    //console.log(tabela, campo, valor, codigo);
+    db.transaction(
+      (tx) => {
+        const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE vr_cod_processo = '${codigo}'`;
+        //console.log(query);
+        tx.executeSql(query, [], (tx, results) => {
+          for (let i = 0; i < results.rows.length; ++i) {
+            alert("INSERIDO COM SUCESSO");
+          }
+        });
+      },
+      (tx, err) => {
+        console.error("error em alguma coisa", err);
+        return true;
+      },
+      (tx, success) => {
+        console.log("tudo certo por aqui", success);
+        //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
+      }
+    );
+    var chaves = '"' + tabela + " " + campo + " " + valor + " " + codigo + '"';
     db.transaction((tx) => {
-      const query = `UPDATE ${tabela} SET ${campo} = '${valor}' WHERE vr_cod_processo = '${codigo}'`;
-      //console.log(query);
-      tx.executeSql(query, [], (tx, results) => {
-        for (let i = 0; i < results.rows.length; ++i) {
-          alert("INSERIDO COM SUCESSO");
-        }
-      });
-    }, (tx, err) => {
-      console.error("error em alguma coisa", err);
-      return true;
-    }, (tx, success) => {
-      console.log("tudo certo por aqui", success);
-      //get_values(tabela, campo, sync);  ///esse aqui foi a tentativa
-    });
-    var chaves = '"' + tabela + ' ' + campo + ' ' + valor + ' ' + codigo + '"';
-    db.transaction((tx) => {
-      const log_delete = "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
-      console.log("INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + " ,'" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')");
+      const log_delete =
+        "INSERT INTO log (chave , tabela, campo, valor, cod_processo, situacao) VALUES  (" +
+        chaves +
+        " ,'" +
+        tabela +
+        "', '" +
+        campo +
+        "', '" +
+        valor +
+        "', '" +
+        codigo +
+        "', '1')";
       tx.executeSql(log_delete, []);
+      console.log(log_delete);
     });
     db.transaction((tx) => {
-      const log_update = "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" + chaves + ", '" + tabela + "', '" + campo + "', '" + valor + "', '" + codigo + "', '1')";
+      const log_update =
+        "REPLACE INTO log (chave, tabela, campo, valor, cod_processo, situacao) VALUES  (" +
+        chaves +
+        ", '" +
+        tabela +
+        "', '" +
+        campo +
+        "', '" +
+        valor +
+        "', '" +
+        codigo +
+        "', '1')";
+      tx.executeSql(log_update, [], (tx, results) => {});
       console.log(log_update);
-      tx.executeSql(log_update, [], (tx, results) => {
-      });
-    })
-    AsyncStorage.setItem('nome_tabela', tabela);
-    AsyncStorage.setItem('codigo', valor.toString());
+    });
+    AsyncStorage.setItem("nome_tabela", tabela);
+    AsyncStorage.setItem("codigo", valor.toString());
   }
 
+  var x_value = "";
+
+  function isValueValid(value) {
+    //console.log(value.isValid());
+   // var y = "";
+    if (value.isValid() === false) {
+      alert("Por favor digite uma data correta.");
+    } else {
+      onPressTitle(
+        "vr",
+        "vr_ocupacao_data_atual",
+        vr_ocupacao_data_atual,
+        sync
+      );
+      setNewDate();
+    }
+  }
+  
+  function setNewDate() {
+    var x = vr_ocupacao_data_atual.split("/").reverse();
+    // console.log(x.join("/"));
+    var y = x.join("/");
+    console.log("'" + y + "'");
+    setDate_ocupacao_atual(new Date(y));
+    //console.log("dasda",x_value.getRawValue())
+  }
+
+  // const numberValue = unmasked.getRawValue()
+  //console.log(numberValue) // Number
+
   return (
-    <View>
+    <>
       <View style={styles.form}>
         <View style={styles.rect2}>
           <Text style={styles.titulo}>DADOS RELATIVO À OCUPAÇÃO</Text>
@@ -238,60 +318,37 @@ const Step1 = (props) => {
         <View style={styles.titleStyle}>
           <Text>Utilizações do Imóvel</Text>
         </View>
-        <DropDownPicker
-          style={styles.DropdrownStyle}
-          open={aberto_vr_ocupacao_utilizacao}
-          value={parseInt(valor_vr_ocupacao_utilizacao)}
-          items={item_vr_ocupacao_utilizacao}
-          zIndex={9999}
-          setOpen={setAberto_vr_ocupacao_utilizacao}
-          setValue={setValor_vr_ocupacao_utilizacao}
-          setItems={setItem_vr_ocupacao_utilizacao} //cidades
-          listMode="SCROLLVIEW"
-          onChangeValue={() =>
-            onPressTitle(
-              "vr",
-              "vr_ocupacao_utilizacao",
-              valor_vr_ocupacao_utilizacao,
-              sync
-            )
-          }
-          placeholder={"Selecione:"}
-        />
+        <View style={{ alignSelf: "center", width: "85%" }}>
+          <DropDownPicker
+            style={styles.DropdrownStyle}
+            open={aberto_vr_ocupacao_utilizacao}
+            value={parseInt(valor_vr_ocupacao_utilizacao)}
+            items={item_vr_ocupacao_utilizacao}
+            zIndex={9999}
+            setOpen={setAberto_vr_ocupacao_utilizacao}
+            setValue={setValor_vr_ocupacao_utilizacao}
+            setItems={setItem_vr_ocupacao_utilizacao} //cidades
+            listMode="SCROLLVIEW"
+            onChangeValue={() =>
+              onPressTitle(
+                "vr",
+                "vr_ocupacao_utilizacao",
+                valor_vr_ocupacao_utilizacao,
+                sync
+              )
+            }
+            placeholder={"Selecione:"}
+          />
+        </View>
 
         <View style={{ alignContent: "center", alignItems: "center" }}>
           <View style={styles.rowStyle}>
-            <View
-              style={{
-                flexDirection: "column",
-                // backgroundColor:'red',
-                width: "45%",
-                height: 100,
-                display: "flex",
-              }}
-            >
+            <View style={styles.DropdrownStyle_Container_collumn}>
               <View>
-                <Text
-                  style={{
-                    color: "#121212",
-                    //marginTop: 20,
-                  }}
-                >
-                  É ocupação primitiva?
-                </Text>
+                <Text style={{ color: "#121212" }}>É ocupação primitiva?</Text>
               </View>
               <DropDownPicker
-                style={{
-                  //height: 40,
-                  width: "auto",
-                  //marginLeft: 30,
-                  height: 40,
-                  marginTop: 25,
-                  borderRadius: 0,
-                  borderWidth: 1,
-                  //marginTop:30,
-                  //alignContent:'flex-end'
-                }}
+                style={styles.DropdrownStyle_row}
                 open={aberto_vr_ocupacao_primitiva}
                 value={valor_vr_ocupacao_primitiva}
                 items={item_vr_ocupacao_primitiva}
@@ -310,33 +367,25 @@ const Step1 = (props) => {
                 placeholder="Selecione:"
               />
             </View>
-            <View
-              style={{
-                flexDirection: "column",
-                //backgroundColor:'red',
-                width: "45%",
-                //alignContent: "center",
-                //alignItems: "center",
-                //alignSelf: "center",
-              }}
-            >
+
+            <View style={styles.TextInputStyle_Container_collumn}>
               <View>
                 <Text style={{ color: "#121212" }}>
                   Data da ocupação primitiva
                 </Text>
               </View>
               <View>
-              {show && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                //mode={mode}
-                maximumDate={new Date()}
-                //is24Hour={true}
-                display="calendar"
-                onChange={onChange}
-              />
-            )}
+                {show && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    //mode={mode}
+                    maximumDate={new Date()}
+                    //is24Hour={true}
+                    display="calendar"
+                    onChange={onChange}
+                  />
+                )}
               </View>
               <TouchableOpacity
                 //  style={{ alignItems: "center" }}
@@ -382,54 +431,55 @@ const Step1 = (props) => {
                 sync
               )
             }
-            //placeholder={"    "}
           />
         </View>
-        <View>
-          <Text style={styles.localizacao}>Reside no imóvel?</Text>
-        </View>
-        <DropDownPicker
-          style={styles.DropdrownStyle}
-          open={aberto_vr_ocupacao_reside}
-          value={valor_vr_ocupacao_reside}
-          items={item_vr_ocupacao_reside}
-          setOpen={setAberto_vr_ocupacao_reside}
-          setValue={setValor_vr_ocupacao_reside}
-          setItems={setItem_vr_ocupacao_reside} //aux_acesso
-          onChangeValue={() =>
-            onPressTitle(
-              "vr",
-              "vr_ocupacao_reside",
-              valor_vr_ocupacao_reside,
-              sync
-            )
-          }
-          listMode="SCROLLVIEW"
-          placeholder="Selecione:"
-        />
-
-        <View>
-          <Text style={styles.localizacao}>Data da ocupação atual</Text>
-        </View>
-
-
-        <View>
-        {show_ocupacao_atual && (
-              <DateTimePicker
-                //testID="dateTimePicker"
-                value={date_ocupacao_atual}
-                //mode={mode}
-                maximumDate={new Date()}
-                //is24Hour={true}
-                display="calendar"
-                onChange={onChange_ocupacao_atual}
-              />
-            )}
+        <View style={{ alignContent: "center", alignItems: "center" }}>
+          <View style={styles.rowStyle}>
+            <View style={styles.DropdrownStyle_Container_collumn}>
+              <View>
+                <Text style={styles.localizacao}>Reside no imóvel?</Text>
               </View>
-              <TouchableOpacity
-                  style={{ alignItems: "center" }}
-                onPress={showDatepicker_ocupacao_atual}
-              >
+              <DropDownPicker
+                style={styles.DropdrownStyle_row}
+                open={aberto_vr_ocupacao_reside}
+                value={valor_vr_ocupacao_reside}
+                items={item_vr_ocupacao_reside}
+                setOpen={setAberto_vr_ocupacao_reside}
+                setValue={setValor_vr_ocupacao_reside}
+                setItems={setItem_vr_ocupacao_reside} //aux_acesso
+                onChangeValue={() =>
+                  onPressTitle(
+                    "vr",
+                    "vr_ocupacao_reside",
+                    valor_vr_ocupacao_reside,
+                    sync
+                  )
+                }
+                listMode="SCROLLVIEW"
+                placeholder="Selecione:"
+              />
+            </View>
+
+            <View style={styles.TextInputStyle_Container_collumn}>
+              <View>
+                <Text style={styles.localizacao}>Data da ocupação atual</Text>
+              </View>
+              <View>
+                {show_ocupacao_atual && (
+                  <DateTimePicker
+                    mode="date"
+                    value={date_ocupacao_atual}
+                    maximumDate={new Date()}
+                    //display="calendar"
+                    is24Hour={false}
+                    locale="pt-BR"
+                    onChange={onChange_ocupacao_atual}
+                    timeZoneOffsetInSeconds={0}
+                    timeZoneOffsetInMinutes={0}
+                  />
+                )}
+              </View>
+              <TouchableOpacity onPress={showDatepicker_ocupacao_atual}>
                 <View style={styles.searchSection}>
                   <Icon
                     style={styles.searchIcon}
@@ -437,41 +487,56 @@ const Step1 = (props) => {
                     size={20}
                     color="#000"
                   />
-                  <TextInput
-                    //style={styles.input2}
-                    placeholder="00/00/0000"
-                    format="YYYY-MM-DD"
-                    onChangeText={(searchString) => {
-                      this.setState_ocupacao_atual({ searchString });
+                  {/* <TextInput
+                
+                  placeholder="00/00/0000"
+                  format="YYYY-MM-DD"
+                  onChangeText={
+                    set_vr_ocupacao_data_atual}
+                  underlineColorAndroid="transparent"
+                /> */}
+                  <TextInputMask
+                    style={styles.input}
+                    type={"datetime"}
+                    options={{ format: "DD/MM/YYYY" }}
+                    value={vr_ocupacao_data_atual}
+                    onChangeText={set_vr_ocupacao_data_atual}
+                    ref={(ref) => (x_value = ref)}
+                    onBlur={() => {
+                      //console.log(x_value);
+                      isValueValid(x_value);
                     }}
-                    underlineColorAndroid="transparent"
                   />
                 </View>
-              <Text >{date_ocupacao_atual.toString().substr(4, 12)}</Text>
               </TouchableOpacity>
-
+              {/* <Text >{vr_ocupacao_data_atual}</Text> */}
+            </View>
+          </View>
+        </View>
         <View>
           <Text style={styles.localizacao}>Possui algum documento?</Text>
         </View>
-        <DropDownPicker
-          style={styles.DropdrownStyle}
-          open={aberto_vr_ocupacao_documento}
-          value={valor_vr_ocupacao_documento}
-          items={item_vr_ocupacao_documento}
-          setOpen={setAberto_vr_ocupacao_documento}
-          setValue={setValor_vr_ocupacao_documento}
-          setItems={setItem_vr_ocupacao_documento} //aux_acesso
-          onChangeValue={() =>
-            onPressTitle(
-              "vr",
-              "vr_ocupacao_documento",
-              valor_vr_ocupacao_documento,
-              sync
-            )
-          }
-          listMode="SCROLLVIEW"
-          placeholder="Selecione:"
-        />
+        <View style={{ alignSelf: "center", width: "85%" }}>
+          <DropDownPicker
+            style={styles.DropdrownStyle}
+            open={aberto_vr_ocupacao_documento}
+            value={valor_vr_ocupacao_documento}
+            items={item_vr_ocupacao_documento}
+            setOpen={setAberto_vr_ocupacao_documento}
+            setValue={setValor_vr_ocupacao_documento}
+            setItems={setItem_vr_ocupacao_documento} //aux_acesso
+            onChangeValue={() =>
+              onPressTitle(
+                "vr",
+                "vr_ocupacao_documento",
+                valor_vr_ocupacao_documento,
+                sync
+              )
+            }
+            listMode="SCROLLVIEW"
+            placeholder="Selecione:"
+          />
+        </View>
 
         <View>
           <Text style={styles.localizacao}>Qual?</Text>
@@ -498,25 +563,27 @@ const Step1 = (props) => {
             Exerce mansa e pacificamente a posse?
           </Text>
         </View>
-        <DropDownPicker
-          style={styles.DropdrownStyle}
-          open={aberto_vr_ocupacao_pacifica}
-          value={valor_vr_ocupacao_pacifica}
-          items={item_vr_ocupacao_pacifica}
-          setOpen={setAberto_vr_ocupacao_pacifica}
-          setValue={setValor_vr_ocupacao_pacifica}
-          setItems={setItem_vr_ocupacao_pacifica} //aux_acesso
-          onChangeValue={() =>
-            onPressTitle(
-              "vr",
-              "vr_ocupacao_pacifica",
-              valor_vr_ocupacao_pacifica,
-              sync
-            )
-          }
-          listMode="SCROLLVIEW"
-          placeholder="Selecione:"
-        />
+        <View style={{ alignSelf: "center", width: "85%" }}>
+          <DropDownPicker
+            style={styles.DropdrownStyle}
+            open={aberto_vr_ocupacao_pacifica}
+            value={valor_vr_ocupacao_pacifica}
+            items={item_vr_ocupacao_pacifica}
+            setOpen={setAberto_vr_ocupacao_pacifica}
+            setValue={setValor_vr_ocupacao_pacifica}
+            setItems={setItem_vr_ocupacao_pacifica} //aux_acesso
+            onChangeValue={() =>
+              onPressTitle(
+                "vr",
+                "vr_ocupacao_pacifica",
+                valor_vr_ocupacao_pacifica,
+                sync
+              )
+            }
+            listMode="SCROLLVIEW"
+            placeholder="Selecione:"
+          />
+        </View>
         <View>
           <Text style={styles.localizacao}>Total de pessoas residentes</Text>
         </View>
@@ -537,36 +604,51 @@ const Step1 = (props) => {
           />
         </View>
       </View>
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  searchSection: {
-    flex: 1,
-    flexDirection: 'row',
-    //justifyContent: 'center',
-    //alignItems: 'center',
-    //backgroundColor: '#fff',
+  TextInputStyle_Container_collumn: {
+    flexDirection: "column",
+    width: "45%",
+    height: 50,
+    //backgroundColor:'red'
+  },
+  DropdrownStyle_Container_collumn: {
+    flexDirection: "column",
+    width: "45%",
+    height: 100,
+    display: "flex",
+  },
+  DropdrownStyle_row: {
+    width: "auto",
     height: 40,
-    width: "85%",
-    marginTop: 10,
-    //marginRight:20,
+    marginTop: 15,
+    borderRadius: 0,
     borderWidth: 1,
-    backgroundColor: "white",
-},
-searchIcon: {
-    padding: 10,
-},
-input: {
-    flex: 1,
+  },
+  input: {
+    width: "81%",
     paddingTop: 10,
     paddingRight: 10,
     paddingBottom: 10,
     paddingLeft: 0,
-    backgroundColor: '#fff',
-    color: '#424242',
-},
+    backgroundColor: "#fff",
+    color: "#424242",
+  },
+  searchSection: {
+    //flex: 1,
+    flexDirection: "row",
+    height: 40,
+    marginTop: 15,
+    borderWidth: 1,
+    backgroundColor: "white",
+  },
+  searchIcon: {
+    padding: 10,
+  },
+
   rowStyle: {
     flexDirection: "row",
     marginTop: 10,
@@ -581,7 +663,6 @@ input: {
     width: "95%",
     left: 11,
     height: 200,
-    //marginLeft: 25,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
@@ -590,25 +671,20 @@ input: {
   localizacao: {
     color: "#121212",
     marginLeft: 30,
-    //marginTop: 20,
-    //marginBottom: 9
   },
   input2: {
     height: 40,
     width: "85%",
+    //marginRight:25,
     marginTop: 2,
-    //marginRight:20,
     borderWidth: 1,
+
     backgroundColor: "white",
   },
   form: {
     width: "95%",
-    left: 11,
-    height: `auto`,
+    height: "auto",
     paddingBottom: 10,
-
-    //padding
-    //marginLeft: 25,
     borderWidth: 1,
     borderColor: "rgba(74,144,226,1)",
     borderRadius: 3,
@@ -627,9 +703,9 @@ input: {
   },
   DropdrownStyle: {
     height: 40,
-    width: "85%",
-    marginLeft: 30,
-    height: 40,
+    //width: "85%",
+    //marginLeft: 30,
+    //height: 40,
     marginTop: 5,
     borderRadius: 0,
     borderWidth: 1,
