@@ -98,9 +98,9 @@ const Menu = ({ navigation }) => {
                 icon="group"
               />
               <Mybutton
-                title=""
-                customClick={() => alert("ok")}
-                icon="image"
+                title="Patrimônio"
+                customClick={() => navigation.navigate("Patrimonio")}
+                icon="qrcode"
               />
               <Mybutton
                 title=""
